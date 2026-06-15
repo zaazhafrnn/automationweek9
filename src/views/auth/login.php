@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl">
+<div class="bg-black max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl">
     <div class="text-center mb-8">
         <h1 class="text-3xl font-extrabold text-gray-900">Welcome Back</h1>
         <p class="mt-2 text-sm text-gray-600">Please sign in to your account</p>
