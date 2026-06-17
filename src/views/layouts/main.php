@@ -1,3 +1,7 @@
+<?php
+$body_class = $body_class ?? 'text-gray-800 font-sans antialiased min-h-screen flex flex-col bg-white';
+$main_class = $main_class ?? 'flex-grow w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +10,8 @@
     <title><?= htmlspecialchars(APP_NAME) ?></title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="text-gray-800 font-sans antialiased min-h-screen flex flex-col">
-    <main class="flex-grow w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<body class="<?= htmlspecialchars($body_class) ?>">
+    <main class="<?= htmlspecialchars($main_class) ?>">
         <?= $content ?? '' ?>
     </main>
 </body>

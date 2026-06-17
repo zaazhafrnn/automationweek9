@@ -8,14 +8,14 @@ class Controller
     {
         extract($data);
 
-        $viewFile = BASE_PATH . '/views/' . $view . '.php';
+        $viewFile = BASE_PATH . '/src/views/' . $view . '.php';
 
         if (file_exists($viewFile)) {
             ob_start();
             require $viewFile;
             $content = ob_get_clean();
 
-            require BASE_PATH . '/views/layouts/main.php';
+            require BASE_PATH . '/src/views/layouts/main.php';
         } else {
             die("View $view not found.");
         }

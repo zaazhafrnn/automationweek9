@@ -1,4 +1,8 @@
-<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl">
+<?php
+$body_class = 'bg-[#bc0301] text-gray-800 font-sans antialiased min-h-screen flex flex-col justify-center';
+$main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
+?>
+<div class="bg-white p-8 rounded-2xl shadow-xl">
     <div class="text-center mb-8">
         <h1 class="text-3xl font-extrabold text-gray-900">Create Account</h1>
         <p class="mt-2 text-sm text-gray-600">Join us today to get started</p>
