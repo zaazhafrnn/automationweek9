@@ -14,6 +14,10 @@ class DashboardController extends Controller
             $this->redirect('/login');
         }
 
+        if (Session::get('role') === 'admin') {
+            $this->redirect('/admin/dashboard');
+        }
+
         $this->view('dashboard/index', [
             'user_name' => Session::get('user_name'),
             'csrf_token' => Security::generateCsrfToken()

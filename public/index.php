@@ -38,6 +38,7 @@ $router->get('/register', 'AuthController@registerForm');
 $router->post('/register', 'AuthController@register');
 
 $router->get('/dashboard', 'DashboardController@index');
+$router->get('/admin/dashboard', 'AdminController@dashboard');
 $router->post('/logout', 'AuthController@logout');
 
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

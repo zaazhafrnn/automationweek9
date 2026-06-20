@@ -19,7 +19,11 @@ class AuthController extends Controller
     public function loginForm()
     {
         if (Session::get('user_id')) {
-            $this->redirect('/dashboard');
+            if (Session::get('role') === 'admin') {
+                $this->redirect('/admin/dashboard');
+            } else {
+                $this->redirect('/dashboard');
+            }
         }
 
         $this->view('auth/login', [
@@ -52,7 +56,16 @@ class AuthController extends Controller
             Session::regenerate();
             Session::set('user_id', $user['id']);
             Session::set('user_name', $user['name']);
-            $this->redirect('/dashboard');
+            
+            // Set role in session, defaulting to member
+            $role = $user['role'] ?? 'member';
+            Session::set('role', $role);
+
+            if ($role === 'admin') {
+                $this->redirect('/admin/dashboard');
+            } else {
+                $this->redirect('/dashboard');
+            }
         } else {
             $this->view('auth/login', [
                 'error' => 'Invalid email or password.',
@@ -64,7 +77,11 @@ class AuthController extends Controller
     public function registerForm()
     {
         if (Session::get('user_id')) {
-            $this->redirect('/dashboard');
+            if (Session::get('role') === 'admin') {
+                $this->redirect('/admin/dashboard');
+            } else {
+                $this->redirect('/dashboard');
+            }
         }
 
         $this->view('auth/register', [
