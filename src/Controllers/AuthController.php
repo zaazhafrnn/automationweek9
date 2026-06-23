@@ -70,11 +70,13 @@ class AuthController extends Controller
         if (empty($email)) {
             $errors['email_error'] = 'email wajib diisi!';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email_error'] = 'format berupa "email@mail.com"';
+            $errors['email_error'] = 'format berupa "email@mail.com"!';
         }
 
         if (empty($password)) {
             $errors['password_error'] = 'password wajib diisi!';
+        } elseif (strlen($password) < 8) {
+            $errors['password_error'] = 'password minimal 8 karakter!';
         }
 
         if (!empty($errors)) {
@@ -138,6 +140,8 @@ class AuthController extends Controller
 
         if (empty($password)) {
             $errors['password_error'] = 'password wajib diisi!';
+        } elseif (strlen($password) < 8) {
+            $errors['password_error'] = 'password minimal 8 karakter!';
         }
 
         if (!empty($errors)) {

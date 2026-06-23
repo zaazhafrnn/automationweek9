@@ -15,11 +15,12 @@ $main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
 
         <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label for="email" class="block text-sm font-medium mb-1">Email<span class="text-red-500">*</span></label>
             <input
                 type="email"
                 id="email"
                 name="email"
+                placeholder="Masukkan email"
                 value="<?= htmlspecialchars($old_email ?? '') ?>"
                 class="appearance-none block w-full px-3 py-2 border-2 rounded-xl shadow-sm
                        placeholder-gray-400 focus:outline-none transition duration-150 ease-in-out sm:text-sm
@@ -35,11 +36,12 @@ $main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
         </div>
 
         <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label for="password" class="block text-sm font-medium mb-1">Password<span class="text-red-500">*</span></label>
             <input
                 type="password"
                 id="password"
                 name="password"
+                placeholder="Masukkan password"
                 value="<?= htmlspecialchars($old_password ?? '') ?>"
                 class="appearance-none block w-full px-3 py-2 border-2 rounded-xl shadow-sm
                        placeholder-gray-400 focus:outline-none transition duration-150 ease-in-out sm:text-sm
@@ -57,7 +59,7 @@ $main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
         <button
             type="submit"
             class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm
-                   text-sm font-medium text-white bg-[#bc0301] hover:bg-[#9a0201]
+                   text-sm font-bold text-white bg-[#bc0301] hover:bg-[#9a0201]
                    transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer">
             Login
         </button>
