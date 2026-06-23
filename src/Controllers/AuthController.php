@@ -43,34 +43,58 @@ class AuthController extends Controller
         $password = $_POST['password'] ?? '';
 
         if (empty($email) || empty($password)) {
+            $data = [
+                'csrf_token' => Security::generateCsrfToken(),
+                'old_email' => $email
+            ];
+            if (empty($email)) $data['email_error'] = 'email wajib diisi!';
+            if (empty($password)) $data['password_error'] = 'password wajib diisi!';
+
+            $this->view('auth/login', $data);
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->view('auth/login', [
-                'error' => 'Please fill in all fields.',
+                'email_error' => 'email harus berupa "email@mail.com"',
+                'old_email' => $email,
                 'csrf_token' => Security::generateCsrfToken()
             ]);
             return;
         }
 
-        $user = $this->userModel->authenticate($email, $password);
+        $user = $this->userModel->findByEmail($email);
 
-        if ($user) {
-            Session::regenerate();
-            Session::set('user_id', $user['id']);
-            Session::set('user_name', $user['name']);
-            
-            // Set role in session, defaulting to member
-            $role = $user['role'] ?? 'member';
-            Session::set('role', $role);
-
-            if ($role === 'admin') {
-                $this->redirect('/admin/dashboard');
-            } else {
-                $this->redirect('/dashboard');
-            }
-        } else {
+        if (!$user) {
             $this->view('auth/login', [
-                'error' => 'Invalid email or password.',
+                'email_error' => 'email tidak ditemukan!',
+                'old_email' => $email,
+                'old_password' => $password,
                 'csrf_token' => Security::generateCsrfToken()
             ]);
+            return;
+        }
+
+        if (!password_verify($password, $user['password'])) {
+            $this->view('auth/login', [
+                'password_error' => 'password salah!',
+                'old_email' => $email,
+                'csrf_token' => Security::generateCsrfToken()
+            ]);
+            return;
+        }
+
+        Session::regenerate();
+        Session::set('user_id', $user['id']);
+        Session::set('user_name', $user['name']);
+
+        $role = $user['role'] ?? 'member';
+        Session::set('role', $role);
+
+        if ($role === 'admin') {
+            $this->redirect('/admin/dashboard');
+        } else {
+            $this->redirect('/dashboard');
         }
     }
 
@@ -102,16 +126,24 @@ class AuthController extends Controller
         $password = $_POST['password'] ?? '';
 
         if (empty($name) || empty($email) || empty($password)) {
-            $this->view('auth/register', [
-                'error' => 'Please fill in all fields.',
-                'csrf_token' => Security::generateCsrfToken()
-            ]);
+            $data = [
+                'csrf_token' => Security::generateCsrfToken(),
+                'old_name' => $name,
+                'old_email' => $email
+            ];
+            if (empty($name)) $data['name_error'] = 'nama wajib diisi!';
+            if (empty($email)) $data['email_error'] = 'email wajib diisi!';
+            if (empty($password)) $data['password_error'] = 'password wajib diisi!';
+
+            $this->view('auth/register', $data);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->view('auth/register', [
-                'error' => 'Invalid email format.',
+                'email_error' => 'email harus berupa "email@mail.com"',
+                'old_name' => $name,
+                'old_email' => $email,
                 'csrf_token' => Security::generateCsrfToken()
             ]);
             return;
@@ -119,7 +151,9 @@ class AuthController extends Controller
 
         if ($this->userModel->findByEmail($email)) {
             $this->view('auth/register', [
-                'error' => 'Email is already registered.',
+                'email_error' => 'Email sudah terdaftar! Silahkan lakukan login',
+                'old_name' => $name,
+                'old_email' => $email,
                 'csrf_token' => Security::generateCsrfToken()
             ]);
             return;
@@ -129,7 +163,7 @@ class AuthController extends Controller
             $this->redirect('/login');
         } else {
             $this->view('auth/register', [
-                'error' => 'Registration failed. Please try again.',
+                'error' => 'Registrasi gagal. Silahkan coba lagi.',
                 'csrf_token' => Security::generateCsrfToken()
             ]);
         }
