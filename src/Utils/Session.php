@@ -41,4 +41,15 @@ class Session
     {
         session_regenerate_id(true);
     }
+
+    public static function flash($key, $value = null)
+    {
+        if ($value !== null) {
+            self::set($key, $value);
+        } else {
+            $val = self::get($key);
+            self::remove($key);
+            return $val;
+        }
+    }
 }

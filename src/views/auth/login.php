@@ -40,6 +40,7 @@ $main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
                 type="password"
                 id="password"
                 name="password"
+                value="<?= htmlspecialchars($old_password ?? '') ?>"
                 class="appearance-none block w-full px-3 py-2 border-2 rounded-xl shadow-sm
                        placeholder-gray-400 focus:outline-none transition duration-150 ease-in-out sm:text-sm
                        <?= isset($password_error) ? 'border-red-500 text-red-900' : 'border-gray-300 focus:border-black' ?>"
@@ -63,9 +64,13 @@ $main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
     </form>
 
     <div class="mt-8 text-center">
-        <p class="text-sm text-gray-600">
+        <p class="text-sm">
             Belum punya akun?
-            <a href="/register" class="font-medium text-[#bc0301] hover:text-[#9a0201] transition ease-in-out duration-150">
+            <a
+                href="/register"
+                class="inline-block font-semibold text-[#bc0301] hover:text-[#9a0201]
+                       transition-all duration-100 ease-out
+                       hover:-translate-y-0.25">
                 Daftar sekarang
             </a>
         </p>
