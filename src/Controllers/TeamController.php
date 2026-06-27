@@ -57,12 +57,16 @@ class TeamController extends Controller
         }
 
         $teamName = trim($_POST['name'] ?? '');
+        $teamSchool = trim($_POST['teamSchool'] ?? '');
         $division = $_POST['division'] ?? '';
-        $ketuaName = trim($_POST['leader_name'] ?? '');
-        $member1Name = trim($_POST['member_1_name'] ?? '');
-        $member2Name = trim($_POST['member_2_name'] ?? '');
+        $leaderName = trim($_POST['leaderName'] ?? '');
+        $leaderPhoneNumber = trim($_POST['leaderPhoneNumber'] ?? '');
+        $firstMemberName = trim($_POST['firstMemberName'] ?? '');
+        $firstMemberPhoneNumber = trim($_POST['firstMemberPhoneNumber'] ?? '');
+        $secondMemberName = trim($_POST['secondMemberName'] ?? '');
+        $secondMemberPhoneNumber = trim($_POST['secondMemberPhoneNumber'] ?? '');
 
-        if (empty($teamName) || empty($division) || empty($ketuaName)) {
+        if (empty($teamName) || empty($division) || empty($leaderName) || empty($leaderPhoneNumber)) {
             $this->view('dashboard/team_register', ['error' => 'Please fill all required fields.', 'csrf_token' => Security::generateCsrfToken()]);
             return;
         }
@@ -74,11 +78,23 @@ class TeamController extends Controller
         }
 
         if (in_array($division, ['LF', 'PLC'])) {
-            $member2Name = null;
+            $secondMemberName = null;
+            $secondMemberPhoneNumber = null;
         }
 
         try {
-            $this->teamModel->create(Session::get('user_id'), $teamName, $division, $ketuaName, $member1Name, $member2Name);
+            $this->teamModel->create(
+                Session::get('user_id'), 
+                $teamName, 
+                $teamSchool, 
+                $division, 
+                $leaderName, 
+                $leaderPhoneNumber, 
+                $firstMemberName, 
+                $firstMemberPhoneNumber, 
+                $secondMemberName, 
+                $secondMemberPhoneNumber
+            );
             $this->redirect('/dashboard');
         } catch (\Exception $e) {
             $this->view('dashboard/team_register', ['error' => 'Registration failed: ' . $e->getMessage(), 'csrf_token' => Security::generateCsrfToken()]);

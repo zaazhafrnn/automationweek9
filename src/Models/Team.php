@@ -14,20 +14,24 @@ class Team
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function create($userId, $teamName, $division, $ketuaName, $member1Name, $member2Name)
+    public function create($userId, $teamName, $teamSchool, $division, $leaderName, $leaderPhoneNumber, $firstMemberName, $firstMemberPhoneNumber, $secondMemberName, $secondMemberPhoneNumber)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO teams (user_id, name, division, leader_name, member_1_name, member_2_name) 
-            VALUES (:user_id, :name, :division, :leader_name, :member_1_name, :member_2_name)
+            INSERT INTO teams (user_id, name, teamSchool, division, leaderName, leaderPhoneNumber, firstMemberName, firstMemberPhoneNumber, secondMemberName, secondMemberPhoneNumber) 
+            VALUES (:user_id, :name, :teamSchool, :division, :leaderName, :leaderPhoneNumber, :firstMemberName, :firstMemberPhoneNumber, :secondMemberName, :secondMemberPhoneNumber)
         ");
 
         return $stmt->execute([
             ':user_id' => $userId,
             ':name' => $teamName,
+            ':teamSchool' => $teamSchool,
             ':division' => $division,
-            ':leader_name' => $ketuaName,
-            ':member_1_name' => $member1Name,
-            ':member_2_name' => $member2Name
+            ':leaderName' => $leaderName,
+            ':leaderPhoneNumber' => $leaderPhoneNumber,
+            ':firstMemberName' => $firstMemberName,
+            ':firstMemberPhoneNumber' => $firstMemberPhoneNumber,
+            ':secondMemberName' => $secondMemberName,
+            ':secondMemberPhoneNumber' => $secondMemberPhoneNumber
         ]);
     }
 

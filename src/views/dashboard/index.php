@@ -29,6 +29,10 @@
                                 <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['name']) ?></p>
                             </div>
                             <div>
+                                <p class="text-sm text-gray-500">Asal Sekolah</p>
+                                <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['teamSchool'] ?? '-') ?></p>
+                            </div>
+                            <div>
                                 <p class="text-sm text-gray-500">Divisi</p>
                                 <p class="font-semibold text-gray-800">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -38,18 +42,21 @@
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Ketua Tim</p>
-                                <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['leader_name']) ?></p>
+                                <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['leaderName']) ?></p>
+                                <p class="text-xs text-gray-500"><?= htmlspecialchars($team['leaderPhoneNumber'] ?? '') ?></p>
                             </div>
-                            <?php if (!empty($team['member_1_name'])): ?>
+                            <?php if (!empty($team['firstMemberName'])): ?>
                                 <div>
                                     <p class="text-sm text-gray-500">Anggota 1</p>
-                                    <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['member_1_name']) ?></p>
+                                    <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['firstMemberName']) ?></p>
+                                    <p class="text-xs text-gray-500"><?= htmlspecialchars($team['firstMemberPhoneNumber'] ?? '') ?></p>
                                 </div>
                             <?php endif; ?>
-                            <?php if (!empty($team['member_2_name'])): ?>
+                            <?php if (!empty($team['secondMemberName'])): ?>
                                 <div>
                                     <p class="text-sm text-gray-500">Anggota 2</p>
-                                    <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['member_2_name']) ?></p>
+                                    <p class="font-semibold text-gray-800"><?= htmlspecialchars($team['secondMemberName']) ?></p>
+                                    <p class="text-xs text-gray-500"><?= htmlspecialchars($team['secondMemberPhoneNumber'] ?? '') ?></p>
                                 </div>
                             <?php endif; ?>
                         </div>

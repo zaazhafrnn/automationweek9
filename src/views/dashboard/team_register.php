@@ -25,6 +25,12 @@
                     </div>
 
                     <div>
+                        <label for="teamSchool" class="block text-sm font-medium text-gray-700 mb-1">Asal Sekolah</label>
+                        <input type="text" id="teamSchool" name="teamSchool"
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+
+                    <div>
                         <label for="division" class="block text-sm font-medium text-gray-700 mb-1">Divisi Lomba <span class="text-red-500">*</span></label>
                         <select id="division" name="division" required
                             class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
@@ -42,20 +48,34 @@
                     <h3 class="text-lg font-bold text-gray-800 border-b pb-2">Anggota Tim</h3>
 
                     <div>
-                        <label for="leader_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Ketua <span class="text-red-500">*</span></label>
-                        <input type="text" id="leader_name" name="leader_name" required
+                        <label for="leaderName" class="block text-sm font-medium text-gray-700 mb-1">Nama Ketua <span class="text-red-500">*</span></label>
+                        <input type="text" id="leaderName" name="leaderName" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+
+                    <div>
+                        <label for="leaderPhoneNumber" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon/WA Ketua <span class="text-red-500">*</span></label>
+                        <input type="text" id="leaderPhoneNumber" name="leaderPhoneNumber" required
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
                     </div>
 
                     <div id="member_1_container">
-                        <label for="member_1_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Anggota 1</label>
-                        <input type="text" id="member_1_name" name="member_1_name"
+                        <label for="firstMemberName" class="block text-sm font-medium text-gray-700 mb-1">Nama Anggota 1</label>
+                        <input type="text" id="firstMemberName" name="firstMemberName"
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
+                        
+                        <label for="firstMemberPhoneNumber" class="block text-sm font-medium text-gray-700 mt-4 mb-1">Nomor Telepon/WA Anggota 1</label>
+                        <input type="text" id="firstMemberPhoneNumber" name="firstMemberPhoneNumber"
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
                     </div>
 
                     <div id="member_2_container" class="hidden">
-                        <label for="member_2_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Anggota 2</label>
-                        <input type="text" id="member_2_name" name="member_2_name"
+                        <label for="secondMemberName" class="block text-sm font-medium text-gray-700 mt-6 mb-1">Nama Anggota 2</label>
+                        <input type="text" id="secondMemberName" name="secondMemberName"
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
+                        
+                        <label for="secondMemberPhoneNumber" class="block text-sm font-medium text-gray-700 mt-4 mb-1">Nomor Telepon/WA Anggota 2</label>
+                        <input type="text" id="secondMemberPhoneNumber" name="secondMemberPhoneNumber"
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
                     </div>
                 </div>
@@ -75,7 +95,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const divisionSelect = document.getElementById('division');
         const member2Container = document.getElementById('member_2_container');
-        const member2Input = document.getElementById('member_2_name');
+        const member2Input = document.getElementById('secondMemberName');
         const hintText = document.getElementById('division_hint');
 
         function updateFormFields() {
