@@ -2,17 +2,10 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-use PDO;
+use App\Core\Model;
 
-class User
+class User extends Model
 {
-    private $db;
-
-    public function __construct()
-    {
-        $this->db = Database::getInstance()->getConnection();
-    }
 
     public function create($name, $email, $password)
     {

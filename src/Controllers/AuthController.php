@@ -16,18 +16,6 @@ class AuthController extends Controller
         $this->userModel = new User();
     }
 
-    private function redirectIfAuthenticated()
-    {
-        if (Session::get('user_id')) {
-            if (Session::get('role') === 'admin') {
-                $this->redirect('/admin/dashboard');
-            } else {
-                $this->redirect('/dashboard');
-            }
-            exit;
-        }
-    }
-
     private function validateCsrf()
     {
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
@@ -40,12 +28,11 @@ class AuthController extends Controller
         Session::flash('errors', $errors);
         Session::flash('old_data', $oldData);
         $this->redirect($route);
-        exit;
     }
 
     public function loginForm()
     {
-        $this->redirectIfAuthenticated();
+        $this->requireGuest();
 
         $data = [
             'csrf_token' => Security::generateCsrfToken()
@@ -98,12 +85,12 @@ class AuthController extends Controller
         Session::set('user_name', $user['name']);
         Session::set('role', $user['role'] ?? 'member');
 
-        $this->redirectIfAuthenticated();
+        $this->redirect(Session::get('role') === 'admin' ? '/admin/dashboard' : '/dashboard');
     }
 
     public function registerForm()
     {
-        $this->redirectIfAuthenticated();
+        $this->requireGuest();
 
         $data = [
             'csrf_token' => Security::generateCsrfToken()

@@ -18,10 +18,7 @@ class TeamController extends Controller
 
     public function registerForm()
     {
-        if (!Session::get('user_id')) {
-            $this->redirect('/login');
-        }
-
+        $this->requireAuth();
         if (Session::get('role') === 'admin') {
             $this->redirect('/admin/dashboard');
         }
@@ -39,9 +36,7 @@ class TeamController extends Controller
 
     public function register()
     {
-        if (!Session::get('user_id')) {
-            $this->redirect('/login');
-        }
+        $this->requireAuth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/dashboard/team/register');
@@ -83,18 +78,17 @@ class TeamController extends Controller
         }
 
         try {
-            $this->teamModel->create(
-                Session::get('user_id'), 
-                $teamName, 
-                $teamSchool, 
-                $division, 
-                $leaderName, 
-                $leaderPhoneNumber, 
-                $firstMemberName, 
-                $firstMemberPhoneNumber, 
-                $secondMemberName, 
-                $secondMemberPhoneNumber
-            );
+            $this->teamModel->create(Session::get('user_id'), [
+                'name' => $teamName,
+                'teamSchool' => $teamSchool,
+                'division' => $division,
+                'leaderName' => $leaderName,
+                'leaderPhoneNumber' => $leaderPhoneNumber,
+                'firstMemberName' => $firstMemberName,
+                'firstMemberPhoneNumber' => $firstMemberPhoneNumber,
+                'secondMemberName' => $secondMemberName,
+                'secondMemberPhoneNumber' => $secondMemberPhoneNumber,
+            ]);
             $this->redirect('/dashboard');
         } catch (\Exception $e) {
             $this->view('dashboard/team_register', ['error' => 'Registration failed: ' . $e->getMessage(), 'csrf_token' => Security::generateCsrfToken()]);

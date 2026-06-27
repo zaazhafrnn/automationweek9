@@ -23,8 +23,6 @@ class Security
 
     public static function sanitizeString($string)
     {
-        $string = trim($string);
-        $string = stripslashes($string);
-        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
     }
 }

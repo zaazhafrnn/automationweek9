@@ -5,19 +5,13 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Utils\Session;
 
+use App\Utils\Security;
+
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        // Must be logged in
-        if (!Session::get('user_id')) {
-            $this->redirect('/login');
-        }
-
-        // Must be an admin
-        if (Session::get('role') !== 'admin') {
-            $this->redirect('/dashboard');
-        }
+        $this->requireAdmin();
 
         $this->view('admin/dashboard', [
             'user_name' => Session::get('user_name'),
@@ -27,9 +21,7 @@ class AdminController extends Controller
 
     public function members()
     {
-        if (!Session::get('user_id') || Session::get('role') !== 'admin') {
-            $this->redirect('/login');
-        }
+        $this->requireAdmin();
 
         $userModel = new \App\Models\User();
         $members = $userModel->getAllMembers();
@@ -42,9 +34,7 @@ class AdminController extends Controller
 
     public function teams()
     {
-        if (!Session::get('user_id') || Session::get('role') !== 'admin') {
-            $this->redirect('/login');
-        }
+        $this->requireAdmin();
 
         $teamModel = new \App\Models\Team();
         $teams = $teamModel->getAllTeams();
@@ -57,31 +47,27 @@ class AdminController extends Controller
 
     public function payments()
     {
-        if (!Session::get('user_id') || Session::get('role') !== 'admin') {
-            $this->redirect('/login');
-        }
+        $this->requireAdmin();
 
         $paymentModel = new \App\Models\Payment();
         $payments = $paymentModel->getAllPayments();
 
         $this->view('admin/payments', [
             'payments' => $payments,
-            'csrf_token' => \App\Utils\Security::generateCsrfToken(),
+            'csrf_token' => Security::generateCsrfToken(),
             'page_title' => 'Pembayaran'
         ], 'admin');
     }
 
     public function processPayment()
     {
-        if (!Session::get('user_id') || Session::get('role') !== 'admin') {
-            $this->redirect('/login');
-        }
+        $this->requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/admin/payments');
         }
 
-        if (!\App\Utils\Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
             $this->redirect('/admin/payments');
         }
 

@@ -25,7 +25,7 @@ class Router
         foreach ($this->routes as $route) {
             if ($route['method'] === strtoupper($requestMethod) && $route['path'] === $path) {
                 
-                list($controllerName, $method) = explode('@', $route['action']);
+                [$controllerName, $method] = explode('@', $route['action']);
                 $controllerClass = "App\\Controllers\\" . $controllerName;
 
                 if (class_exists($controllerClass)) {

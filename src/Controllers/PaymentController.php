@@ -21,9 +21,7 @@ class PaymentController extends Controller
 
     public function uploadForm()
     {
-        if (!Session::get('user_id')) {
-            $this->redirect('/login');
-        }
+        $this->requireAuth();
 
         $team = $this->teamModel->findByUserId(Session::get('user_id'));
         if (!$team) {
@@ -45,9 +43,7 @@ class PaymentController extends Controller
 
     public function upload()
     {
-        if (!Session::get('user_id')) {
-            $this->redirect('/login');
-        }
+        $this->requireAuth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/dashboard/payment');

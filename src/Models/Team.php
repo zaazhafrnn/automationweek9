@@ -2,19 +2,11 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-use PDO;
+use App\Core\Model;
 
-class Team
+class Team extends Model
 {
-    private $db;
-
-    public function __construct()
-    {
-        $this->db = Database::getInstance()->getConnection();
-    }
-
-    public function create($userId, $teamName, $teamSchool, $division, $leaderName, $leaderPhoneNumber, $firstMemberName, $firstMemberPhoneNumber, $secondMemberName, $secondMemberPhoneNumber)
+    public function create($userId, array $data)
     {
         $stmt = $this->db->prepare("
             INSERT INTO teams (user_id, name, teamSchool, division, leaderName, leaderPhoneNumber, firstMemberName, firstMemberPhoneNumber, secondMemberName, secondMemberPhoneNumber) 
@@ -23,15 +15,15 @@ class Team
 
         return $stmt->execute([
             ':user_id' => $userId,
-            ':name' => $teamName,
-            ':teamSchool' => $teamSchool,
-            ':division' => $division,
-            ':leaderName' => $leaderName,
-            ':leaderPhoneNumber' => $leaderPhoneNumber,
-            ':firstMemberName' => $firstMemberName,
-            ':firstMemberPhoneNumber' => $firstMemberPhoneNumber,
-            ':secondMemberName' => $secondMemberName,
-            ':secondMemberPhoneNumber' => $secondMemberPhoneNumber
+            ':name' => $data['name'],
+            ':teamSchool' => $data['teamSchool'],
+            ':division' => $data['division'],
+            ':leaderName' => $data['leaderName'],
+            ':leaderPhoneNumber' => $data['leaderPhoneNumber'],
+            ':firstMemberName' => $data['firstMemberName'],
+            ':firstMemberPhoneNumber' => $data['firstMemberPhoneNumber'],
+            ':secondMemberName' => $data['secondMemberName'],
+            ':secondMemberPhoneNumber' => $data['secondMemberPhoneNumber']
         ]);
     }
 

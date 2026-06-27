@@ -12,10 +12,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        if (!Session::get('user_id')) {
-            $this->redirect('/login');
-        }
-
+        $this->requireAuth();
         if (Session::get('role') === 'admin') {
             $this->redirect('/admin/dashboard');
         }
