@@ -30,7 +30,7 @@ spl_autoload_register(function ($class) {
 
 $router = new \App\Core\Router();
 
-$router->get('/', 'AuthController@loginForm');
+$router->get('/', 'LandingController@index');
 $router->get('/login', 'AuthController@loginForm');
 $router->post('/login', 'AuthController@login');
 

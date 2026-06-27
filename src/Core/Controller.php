@@ -17,7 +17,11 @@ class Controller
             require $viewFile;
             $content = ob_get_clean();
 
-            require BASE_PATH . '/src/views/layouts/' . $layout . '.php';
+            if ($layout) {
+                require BASE_PATH . '/src/views/layouts/' . $layout . '.php';
+            } else {
+                echo $content;
+            }
         } else {
             die("View $view not found.");
         }
