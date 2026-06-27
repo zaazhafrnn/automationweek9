@@ -19,7 +19,7 @@ class User
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $this->db->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-        
+
         return $stmt->execute([
             ':name' => $name,
             ':email' => $email,
@@ -31,7 +31,7 @@ class User
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
-        
+
         return $stmt->fetch();
     }
 
@@ -44,5 +44,13 @@ class User
         }
 
         return false;
+    }
+
+    public function getAllMembers()
+    {
+        $stmt = $this->db->prepare("SELECT id, name, email, role, created_at FROM users WHERE role = 'member' ORDER BY created_at DESC");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 }

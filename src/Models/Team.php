@@ -42,4 +42,12 @@ class Team
 
         return $stmt->fetch();
     }
+
+    public function getAllTeams()
+    {
+        $stmt = $this->db->prepare("SELECT t.*, u.email as user_email FROM teams t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

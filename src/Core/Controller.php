@@ -4,7 +4,7 @@ namespace App\Core;
 
 class Controller
 {
-    protected function view($view, $data = [])
+    protected function view($view, $data = [], $layout = 'main')
     {
         extract($data);
 
@@ -15,7 +15,7 @@ class Controller
             require $viewFile;
             $content = ob_get_clean();
 
-            require BASE_PATH . '/src/views/layouts/main.php';
+            require BASE_PATH . '/src/views/layouts/' . $layout . '.php';
         } else {
             die("View $view not found.");
         }
