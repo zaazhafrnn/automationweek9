@@ -38,6 +38,12 @@ $body_class = $body_class ?? 'text-gray-800 font-sans antialiased min-h-screen b
                         Tim
                     </a>
                 </li>
+                <li>
+                    <a href="/admin/payments" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors <?= $_SERVER['REQUEST_URI'] === '/admin/payments' ? 'bg-gray-800 text-white border-l-4 border-indigo-500' : '' ?>">
+                        <span class="mr-3 text-xl">💳</span>
+                        Pembayaran
+                    </a>
+                </li>
             </ul>
         </nav>
 

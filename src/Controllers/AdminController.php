@@ -54,4 +54,54 @@ class AdminController extends Controller
             'page_title' => 'Tim'
         ], 'admin');
     }
+
+    public function payments()
+    {
+        if (!Session::get('user_id') || Session::get('role') !== 'admin') {
+            $this->redirect('/login');
+        }
+
+        $paymentModel = new \App\Models\Payment();
+        $payments = $paymentModel->getAllPayments();
+
+        $this->view('admin/payments', [
+            'payments' => $payments,
+            'csrf_token' => \App\Utils\Security::generateCsrfToken(),
+            'page_title' => 'Pembayaran'
+        ], 'admin');
+    }
+
+    public function processPayment()
+    {
+        if (!Session::get('user_id') || Session::get('role') !== 'admin') {
+            $this->redirect('/login');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/payments');
+        }
+
+        if (!\App\Utils\Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect('/admin/payments');
+        }
+
+        $paymentId = $_POST['payment_id'] ?? null;
+        $action = $_POST['action'] ?? '';
+        $note = trim($_POST['note'] ?? '');
+
+        if (!$paymentId || !in_array($action, ['verify', 'reject', 'cancel'])) {
+            $this->redirect('/admin/payments');
+        }
+
+        $paymentModel = new \App\Models\Payment();
+
+        if ($action === 'cancel') {
+            $paymentModel->updateStatus($paymentId, 'pending', null, null, true);
+        } else {
+            $status = $action === 'verify' ? 'verified' : 'rejected';
+            $paymentModel->updateStatus($paymentId, $status, $note ?: null, Session::get('user_id'));
+        }
+
+        $this->redirect('/admin/payments');
+    }
 }
