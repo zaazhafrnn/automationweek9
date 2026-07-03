@@ -1,3 +1,4 @@
+<?php /** @var string $user_name */ /** @var string $page_title */ ?>
 <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200">
     <div class="px-6 py-8">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Selamat Datang, Admin <?= htmlspecialchars($user_name ?? '') ?>! 🛡️</h2>

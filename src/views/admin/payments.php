@@ -1,3 +1,16 @@
+<?php
+
+/** @var array $payments */
+/** @var string $csrf_token */
+/** @var string $page_title */
+
+use App\Components\Button;
+use App\Components\Dialog;
+
+$previewDialog = Dialog::make()
+    ->id('previewDialog')
+    ->title('Bukti Pembayaran');
+?>
 <div class="w-full bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
         <h2 class="text-xl font-bold text-gray-800">
@@ -55,9 +68,12 @@
                             </td>
                             <td class="px-4 py-4 align-top">
                                 <?php if (!empty($p['proofImage'])): ?>
-                                    <a href="/uploads/payments/<?= htmlspecialchars($p['proofImage']) ?>" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                        Lihat
-                                    </a>
+                                    <?= Button::make()
+                                        ->label('Lihat')
+                                        ->variant('link')
+                                        ->size('sm')
+                                        ->attr('onclick', "document.getElementById('previewImg').src='/uploads/payments/" . htmlspecialchars($p['proofImage']) . "';openDialog('previewDialog')")
+                                    ?>
                                 <?php else: ?>
                                     <span class="text-gray-400">-</span>
                                 <?php endif; ?>
@@ -70,22 +86,16 @@
                                     <form action="/admin/payments/process" method="POST" class="space-y-2">
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                         <input type="hidden" name="payment_id" value="<?= $p['id'] ?>">
-                                        <button type="submit" name="action" value="verify" class="w-full px-3 py-1.5 bg-green-500 text-black text-xs font-medium rounded-md hover:bg-green-700 transition">
-                                            Terima
-                                        </button>
+                                        <?= Button::make()->label('Terima')->variant('success')->size('sm')->tag('button')->attr('type', 'submit')->attr('name', 'action')->attr('value', 'verify') ?>
                                         <input type="text" name="note" placeholder="Alasan (opsional)" class="w-full px-2 py-1 border border-gray-300 rounded text-xs">
-                                        <button type="submit" name="action" value="reject" class="w-full px-3 py-1.5 bg-red-600 text-black text-xs font-medium rounded-md hover:bg-red-700 transition">
-                                            Tolak
-                                        </button>
+                                        <?= Button::make()->label('Tolak')->variant('danger')->size('sm')->tag('button')->attr('type', 'submit')->attr('name', 'action')->attr('value', 'reject') ?>
                                     </form>
                                 <?php elseif ($p['status'] === 'verified'): ?>
                                     <form action="/admin/payments/process" method="POST" onsubmit="return confirm('Batalkan verifikasi pembayaran ini?')">
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                         <input type="hidden" name="payment_id" value="<?= $p['id'] ?>">
                                         <input type="hidden" name="action" value="cancel">
-                                        <button type="submit" class="px-3 py-1.5 bg-yellow-500 text-black text-xs font-medium rounded-md hover:bg-yellow-600 transition">
-                                            Batalkan
-                                        </button>
+                                        <?= Button::make()->label('Batalkan')->variant('secondary')->size('sm')->tag('button')->attr('type', 'submit') ?>
                                     </form>
                                 <?php elseif ($p['status'] === 'rejected'): ?>
                                     <?php if (!empty($p['note'])): ?>
@@ -97,9 +107,7 @@
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                         <input type="hidden" name="payment_id" value="<?= $p['id'] ?>">
                                         <input type="hidden" name="action" value="cancel">
-                                        <button type="submit" class="px-3 py-1.5 bg-yellow-500 text-black text-xs font-medium rounded-md hover:bg-yellow-600 transition">
-                                            Reset
-                                        </button>
+                                        <?= Button::make()->label('Reset')->variant('secondary')->size('sm')->tag('button')->attr('type', 'submit') ?>
                                     </form>
                                 <?php endif; ?>
                             </td>
@@ -110,3 +118,5 @@
         </table>
     </div>
 </div>
+
+<?= $previewDialog->content('<img id="previewImg" src="" alt="Preview Bukti Pembayaran" class="w-full h-auto max-h-[75vh] object-contain rounded">')->render() ?>

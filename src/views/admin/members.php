@@ -1,3 +1,4 @@
+<?php /** @var array $members */ /** @var string $page_title */ ?>
 <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
         <h2 class="text-xl font-bold text-gray-800">Semua Anggota</h2>

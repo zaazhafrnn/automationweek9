@@ -1,3 +1,4 @@
+<?php /** @var string $csrf_token */ /** @var string|null $error */ ?>
 <div class="bg-white shadow-xl rounded-2xl overflow-hidden max-w-4xl mx-auto mt-8">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-900">Registrasi Tim Lomba</h1>

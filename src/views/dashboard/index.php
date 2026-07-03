@@ -1,3 +1,4 @@
+<?php /** @var string $csrf_token */ /** @var string $user_name */ /** @var array|null $team */ /** @var array|null $payment */ ?>
 <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>

@@ -1,3 +1,4 @@
+<?php /** @var array $teams */ /** @var string $page_title */ ?>
 <div class="w-full bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
         <h2 class="text-xl font-bold text-gray-800">

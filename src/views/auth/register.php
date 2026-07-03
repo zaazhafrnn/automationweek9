@@ -1,4 +1,13 @@
 <?php
+/** @var string $csrf_token */
+/** @var string|null $error */
+/** @var string|null $old_name */
+/** @var string|null $old_email */
+/** @var string|null $old_password */
+/** @var string|null $name_error */
+/** @var string|null $email_error */
+/** @var string|null $password_error */
+
 $body_class = 'bg-[#bc0301] text-gray-800 font-sans antialiased min-h-screen flex flex-col justify-center';
 $main_class = 'w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8';
 ?>
