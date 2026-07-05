@@ -50,12 +50,12 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                     <div class="p-6">
 
                         <?php if (isset($error)): ?>
-                            <div class="mb-4 rounded-xl border border-red-500 bg-red-600/10 p-3 text-sm text-red-400">
+                            <div id="error" class="mb-4 rounded-xl border border-red-500 bg-red-600/10 p-3 text-sm text-red-400">
                                 <?= htmlspecialchars($error) ?>
                             </div>
                         <?php endif; ?>
 
-                        <form action="/register" method="POST" class="space-y-4" novalidate>
+                        <form action="/register" method="POST" class="space-y-4">
                             <input
                                 type="hidden"
                                 name="csrf_token"
@@ -73,6 +73,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                     id="name"
                                     name="name"
                                     placeholder="Masukkan nama lengkap"
+                                    required
                                     value="<?= htmlspecialchars($old_name ?? '') ?>"
                                     class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
                                            bg-[#2a2926] placeholder-gray-500 text-white
@@ -103,6 +104,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                     id="email"
                                     name="email"
                                     placeholder="Masukkan email"
+                                    required
                                     value="<?= htmlspecialchars($old_email ?? '') ?>"
                                     class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
                                            bg-[#2a2926] placeholder-gray-500 text-white
@@ -133,6 +135,8 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                     id="password"
                                     name="password"
                                     placeholder="Masukkan password"
+                                    required
+                                    minlength="8"
                                     value="<?= htmlspecialchars($old_password ?? '') ?>"
                                     class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
                                            bg-[#2a2926] placeholder-gray-500 text-white
@@ -192,3 +196,38 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         </div>
     </div>
 </div>
+
+<script>
+document.querySelector('form[action="/register"]')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Memproses...';
+    try {
+        const res = await fetch(this.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: new FormData(this)
+        });
+        const data = await res.json();
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            for (const [k, v] of Object.entries(data.errors || {})) {
+                const el = document.getElementById(k.replace(/_error$/, '-error'));
+                if (el) {
+                    el.textContent = v;
+                    el.classList.remove('hidden');
+                    el.previousElementSibling?.classList.add('border-red-500', 'text-red-400');
+                }
+            }
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    } catch(e) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
+});
+</script>

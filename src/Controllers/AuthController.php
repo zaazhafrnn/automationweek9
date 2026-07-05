@@ -23,8 +23,23 @@ class AuthController extends Controller
         }
     }
 
+    private function wantsJson(): bool
+    {
+        return isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false;
+    }
+
+    private function jsonExit(array $data): void
+    {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
+
     private function redirectWithError($route, $errors, $oldData = [])
     {
+        if ($this->wantsJson()) {
+            $this->jsonExit(['success' => false, 'errors' => $errors]);
+        }
         Session::flash('errors', $errors);
         Session::flash('old_data', $oldData);
         $this->redirect($route);
@@ -85,7 +100,13 @@ class AuthController extends Controller
         Session::set('user_name', $user['name']);
         Session::set('role', $user['role'] ?? 'member');
 
-        $this->redirect(Session::get('role') === 'admin' ? '/admin/dashboard' : '/dashboard');
+        $redirectUrl = Session::get('role') === 'admin' ? '/admin/dashboard' : '/dashboard';
+
+        if ($this->wantsJson()) {
+            $this->jsonExit(['success' => true, 'redirect' => $redirectUrl]);
+        }
+
+        $this->redirect($redirectUrl);
     }
 
     public function registerForm()
@@ -136,8 +157,14 @@ class AuthController extends Controller
         }
 
         if ($this->userModel->create($name, $email, $password)) {
+            if ($this->wantsJson()) {
+                $this->jsonExit(['success' => true, 'redirect' => '/login']);
+            }
             $this->redirect('/login');
         } else {
+            if ($this->wantsJson()) {
+                $this->jsonExit(['success' => false, 'errors' => ['error' => 'Registrasi gagal. Silahkan coba lagi.']]);
+            }
             $this->redirectWithError('/register', ['error' => 'Registrasi gagal. Silahkan coba lagi.'], ['old_name' => $name, 'old_email' => $email, 'old_password' => $password]);
         }
     }
