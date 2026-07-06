@@ -37,7 +37,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
                 <div class="border border-white/10 rounded-4xl overflow-hidden bg-[#1e1d1a]">
                     <div class="p-6">
-                        <form action="/login" method="POST" class="space-y-4">
+                        <form action="/login" method="POST" class="space-y-4" novalidate>
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
 
                             <div>
@@ -69,23 +69,27 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                 <label for="password" class="block text-sm font-medium mb-1 text-gray-300">
                                     Password<span class="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    placeholder="Masukkan password"
-                                    required
-                                    minlength="8"
-                                    value="<?= htmlspecialchars($old_password ?? '') ?>"
-                                    class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
-                                           bg-[#2a2926] placeholder-gray-500 text-white
-                                           focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
-                                           <?= isset($password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
-                                    oninput="
-                                        this.classList.remove('border-red-500', 'text-red-400');
-                                        this.classList.add('border-white/10');
-                                        document.getElementById('password-error')?.classList.add('hidden');
-                                    ">
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        placeholder="Masukkan password"
+                                        required
+                                        minlength="8"
+                                        value="<?= htmlspecialchars($old_password ?? '') ?>"
+                                        style="padding-right: 3.5rem"
+                                        class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
+                                               bg-[#2a2926] placeholder-gray-500 text-white
+                                               focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
+                                               <?= isset($password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
+                                        oninput="
+                                            this.classList.remove('border-red-500', 'text-red-400');
+                                            this.classList.add('border-white/10');
+                                            document.getElementById('password-error')?.classList.add('hidden');
+                                        ">
+                                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer" data-password-toggle="password">show</button>
+                                </div>
                                 <p id="password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
                                     <?= htmlspecialchars($password_error ?? '') ?>
                                 </p>
@@ -134,8 +138,38 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 </div>
 
 <script>
+document.querySelectorAll('[data-password-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const inp = document.getElementById(btn.dataset.passwordToggle);
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        btn.textContent = inp.type === 'password' ? 'show' : 'hide';
+    });
+});
+
 document.querySelector('form[action="/login"]')?.addEventListener('submit', async function(e) {
     e.preventDefault();
+
+    const errEmail = document.getElementById('email-error');
+    const errPass = document.getElementById('password-error');
+    const inpEmail = document.getElementById('email');
+    const inpPass = document.getElementById('password');
+
+    [errEmail, errPass].forEach(el => {
+        if (el) { el.classList.add('hidden'); }
+    });
+    [inpEmail, inpPass].forEach(el => {
+        if (el) { el.classList.remove('border-red-500', 'text-red-400'); el.classList.add('border-white/10'); }
+    });
+
+    const emailVal = inpEmail.value.trim();
+    const passVal = inpPass.value;
+    let err = false;
+    if (!emailVal) { errEmail.textContent = 'email wajib diisi!'; errEmail.classList.remove('hidden'); inpEmail.classList.remove('border-white/10'); inpEmail.classList.add('border-red-500', 'text-red-400'); err = true; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { errEmail.textContent = 'format berupa "email@mail.com"!'; errEmail.classList.remove('hidden'); inpEmail.classList.remove('border-white/10'); inpEmail.classList.add('border-red-500', 'text-red-400'); err = true; }
+    if (!passVal) { errPass.textContent = 'password wajib diisi!'; errPass.classList.remove('hidden'); inpPass.classList.remove('border-white/10'); inpPass.classList.add('border-red-500', 'text-red-400'); err = true; }
+    else if (passVal.length < 8) { errPass.textContent = 'password minimal 8 karakter!'; errPass.classList.remove('hidden'); inpPass.classList.remove('border-white/10'); inpPass.classList.add('border-red-500', 'text-red-400'); err = true; }
+    if (err) return;
+
     const btn = this.querySelector('button[type="submit"]');
     btn.disabled = true;
     const originalText = btn.textContent;
@@ -150,14 +184,15 @@ document.querySelector('form[action="/login"]')?.addEventListener('submit', asyn
         if (data.success) {
             window.location.href = data.redirect;
         } else {
-            for (const [k, v] of Object.entries(data.errors || {})) {
-                const el = document.getElementById(k.replace(/_error$/, '-error'));
-                if (el) {
-                    el.textContent = v;
-                    el.classList.remove('hidden');
-                    el.previousElementSibling?.classList.add('border-red-500', 'text-red-400');
+                for (const [k, v] of Object.entries(data.errors || {})) {
+                    const el = document.getElementById(k.replace(/_error$/, '-error'));
+                    if (el) {
+                        el.textContent = v;
+                        el.classList.remove('hidden');
+                        const inp = document.getElementById(k.replace(/_error$/, ''));
+                        if (inp) { inp.classList.remove('border-white/10'); inp.classList.add('border-red-500', 'text-red-400'); }
+                    }
                 }
-            }
             btn.disabled = false;
             btn.textContent = originalText;
         }
