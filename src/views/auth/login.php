@@ -88,7 +88,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                             this.classList.add('border-white/10');
                                             document.getElementById('password-error')?.classList.add('hidden');
                                         ">
-                                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer" data-password-toggle="password">show</button>
+                                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="password"></button>
                                 </div>
                                 <p id="password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
                                     <?= htmlspecialchars($password_error ?? '') ?>
@@ -138,67 +138,106 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 </div>
 
 <script>
-document.querySelectorAll('[data-password-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const inp = document.getElementById(btn.dataset.passwordToggle);
-        inp.type = inp.type === 'password' ? 'text' : 'password';
-        btn.textContent = inp.type === 'password' ? 'show' : 'hide';
-    });
-});
-
-document.querySelector('form[action="/login"]')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const errEmail = document.getElementById('email-error');
-    const errPass = document.getElementById('password-error');
-    const inpEmail = document.getElementById('email');
-    const inpPass = document.getElementById('password');
-
-    [errEmail, errPass].forEach(el => {
-        if (el) { el.classList.add('hidden'); }
-    });
-    [inpEmail, inpPass].forEach(el => {
-        if (el) { el.classList.remove('border-red-500', 'text-red-400'); el.classList.add('border-white/10'); }
-    });
-
-    const emailVal = inpEmail.value.trim();
-    const passVal = inpPass.value;
-    let err = false;
-    if (!emailVal) { errEmail.textContent = 'email wajib diisi!'; errEmail.classList.remove('hidden'); inpEmail.classList.remove('border-white/10'); inpEmail.classList.add('border-red-500', 'text-red-400'); err = true; }
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { errEmail.textContent = 'format berupa "email@mail.com"!'; errEmail.classList.remove('hidden'); inpEmail.classList.remove('border-white/10'); inpEmail.classList.add('border-red-500', 'text-red-400'); err = true; }
-    if (!passVal) { errPass.textContent = 'password wajib diisi!'; errPass.classList.remove('hidden'); inpPass.classList.remove('border-white/10'); inpPass.classList.add('border-red-500', 'text-red-400'); err = true; }
-    else if (passVal.length < 8) { errPass.textContent = 'password minimal 8 karakter!'; errPass.classList.remove('hidden'); inpPass.classList.remove('border-white/10'); inpPass.classList.add('border-red-500', 'text-red-400'); err = true; }
-    if (err) return;
-
-    const btn = this.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    const originalText = btn.textContent;
-    btn.textContent = 'Memproses...';
-    try {
-        const res = await fetch(this.action, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: new FormData(this)
+    (async () => {
+        const [eye, eyeOff] = await Promise.all([
+            fetch('/icons/eye.svg').then(r => r.text()),
+            fetch('/icons/eye-off.svg').then(r => r.text())
+        ]);
+        document.querySelectorAll('[data-password-toggle]').forEach(btn => {
+            btn.innerHTML = eye;
+            btn.addEventListener('click', () => {
+                const inp = document.getElementById(btn.dataset.passwordToggle);
+                inp.type = inp.type === 'password' ? 'text' : 'password';
+                btn.innerHTML = inp.type === 'password' ? eye : eyeOff;
+            });
         });
-        const data = await res.json();
-        if (data.success) {
-            window.location.href = data.redirect;
-        } else {
+    })();
+
+    document.querySelector('form[action="/login"]')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const errEmail = document.getElementById('email-error');
+        const errPass = document.getElementById('password-error');
+        const inpEmail = document.getElementById('email');
+        const inpPass = document.getElementById('password');
+
+        [errEmail, errPass].forEach(el => {
+            if (el) {
+                el.classList.add('hidden');
+            }
+        });
+        [inpEmail, inpPass].forEach(el => {
+            if (el) {
+                el.classList.remove('border-red-500', 'text-red-400');
+                el.classList.add('border-white/10');
+            }
+        });
+
+        const emailVal = inpEmail.value.trim();
+        const passVal = inpPass.value;
+        let err = false;
+        if (!emailVal) {
+            errEmail.textContent = 'email wajib diisi!';
+            errEmail.classList.remove('hidden');
+            inpEmail.classList.remove('border-white/10');
+            inpEmail.classList.add('border-red-500', 'text-red-400');
+            err = true;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+            errEmail.textContent = 'format berupa "email@mail.com"!';
+            errEmail.classList.remove('hidden');
+            inpEmail.classList.remove('border-white/10');
+            inpEmail.classList.add('border-red-500', 'text-red-400');
+            err = true;
+        }
+        if (!passVal) {
+            errPass.textContent = 'password wajib diisi!';
+            errPass.classList.remove('hidden');
+            inpPass.classList.remove('border-white/10');
+            inpPass.classList.add('border-red-500', 'text-red-400');
+            err = true;
+        } else if (passVal.length < 8) {
+            errPass.textContent = 'password minimal 8 karakter!';
+            errPass.classList.remove('hidden');
+            inpPass.classList.remove('border-white/10');
+            inpPass.classList.add('border-red-500', 'text-red-400');
+            err = true;
+        }
+        if (err) return;
+
+        const btn = this.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        const originalText = btn.textContent;
+        btn.textContent = 'Memproses...';
+        try {
+            const res = await fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: new FormData(this)
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
                 for (const [k, v] of Object.entries(data.errors || {})) {
                     const el = document.getElementById(k.replace(/_error$/, '-error'));
                     if (el) {
                         el.textContent = v;
                         el.classList.remove('hidden');
                         const inp = document.getElementById(k.replace(/_error$/, ''));
-                        if (inp) { inp.classList.remove('border-white/10'); inp.classList.add('border-red-500', 'text-red-400'); }
+                        if (inp) {
+                            inp.classList.remove('border-white/10');
+                            inp.classList.add('border-red-500', 'text-red-400');
+                        }
                     }
                 }
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        } catch (e) {
             btn.disabled = false;
             btn.textContent = originalText;
         }
-    } catch(e) {
-        btn.disabled = false;
-        btn.textContent = originalText;
-    }
-});
+    });
 </script>

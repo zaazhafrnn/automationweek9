@@ -138,7 +138,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                                 this.classList.add('border-white/10');
                                                 document.getElementById('password-error')?.classList.add('hidden');
                                             ">
-                                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer" data-password-toggle="password">show</button>
+                                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="password"></button>
                                     </div>
                                     <p id="password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
                                         <?= htmlspecialchars($password_error ?? '') ?>
@@ -167,7 +167,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                                 this.classList.add('border-white/10');
                                                 document.getElementById('confirm-password-error')?.classList.add('hidden');
                                             ">
-                                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer" data-password-toggle="confirm_password">show</button>
+                                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="confirm_password"></button>
                                     </div>
                                     <p id="confirm-password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($confirm_password_error) ? '' : 'hidden' ?>">
                                         <?= htmlspecialchars($confirm_password_error ?? '') ?>
@@ -229,128 +229,163 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 </div>
 
 <script>
-const form = document.querySelector('form[action="/register"]');
-if (form) {
-    document.querySelectorAll('[data-password-toggle]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const inp = document.getElementById(btn.dataset.passwordToggle);
-            inp.type = inp.type === 'password' ? 'text' : 'password';
-            btn.textContent = inp.type === 'password' ? 'show' : 'hide';
-        });
-    });
+    const form = document.querySelector('form[action="/register"]');
+    if (form) {
+        (async () => {
+            const [eye, eyeOff] = await Promise.all([
+                fetch('/icons/eye.svg').then(r => r.text()),
+                fetch('/icons/eye-off.svg').then(r => r.text())
+            ]);
+            document.querySelectorAll('[data-password-toggle]').forEach(btn => {
+                btn.innerHTML = eye;
+                btn.addEventListener('click', () => {
+                    const inp = document.getElementById(btn.dataset.passwordToggle);
+                    inp.type = inp.type === 'password' ? 'text' : 'password';
+                    btn.innerHTML = inp.type === 'password' ? eye : eyeOff;
+                });
+            });
+        })();
 
-    const step1 = document.getElementById('step-1-fields');
-    const step2 = document.getElementById('step-2-fields');
-    const actionBtn = document.getElementById('action-btn');
-    const backBtn = document.getElementById('back-btn');
+        const step1 = document.getElementById('step-1-fields');
+        const step2 = document.getElementById('step-2-fields');
+        const actionBtn = document.getElementById('action-btn');
+        const backBtn = document.getElementById('back-btn');
 
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const passInput = document.getElementById('password');
-    const confirmInput = document.getElementById('confirm_password');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm_password');
 
-    const errName = document.getElementById('name-error');
-    const errEmail = document.getElementById('email-error');
-    const errPass = document.getElementById('password-error');
-    const errConfirm = document.getElementById('confirm-password-error');
+        const errName = document.getElementById('name-error');
+        const errEmail = document.getElementById('email-error');
+        const errPass = document.getElementById('password-error');
+        const errConfirm = document.getElementById('confirm-password-error');
 
-    let step = 1;
+        let step = 1;
 
-    function inputFor(errEl) {
-        return document.getElementById(errEl.id.replace(/-error$/, '').replace(/-/g, '_'));
-    }
-
-    function clearErrors() {
-        [errName, errEmail, errPass, errConfirm].forEach(el => {
-            if (el) { el.classList.add('hidden');
-                inputFor(el)?.classList.remove('border-red-500', 'text-red-400');
-                inputFor(el)?.classList.add('border-white/10'); }
-        });
-    }
-
-    function showFieldError(errEl, msg) {
-        if (!errEl) return;
-        errEl.textContent = msg;
-        errEl.classList.remove('hidden');
-        const inp = inputFor(errEl);
-        if (inp) { inp.classList.remove('border-white/10'); inp.classList.add('border-red-500', 'text-red-400'); }
-    }
-
-    function goToStep1() {
-        step = 1;
-        step1.classList.remove('hidden');
-        step2.classList.add('hidden');
-        backBtn.classList.add('hidden');
-        actionBtn.textContent = 'Lanjutkan';
-    }
-
-    backBtn.addEventListener('click', goToStep1);
-
-    form.addEventListener('submit', e => e.preventDefault());
-
-    actionBtn.addEventListener('click', async () => {
-        clearErrors();
-
-        if (step === 1) {
-            let err = false;
-            if (!nameInput.value.trim()) { showFieldError(errName, 'nama wajib diisi!'); err = true; }
-            if (!emailInput.value.trim()) { showFieldError(errEmail, 'email wajib diisi!'); err = true; }
-            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) { showFieldError(errEmail, 'email harus berupa "email@mail.com"'); err = true; }
-            if (err) return;
-
-            step = 2;
-            step1.classList.add('hidden');
-            step2.classList.remove('hidden');
-            backBtn.classList.remove('hidden');
-            actionBtn.textContent = 'Daftar';
-            return;
+        function inputFor(errEl) {
+            return document.getElementById(errEl.id.replace(/-error$/, '').replace(/-/g, '_'));
         }
 
-        // step 2 validation
-        let err = false;
-        if (!passInput.value) { showFieldError(errPass, 'password wajib diisi!'); err = true; }
-        else if (passInput.value.length < 8) { showFieldError(errPass, 'password minimal 8 karakter!'); err = true; }
-        if (!confirmInput.value) { showFieldError(errConfirm, 'konfirmasi password wajib diisi!'); err = true; }
-        else if (passInput.value !== confirmInput.value) { showFieldError(errConfirm, 'konfirmasi password tidak cocok!'); err = true; }
-        if (err) return;
-
-        actionBtn.disabled = true;
-        const originalText = actionBtn.textContent;
-        actionBtn.textContent = 'Memproses...';
-
-        try {
-            const fd = new FormData();
-            fd.append('csrf_token', document.querySelector('input[name="csrf_token"]').value);
-            fd.append('name', nameInput.value.trim());
-            fd.append('email', emailInput.value.trim());
-            fd.append('password', passInput.value);
-
-            const res = await fetch('/register', {
-                method: 'POST',
-                headers: { 'Accept': 'application/json' },
-                body: fd
-            });
-            const data = await res.json();
-            if (data.success) {
-                window.location.href = data.redirect;
-            } else {
-                for (const [k, v] of Object.entries(data.errors || {})) {
-                    const el = document.getElementById(k.replace(/_error$/, '-error'));
-                    if (el) {
-                        el.textContent = v;
-                        el.classList.remove('hidden');
-                        const inp = document.getElementById(k.replace(/_error$/, ''));
-                        if (inp) { inp.classList.remove('border-white/10'); inp.classList.add('border-red-500', 'text-red-400'); }
-                    }
+        function clearErrors() {
+            [errName, errEmail, errPass, errConfirm].forEach(el => {
+                if (el) {
+                    el.classList.add('hidden');
+                    inputFor(el)?.classList.remove('border-red-500', 'text-red-400');
+                    inputFor(el)?.classList.add('border-white/10');
                 }
-                if (data.errors?.name_error || data.errors?.email_error) goToStep1();
+            });
+        }
+
+        function showFieldError(errEl, msg) {
+            if (!errEl) return;
+            errEl.textContent = msg;
+            errEl.classList.remove('hidden');
+            const inp = inputFor(errEl);
+            if (inp) {
+                inp.classList.remove('border-white/10');
+                inp.classList.add('border-red-500', 'text-red-400');
+            }
+        }
+
+        function goToStep1() {
+            step = 1;
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+            backBtn.classList.add('hidden');
+            actionBtn.textContent = 'Lanjutkan';
+        }
+
+        backBtn.addEventListener('click', goToStep1);
+
+        form.addEventListener('submit', e => e.preventDefault());
+
+        actionBtn.addEventListener('click', async () => {
+            clearErrors();
+
+            if (step === 1) {
+                let err = false;
+                if (!nameInput.value.trim()) {
+                    showFieldError(errName, 'nama wajib diisi!');
+                    err = true;
+                }
+                if (!emailInput.value.trim()) {
+                    showFieldError(errEmail, 'email wajib diisi!');
+                    err = true;
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+                    showFieldError(errEmail, 'email harus berupa "email@mail.com"');
+                    err = true;
+                }
+                if (err) return;
+
+                step = 2;
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+                backBtn.classList.remove('hidden');
+                actionBtn.textContent = 'Daftar';
+                return;
+            }
+
+            // step 2 validation
+            let err = false;
+            if (!passInput.value) {
+                showFieldError(errPass, 'password wajib diisi!');
+                err = true;
+            } else if (passInput.value.length < 8) {
+                showFieldError(errPass, 'password minimal 8 karakter!');
+                err = true;
+            }
+            if (!confirmInput.value) {
+                showFieldError(errConfirm, 'konfirmasi password wajib diisi!');
+                err = true;
+            } else if (passInput.value !== confirmInput.value) {
+                showFieldError(errConfirm, 'konfirmasi password tidak cocok!');
+                err = true;
+            }
+            if (err) return;
+
+            actionBtn.disabled = true;
+            const originalText = actionBtn.textContent;
+            actionBtn.textContent = 'Memproses...';
+
+            try {
+                const fd = new FormData();
+                fd.append('csrf_token', document.querySelector('input[name="csrf_token"]').value);
+                fd.append('name', nameInput.value.trim());
+                fd.append('email', emailInput.value.trim());
+                fd.append('password', passInput.value);
+
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: fd
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    for (const [k, v] of Object.entries(data.errors || {})) {
+                        const el = document.getElementById(k.replace(/_error$/, '-error'));
+                        if (el) {
+                            el.textContent = v;
+                            el.classList.remove('hidden');
+                            const inp = document.getElementById(k.replace(/_error$/, ''));
+                            if (inp) {
+                                inp.classList.remove('border-white/10');
+                                inp.classList.add('border-red-500', 'text-red-400');
+                            }
+                        }
+                    }
+                    if (data.errors?.name_error || data.errors?.email_error) goToStep1();
+                    actionBtn.disabled = false;
+                    actionBtn.textContent = originalText;
+                }
+            } catch (e) {
                 actionBtn.disabled = false;
                 actionBtn.textContent = originalText;
             }
-        } catch(e) {
-            actionBtn.disabled = false;
-            actionBtn.textContent = originalText;
-        }
-    });
-}
+        });
+    }
 </script>
