@@ -1,4 +1,7 @@
-<?php /** @var string $csrf_token */ /** @var string|null $error */ ?>
+<?php
+
+/** @var string $csrf_token */
+/** @var string|null $error */ ?>
 <div class="bg-white shadow-xl rounded-2xl overflow-hidden max-w-4xl mx-auto mt-8">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-900">Registrasi Tim Lomba</h1>
@@ -64,7 +67,7 @@
                         <label for="firstMemberName" class="block text-sm font-medium text-gray-700 mb-1">Nama Anggota 1</label>
                         <input type="text" id="firstMemberName" name="firstMemberName"
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
-                        
+
                         <label for="firstMemberPhoneNumber" class="block text-sm font-medium text-gray-700 mt-4 mb-1">Nomor Telepon/WA Anggota 1</label>
                         <input type="text" id="firstMemberPhoneNumber" name="firstMemberPhoneNumber"
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
@@ -74,7 +77,7 @@
                         <label for="secondMemberName" class="block text-sm font-medium text-gray-700 mt-6 mb-1">Nama Anggota 2</label>
                         <input type="text" id="secondMemberName" name="secondMemberName"
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
-                        
+
                         <label for="secondMemberPhoneNumber" class="block text-sm font-medium text-gray-700 mt-4 mb-1">Nomor Telepon/WA Anggota 2</label>
                         <input type="text" id="secondMemberPhoneNumber" name="secondMemberPhoneNumber"
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
@@ -84,7 +87,7 @@
 
             <div class="pt-4 border-t border-gray-200">
                 <button type="submit"
-                    class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#bc0301] hover:bg-[#bc0301]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out transform scale-95 hover:scale-100">
+                    class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand hover:bg-brand/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out transform scale-95 hover:scale-100">
                     Daftar Tim
                 </button>
             </div>

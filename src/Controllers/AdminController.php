@@ -82,7 +82,7 @@ class AdminController extends Controller
         $paymentModel = new \App\Models\Payment();
 
         if ($action === 'cancel') {
-            $paymentModel->updateStatus($paymentId, 'pending', null, null, true);
+            $paymentModel->resetStatus($paymentId);
         } else {
             $status = $action === 'verify' ? 'verified' : 'rejected';
             $paymentModel->updateStatus($paymentId, $status, $note ?: null, Session::get('user_id'));

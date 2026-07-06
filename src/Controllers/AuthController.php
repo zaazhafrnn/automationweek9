@@ -16,9 +16,12 @@ class AuthController extends Controller
         $this->userModel = new User();
     }
 
-    private function validateCsrf()
+    private function validateCsrf(): void
     {
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            if ($this->wantsJson()) {
+                $this->jsonExit(['success' => false, 'errors' => ['error' => 'Invalid CSRF token.']]);
+            }
             die("Invalid CSRF token.");
         }
     }
@@ -82,17 +85,17 @@ class AuthController extends Controller
         }
 
         if (!empty($errors)) {
-            $this->redirectWithError('/login', $errors, ['old_email' => $email, 'old_password' => $password]);
+            $this->redirectWithError('/login', $errors, ['old_email' => $email]);
         }
 
         $user = $this->userModel->findByEmail($email);
 
         if (!$user) {
-            $this->redirectWithError('/login', ['email_error' => 'email tidak ditemukan!'], ['old_email' => $email, 'old_password' => $password]);
+            $this->redirectWithError('/login', ['email_error' => 'email tidak ditemukan!'], ['old_email' => $email]);
         }
 
         if (!password_verify($password, $user['password'])) {
-            $this->redirectWithError('/login', ['password_error' => 'password salah!'], ['old_email' => $email, 'old_password' => $password]);
+            $this->redirectWithError('/login', ['password_error' => 'password salah!'], ['old_email' => $email]);
         }
 
         Session::regenerate();
@@ -153,7 +156,7 @@ class AuthController extends Controller
         }
 
         if (!empty($errors)) {
-            $this->redirectWithError('/register', $errors, ['old_name' => $name, 'old_email' => $email, 'old_password' => $password]);
+            $this->redirectWithError('/register', $errors, ['old_name' => $name, 'old_email' => $email]);
         }
 
         if ($this->userModel->create($name, $email, $password)) {
@@ -165,7 +168,7 @@ class AuthController extends Controller
             if ($this->wantsJson()) {
                 $this->jsonExit(['success' => false, 'errors' => ['error' => 'Registrasi gagal. Silahkan coba lagi.']]);
             }
-            $this->redirectWithError('/register', ['error' => 'Registrasi gagal. Silahkan coba lagi.'], ['old_name' => $name, 'old_email' => $email, 'old_password' => $password]);
+            $this->redirectWithError('/register', ['error' => 'Registrasi gagal. Silahkan coba lagi.'], ['old_name' => $name, 'old_email' => $email]);
         }
     }
 

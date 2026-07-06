@@ -4,7 +4,7 @@ namespace App\Utils;
 
 class Security
 {
-    public static function generateCsrfToken()
+    public static function generateCsrfToken(): string
     {
         if (!Session::get('csrf_token')) {
             Session::set('csrf_token', bin2hex(random_bytes(32)));
@@ -12,7 +12,7 @@ class Security
         return Session::get('csrf_token');
     }
 
-    public static function validateCsrfToken($token)
+    public static function validateCsrfToken(?string $token): bool
     {
         $sessionToken = Session::get('csrf_token');
         if (!$sessionToken || !$token) {
@@ -21,7 +21,7 @@ class Security
         return hash_equals($sessionToken, $token);
     }
 
-    public static function sanitizeString($string)
+    public static function sanitizeString(string $string): string
     {
         return htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
     }

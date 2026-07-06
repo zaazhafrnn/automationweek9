@@ -7,7 +7,7 @@ use App\Core\Model;
 class User extends Model
 {
 
-    public function create($name, $email, $password)
+    public function create(string $name, string $email, string $password): bool
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -20,7 +20,7 @@ class User extends Model
         ]);
     }
 
-    public function findByEmail($email)
+    public function findByEmail(string $email): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
@@ -28,18 +28,7 @@ class User extends Model
         return $stmt->fetch();
     }
 
-    public function authenticate($email, $password)
-    {
-        $user = $this->findByEmail($email);
-
-        if ($user && password_verify($password, $user['password'])) {
-            return $user;
-        }
-
-        return false;
-    }
-
-    public function getAllMembers()
+    public function getAllMembers(): array
     {
         $stmt = $this->db->prepare("SELECT id, name, email, role, created_at FROM users WHERE role = 'member' ORDER BY created_at DESC");
         $stmt->execute();

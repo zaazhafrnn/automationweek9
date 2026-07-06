@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Components;
 
 class Button extends Component
 {
     private string $tag = 'button';
     private string $label = '';
+    private ?string $variantApplied = null;
 
     public function tag(string $tag): static
     {
@@ -20,8 +22,9 @@ class Button extends Component
 
     public function variant(string $variant): static
     {
+        $this->variantApplied = $variant;
         $map = [
-            'primary' => 'bg-[#bc0301] text-white hover:bg-[#bc0301]/90',
+            'primary' => 'bg-brand text-white hover:bg-brand/90',
             'secondary' => 'bg-gray-100 text-gray-700 hover:bg-gray-200',
             'ghost' => 'text-gray-600 hover:text-gray-900',
             'link' => 'text-blue-600 hover:text-blue-800 underline-offset-2',
@@ -44,7 +47,11 @@ class Button extends Component
 
     public function render(): string
     {
-        $this->class('inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer');
+        $base = 'inline-flex items-center justify-center rounded-xl text-sm font-bold transition duration-150 ease-in-out cursor-pointer';
+        if ($this->variantApplied === null) {
+            $base .= ' text-[#161512] bg-white hover:bg-gray-200';
+        }
+        $this->class($base);
 
         $btn = '<' . $this->tag;
         $btn .= ' ' . $this->renderAttrs();

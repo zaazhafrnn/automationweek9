@@ -2,7 +2,7 @@
 
 /** @var string $csrf_token */
 /** @var string|null $old_email */
-/** @var string|null $old_password */
+
 /** @var string|null $email_error */
 /** @var string|null $password_error */
 $body_class = 'bg-zinc-100 text-black font-sans antialiased min-h-screen';
@@ -30,7 +30,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
                 <div class="flex justify-center bg-red-600/10 -mb-6 pb-6 rounded-t-4xl border border-red-500">
                     <div class="inline-flex items-center gap-2 px-3 py-4 text-xs">
-                        <span class="text-[#bc0301] font-semibold">Pendaftaran lomba dibuka</span>
+                        <span class="text-brand font-semibold">Pendaftaran lomba dibuka</span>
                         <span>20 Agustus - 20 Oktober 2026</span>
                     </div>
                 </div>
@@ -77,7 +77,6 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                         placeholder="Masukkan password"
                                         required
                                         minlength="8"
-                                        value="<?= htmlspecialchars($old_password ?? '') ?>"
                                         style="padding-right: 3.5rem"
                                         class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
                                                bg-[#2a2926] placeholder-gray-500 text-white
@@ -111,7 +110,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                         Belum punya akun?
                         <a
                             href="/register"
-                            class="inline-block font-semibold text-[#bc0301]
+                            class="inline-block font-semibold text-brand
                         transition-all duration-100 ease-out">
                             Daftar sekarang
                         </a>

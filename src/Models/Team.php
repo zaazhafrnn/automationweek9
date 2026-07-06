@@ -6,7 +6,7 @@ use App\Core\Model;
 
 class Team extends Model
 {
-    public function create($userId, array $data)
+    public function create(int $userId, array $data): bool
     {
         $stmt = $this->db->prepare("
             INSERT INTO teams (user_id, name, teamSchool, division, leaderName, leaderPhoneNumber, firstMemberName, firstMemberPhoneNumber, secondMemberName, secondMemberPhoneNumber) 
@@ -27,7 +27,7 @@ class Team extends Model
         ]);
     }
 
-    public function findByUserId($userId)
+    public function findByUserId(int $userId): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM teams WHERE user_id = :user_id LIMIT 1");
         $stmt->execute([':user_id' => $userId]);
@@ -35,7 +35,7 @@ class Team extends Model
         return $stmt->fetch();
     }
 
-    public function getAllTeams()
+    public function getAllTeams(): array
     {
         $stmt = $this->db->prepare("SELECT t.*, u.email as user_email FROM teams t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC");
         $stmt->execute();

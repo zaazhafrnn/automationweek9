@@ -4,7 +4,7 @@ namespace App\Utils;
 
 class Session
 {
-    public static function init()
+    public static function init(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             ini_set('session.cookie_httponly', 1);
@@ -14,42 +14,42 @@ class Session
         }
     }
 
-    public static function set($key, $value)
+    public static function set(string $key, mixed $value): void
     {
         $_SESSION[$key] = $value;
     }
 
-    public static function get($key)
+    public static function get(string $key): mixed
     {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
 
-    public static function remove($key)
+    public static function remove(string $key): void
     {
         if (isset($_SESSION[$key])) {
             unset($_SESSION[$key]);
         }
     }
 
-    public static function destroy()
+    public static function destroy(): void
     {
         session_destroy();
         $_SESSION = [];
     }
 
-    public static function regenerate()
+    public static function regenerate(): void
     {
         session_regenerate_id(true);
     }
 
-    public static function flash($key, $value = null)
+    public static function flash(string $key, mixed $value = null): mixed
     {
         if ($value !== null) {
             self::set($key, $value);
-        } else {
-            $val = self::get($key);
-            self::remove($key);
-            return $val;
+            return null;
         }
+        $val = self::get($key);
+        self::remove($key);
+        return $val;
     }
 }

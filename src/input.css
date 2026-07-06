@@ -1,1 +1,4 @@
 @import "tailwindcss";
+@theme {
+    --color-brand: #bc0301;
+}

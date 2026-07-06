@@ -4,9 +4,9 @@ namespace App\Core;
 
 class Router
 {
-    private $routes = [];
+    private array $routes = [];
 
-    public function add($method, $path, $controllerAction)
+    public function add(string $method, string $path, string $controllerAction): void
     {
         $this->routes[] = [
             'method' => strtoupper($method),
@@ -15,23 +15,30 @@ class Router
         ];
     }
 
-    public function get($path, $action) { $this->add('GET', $path, $action); }
-    public function post($path, $action) { $this->add('POST', $path, $action); }
+    public function get(string $path, string $action): void
+    {
+        $this->add('GET', $path, $action);
+    }
+    public function post(string $path, string $action): void
+    {
+        $this->add('POST', $path, $action);
+    }
 
-    public function dispatch($requestUri, $requestMethod)
+    public function dispatch(string $requestUri, string $requestMethod): void
     {
         $path = parse_url($requestUri, PHP_URL_PATH);
 
         foreach ($this->routes as $route) {
             if ($route['method'] === strtoupper($requestMethod) && $route['path'] === $path) {
-                
+
                 [$controllerName, $method] = explode('@', $route['action']);
                 $controllerClass = "App\\Controllers\\" . $controllerName;
 
                 if (class_exists($controllerClass)) {
                     $controller = new $controllerClass();
                     if (method_exists($controller, $method)) {
-                        return $controller->$method();
+                        $controller->$method();
+                        return;
                     } else {
                         die("Method $method not found in controller $controllerName");
                     }
