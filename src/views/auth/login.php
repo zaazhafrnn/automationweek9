@@ -139,10 +139,12 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
 <script>
     (async () => {
-        const [eye, eyeOff] = await Promise.all([
+        const [eye, eyeOff, lc] = await Promise.all([
             fetch('/icons/eye.svg').then(r => r.text()),
-            fetch('/icons/eye-off.svg').then(r => r.text())
+            fetch('/icons/eye-off.svg').then(r => r.text()),
+            fetch('/icons/loader-circle.svg').then(r => r.text())
         ]);
+        document.querySelector('form[action="/login"]').dataset.loaderCircle = lc;
         document.querySelectorAll('[data-password-toggle]').forEach(btn => {
             btn.innerHTML = eye;
             btn.addEventListener('click', () => {
@@ -207,7 +209,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         const btn = this.querySelector('button[type="submit"]');
         btn.disabled = true;
         const originalText = btn.textContent;
-        btn.textContent = 'Memproses...';
+        btn.innerHTML = this.dataset.loaderCircle;
         try {
             const res = await fetch(this.action, {
                 method: 'POST',

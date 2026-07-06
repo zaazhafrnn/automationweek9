@@ -265,10 +265,12 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
     const form = document.querySelector('form[action="/register"]');
     if (form) {
         (async () => {
-            const [eye, eyeOff] = await Promise.all([
+            const [eye, eyeOff, lc] = await Promise.all([
                 fetch('/icons/eye.svg').then(r => r.text()),
-                fetch('/icons/eye-off.svg').then(r => r.text())
+                fetch('/icons/eye-off.svg').then(r => r.text()),
+                fetch('/icons/loader-circle.svg').then(r => r.text())
             ]);
+            form.dataset.loaderCircle = lc;
             document.querySelectorAll('[data-password-toggle]').forEach(btn => {
                 btn.innerHTML = eye;
                 btn.addEventListener('click', () => {
@@ -396,7 +398,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
             actionBtn.disabled = true;
             const originalText = actionBtn.textContent;
-            actionBtn.textContent = 'Memproses...';
+            actionBtn.innerHTML = form.dataset.loaderCircle;
 
             try {
                 const fd = new FormData();
