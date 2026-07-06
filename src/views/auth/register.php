@@ -57,143 +57,176 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                             </div>
                         <?php endif; ?>
 
-                        <form action="/register" method="POST" class="space-y-4">
-                            <input
-                                type="hidden"
-                                name="csrf_token"
-                                value="<?= htmlspecialchars($csrf_token ?? '') ?>">
+                        <div id="register-form">
+                            <form action="/register" method="POST" class="space-y-4">
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="<?= htmlspecialchars($csrf_token ?? '') ?>">
 
-                            <div id="step-1-fields" class="space-y-4">
-                                <div>
-                                    <label for="name" class="block text-sm font-medium mb-1 text-gray-300">
-                                        Nama Lengkap<span class="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        placeholder="Masukkan nama lengkap"
-                                        required
-                                        value="<?= htmlspecialchars($old_name ?? '') ?>"
-                                        class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
-                                               bg-[#2a2926] placeholder-gray-500 text-white
-                                               focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
-                                               <?= isset($name_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
-                                        oninput="
-                                            this.classList.remove('border-red-500', 'text-red-400');
-                                            this.classList.add('border-white/10');
-                                            document.getElementById('name-error')?.classList.add('hidden');
-                                        ">
-                                    <p id="name-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($name_error) ? '' : 'hidden' ?>">
-                                        <?= htmlspecialchars($name_error ?? '') ?>
-                                    </p>
-                                </div>
-                                <div>
-                                    <label for="email" class="block text-sm font-medium mb-1 text-gray-300">
-                                        Email<span class="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        placeholder="Masukkan email"
-                                        required
-                                        value="<?= htmlspecialchars($old_email ?? '') ?>"
-                                        class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
-                                               bg-[#2a2926] placeholder-gray-500 text-white
-                                               focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
-                                               <?= isset($email_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
-                                        oninput="
-                                            this.classList.remove('border-red-500', 'text-red-400');
-                                            this.classList.add('border-white/10');
-                                            document.getElementById('email-error')?.classList.add('hidden');
-                                        ">
-                                    <p id="email-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($email_error) ? '' : 'hidden' ?>">
-                                        <?= htmlspecialchars($email_error ?? '') ?>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div id="step-2-fields" class="space-y-4 hidden">
-                                <div>
-                                    <label for="password" class="block text-sm font-medium mb-1 text-gray-300">
-                                        Password<span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative">
+                                <div id="step-1-fields" class="space-y-4">
+                                    <div>
+                                        <label for="name" class="block text-sm font-medium mb-1 text-gray-300">
+                                            Nama Lengkap<span class="text-red-500">*</span>
+                                        </label>
                                         <input
-                                            type="password"
-                                            id="password"
-                                            name="password"
-                                            placeholder="Masukkan password"
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            placeholder="Masukkan nama lengkap"
                                             required
-                                            minlength="8"
-                                            value="<?= htmlspecialchars($old_password ?? '') ?>"
-                                            style="padding-right: 3.5rem"
+                                            value="<?= htmlspecialchars($old_name ?? '') ?>"
                                             class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
                                                    bg-[#2a2926] placeholder-gray-500 text-white
                                                    focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
-                                                   <?= isset($password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
+                                                   <?= isset($name_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
                                             oninput="
                                                 this.classList.remove('border-red-500', 'text-red-400');
                                                 this.classList.add('border-white/10');
-                                                document.getElementById('password-error')?.classList.add('hidden');
+                                                document.getElementById('name-error')?.classList.add('hidden');
                                             ">
-                                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="password"></button>
+                                        <p id="name-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($name_error) ? '' : 'hidden' ?>">
+                                            <?= htmlspecialchars($name_error ?? '') ?>
+                                        </p>
                                     </div>
-                                    <p id="password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
-                                        <?= htmlspecialchars($password_error ?? '') ?>
-                                    </p>
-                                </div>
-                                <div>
-                                    <label for="confirm_password" class="block text-sm font-medium mb-1 text-gray-300">
-                                        Konfirmasi Password<span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative">
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium mb-1 text-gray-300">
+                                            Email<span class="text-red-500">*</span>
+                                        </label>
                                         <input
-                                            type="password"
-                                            id="confirm_password"
-                                            name="confirm_password"
-                                            placeholder="Masukkan kembali password"
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            placeholder="Masukkan email"
                                             required
-                                            minlength="8"
-                                            value="<?= htmlspecialchars($old_confirm_password ?? '') ?>"
-                                            style="padding-right: 3.5rem"
+                                            value="<?= htmlspecialchars($old_email ?? '') ?>"
                                             class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
                                                    bg-[#2a2926] placeholder-gray-500 text-white
                                                    focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
-                                                   <?= isset($confirm_password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
+                                                   <?= isset($email_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
                                             oninput="
-                                                this.classList.remove('border-red-500', 'text-red-400');
-                                                this.classList.add('border-white/10');
-                                                document.getElementById('confirm-password-error')?.classList.add('hidden');
-                                            ">
-                                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="confirm_password"></button>
+                                                 this.classList.remove('border-red-500', 'text-red-400');
+                                                 this.classList.add('border-white/10');
+                                                 document.getElementById('email-error')?.classList.add('hidden');
+                                                 this.dataset.rejected = '';
+                                             ">
+                                        <p id="email-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($email_error) ? '' : 'hidden' ?>">
+                                            <?= htmlspecialchars($email_error ?? '') ?>
+                                        </p>
                                     </div>
-                                    <p id="confirm-password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($confirm_password_error) ? '' : 'hidden' ?>">
-                                        <?= htmlspecialchars($confirm_password_error ?? '') ?>
-                                    </p>
                                 </div>
-                            </div>
 
-                            <div class="flex flex-col gap-2">
-                                <button
-                                    type="button"
-                                    id="action-btn"
-                                    class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm
-                                           text-sm font-bold text-[#161512] bg-white hover:bg-gray-200
-                                           transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer">
-                                    Lanjutkan
-                                </button>
-                                <button
-                                    type="button"
-                                    id="back-btn"
-                                    class="hidden w-full flex justify-center py-2 px-4 border border-white/10 rounded-xl shadow-sm
-                                           text-sm font-medium text-gray-400 hover:text-white
-                                           transition duration-150 ease-in-out cursor-pointer">
-                                    Kembali ke sebelumnya
-                                </button>
+                                <div id="step-2-fields" class="space-y-4 hidden">
+                                    <div class="text-center text-sm flex flex-col">
+                                        <span class="text-gray-100 font-thin -mb-1">Daftar untuk akun</span>
+                                        <span id="confirm-email" class="text-white font-medium"></span>
+                                    </div>
+                                    <div>
+                                        <label for="password" class="block text-sm font-medium mb-1 text-gray-300">
+                                            Password<span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input
+                                                type="password"
+                                                id="password"
+                                                name="password"
+                                                placeholder="Masukkan password"
+                                                required
+                                                minlength="8"
+                                                value="<?= htmlspecialchars($old_password ?? '') ?>"
+                                                style="padding-right: 3.5rem"
+                                                class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
+                                                       bg-[#2a2926] placeholder-gray-500 text-white
+                                                       focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
+                                                       <?= isset($password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
+                                                oninput="
+                                                    this.classList.remove('border-red-500', 'text-red-400');
+                                                    this.classList.add('border-white/10');
+                                                    document.getElementById('password-error')?.classList.add('hidden');
+                                                ">
+                                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="password"></button>
+                                        </div>
+                                        <p id="password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
+                                            <?= htmlspecialchars($password_error ?? '') ?>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label for="confirm_password" class="block text-sm font-medium mb-1 text-gray-300">
+                                            Konfirmasi Password<span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input
+                                                type="password"
+                                                id="confirm_password"
+                                                name="confirm_password"
+                                                placeholder="Masukkan kembali password"
+                                                required
+                                                minlength="8"
+                                                value="<?= htmlspecialchars($old_confirm_password ?? '') ?>"
+                                                style="padding-right: 3.5rem"
+                                                class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
+                                                       bg-[#2a2926] placeholder-gray-500 text-white
+                                                       focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
+                                                       <?= isset($confirm_password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
+                                                oninput="
+                                                    this.classList.remove('border-red-500', 'text-red-400');
+                                                    this.classList.add('border-white/10');
+                                                    document.getElementById('confirm-password-error')?.classList.add('hidden');
+                                                ">
+                                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="confirm_password"></button>
+                                        </div>
+                                        <p id="confirm-password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($confirm_password_error) ? '' : 'hidden' ?>">
+                                            <?= htmlspecialchars($confirm_password_error ?? '') ?>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-2">
+                                    <button
+                                        type="button"
+                                        id="action-btn"
+                                        class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm
+                                               text-sm font-bold text-[#161512] bg-white hover:bg-gray-200
+                                               transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer">
+                                        Lanjutkan
+                                    </button>
+                                    <button
+                                        type="button"
+                                        id="back-btn"
+                                        class="hidden w-full flex justify-center py-2 px-4 border border-white/50 rounded-xl shadow-sm
+                                               text-sm font-medium text-gray-400 hover:bg-white/20 hover:text-white
+                                               transition duration-150 ease-in-out cursor-pointer">
+                                        Kembali ke sebelumnya
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="register-success" class="hidden text-center py-8 space-y-4">
+                            <svg class="w-16 h-16 mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 12l2 2 4-4" />
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>
+                            <h2 class="text-xl font-bold text-white">Pendaftaran Berhasil!</h2>
+                            <p class="text-gray-400 text-sm">Akun untuk <span id="success-email" class="text-white font-semibold"></span> berhasil dibuat!<br>Silakan masuk untuk melanjutkan pendaftaran.</p>
+                            <div class="flex flex-col gap-2 pt-4">
+                                <a href="/login" class="w-full block text-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-[#161512] bg-white hover:bg-gray-200 transition">Masuk</a>
+                                <a href="/register" class="w-full block text-center py-2 px-4 border border-white/10 rounded-xl shadow-sm text-sm font-medium text-gray-400 hover:text-white transition">Daftar Akun Lain</a>
                             </div>
-                        </form>
+                        </div>
+
+                        <div id="register-error" class="hidden text-center py-8 space-y-4">
+                            <svg class="w-16 h-16 mx-auto text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="15" y1="9" x2="9" y2="15" />
+                                <line x1="9" y1="9" x2="15" y2="15" />
+                            </svg>
+                            <h2 class="text-xl font-bold text-white">Email Sudah Terdaftar</h2>
+                            <p class="text-gray-400 text-sm">Gunakan email lain untuk mendaftar akun baru.</p>
+                            <div class="flex flex-col gap-2 pt-4">
+                                <button type="button" id="retry-btn" class="w-full block text-center py-2.5 px-4 border border-white/50 rounded-xl shadow-sm text-sm font-medium text-gray-400 hover:text-white hover:bg-white/20 transition cursor-pointer">Gunakan Email Lain</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -297,8 +330,21 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         }
 
         backBtn.addEventListener('click', goToStep1);
+        document.getElementById('retry-btn')?.addEventListener('click', () => {
+            document.getElementById('register-error').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+            goToStep1();
+            actionBtn.disabled = false;
+            actionBtn.textContent = 'Lanjutkan';
+            showFieldError(errEmail, 'Email sudah terdaftar');
+        });
 
-        form.addEventListener('submit', e => e.preventDefault());
+        form.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                e.preventDefault();
+                actionBtn.click();
+            }
+        });
 
         actionBtn.addEventListener('click', async () => {
             clearErrors();
@@ -315,10 +361,14 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
                     showFieldError(errEmail, 'email harus berupa "email@mail.com"');
                     err = true;
+                } else if (emailInput.dataset.rejected === 'true') {
+                    showFieldError(errEmail, 'Email sudah terdaftar');
+                    err = true;
                 }
                 if (err) return;
 
                 step = 2;
+                document.getElementById('confirm-email').textContent = emailInput.value.trim();
                 step1.classList.add('hidden');
                 step2.classList.remove('hidden');
                 backBtn.classList.remove('hidden');
@@ -364,7 +414,15 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 });
                 const data = await res.json();
                 if (data.success) {
-                    window.location.href = data.redirect;
+                    document.getElementById('register-form').classList.add('hidden');
+                    document.getElementById('success-email').textContent = emailInput.value.trim();
+                    document.getElementById('register-success').classList.remove('hidden');
+                } else if (data.errors?.email_error) {
+                    document.getElementById('register-form').classList.add('hidden');
+                    document.getElementById('register-error').classList.remove('hidden');
+                    emailInput.dataset.rejected = 'true';
+                    actionBtn.disabled = false;
+                    actionBtn.textContent = originalText;
                 } else {
                     for (const [k, v] of Object.entries(data.errors || {})) {
                         const el = document.getElementById(k.replace(/_error$/, '-error'));
