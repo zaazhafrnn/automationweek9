@@ -201,10 +201,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                         </div>
 
                         <div id="register-success" class="hidden text-center py-8 space-y-4">
-                            <svg class="w-16 h-16 mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 12l2 2 4-4" />
-                                <circle cx="12" cy="12" r="10" />
-                            </svg>
+                            <div id="success-icon" class="w-16 h-16 mx-auto text-green-400"></div>
                             <h2 class="text-xl font-bold text-white">Pendaftaran Berhasil!</h2>
                             <p class="text-gray-400 text-sm">Akun untuk <span id="success-email" class="text-white font-semibold"></span> berhasil dibuat!<br>Silakan masuk untuk melanjutkan pendaftaran.</p>
                             <div class="flex flex-col gap-2 pt-4">
@@ -214,11 +211,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                         </div>
 
                         <div id="register-error" class="hidden text-center py-8 space-y-4">
-                            <svg class="w-16 h-16 mx-auto text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="15" y1="9" x2="9" y2="15" />
-                                <line x1="9" y1="9" x2="15" y2="15" />
-                            </svg>
+                            <div id="error-icon" class="w-16 h-16 mx-auto text-red-400"></div>
                             <h2 class="text-xl font-bold text-white">Email Sudah Terdaftar</h2>
                             <p class="text-gray-400 text-sm">Gunakan email lain untuk mendaftar akun baru.</p>
                             <div class="flex flex-col gap-2 pt-4">
@@ -263,12 +256,16 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
     const form = document.querySelector('form[action="/register"]');
     if (form) {
         (async () => {
-            const [eye, eyeOff, lc] = await Promise.all([
+            const [eye, eyeOff, lc, ur, urx] = await Promise.all([
                 fetch('/icons/eye.svg').then(r => r.text()),
                 fetch('/icons/eye-off.svg').then(r => r.text()),
-                fetch('/icons/loader-circle.svg').then(r => r.text())
+                fetch('/icons/loader-circle.svg').then(r => r.text()),
+                fetch('/icons/user-round.svg').then(r => r.text()),
+                fetch('/icons/user-round-x.svg').then(r => r.text())
             ]);
             form.dataset.loaderCircle = lc;
+            form.dataset.userRound = ur;
+            form.dataset.userRoundX = urx;
             document.querySelectorAll('[data-password-toggle]').forEach(btn => {
                 btn.innerHTML = eye;
                 btn.addEventListener('click', () => {
@@ -414,10 +411,12 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 const data = await res.json();
                 if (data.success) {
                     document.getElementById('register-form').classList.add('hidden');
+                    document.getElementById('success-icon').innerHTML = form.dataset.userRound;
                     document.getElementById('success-email').textContent = emailInput.value.trim();
                     document.getElementById('register-success').classList.remove('hidden');
                 } else if (data.errors?.email_error) {
                     document.getElementById('register-form').classList.add('hidden');
+                    document.getElementById('error-icon').innerHTML = form.dataset.userRoundX;
                     document.getElementById('register-error').classList.remove('hidden');
                     emailInput.dataset.rejected = 'true';
                     actionBtn.disabled = false;
