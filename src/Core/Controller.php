@@ -6,7 +6,7 @@ use App\Utils\Session;
 
 class Controller
 {
-    protected function view(string $view, array $data = [], string $layout = 'main'): void
+    protected function view(string $view, array $data = [], ?string $layout = 'main'): void
     {
         extract($data);
 
