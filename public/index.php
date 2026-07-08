@@ -43,12 +43,15 @@ $router->get('/admin/members', 'AdminController@members');
 $router->get('/admin/teams', 'AdminController@teams');
 $router->get('/admin/payments', 'AdminController@payments');
 $router->post('/admin/payments/process', 'AdminController@processPayment');
+$router->get('/admin/submissions', 'AdminController@submissions');
 
 $router->get('/dashboard/team/register', 'TeamController@registerForm');
 $router->post('/dashboard/team/register', 'TeamController@register');
 
 $router->get('/dashboard/payment', 'PaymentController@uploadForm');
 $router->post('/dashboard/payment', 'PaymentController@upload');
+
+$router->post('/dashboard/submission', 'SubmissionController@upload');
 
 $router->post('/logout', 'AuthController@logout');
 

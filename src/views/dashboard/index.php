@@ -3,7 +3,8 @@
 /** @var string $csrf_token */
 /** @var string $user_name */
 /** @var array|null $team */
-/** @var array|null $payment */ ?>
+/** @var array|null $payment */
+/** @var array|null $submission */ ?>
 <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
     <div class="px-6 py-5 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
@@ -95,7 +96,7 @@
                             </svg>
                             Pembayaran Terverifikasi
                         </h3>
-                        <p class="text-sm text-green-800">Pembayaran Anda telah dikonfirmasi. Pendaftaran selesai.</p>
+                        <p class="text-sm text-green-800">Pembayaran Anda telah dikonfirmasi.</p>
                     </div>
                 <?php elseif ($payment['status'] === 'rejected'): ?>
                     <div class="mt-6 bg-red-50 border border-red-200 rounded-xl p-6 shadow-sm">
@@ -108,6 +109,62 @@
                         <a href="/dashboard/payment" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-brand hover:bg-brand/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150">
                             Upload Ulang
                         </a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($payment && $payment['status'] === 'verified'): ?>
+                    <?php $submission_error = \App\Utils\Session::flash('submission_error');
+                    $submission_success = \App\Utils\Session::flash('submission_success'); ?>
+                    <?php if ($submission_success): ?>
+                        <div class="mt-6 bg-green-50 border border-green-200 rounded-xl p-4 shadow-sm">
+                            <p class="text-sm text-green-800"><?= htmlspecialchars($submission_success) ?></p>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($submission_error): ?>
+                        <div class="mt-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-md">
+                            <p class="text-sm"><?= htmlspecialchars($submission_error) ?></p>
+                        </div>
+                    <?php endif; ?>
+                    <div class="mt-6 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            Upload Karya Lomba
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-4">Upload karya untuk divisi <?= htmlspecialchars($team['division']) ?>.</p>
+
+                        <?php if ($submission): ?>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-blue-800">
+                                Sudah diupload:
+                                <?php if ($submission['type'] === 'youtube_link'): ?>
+                                    <a href="<?= htmlspecialchars($submission['value']) ?>" target="_blank" class="underline ml-1"><?= htmlspecialchars($submission['value']) ?></a>
+                                <?php else: ?>
+                                    <?= htmlspecialchars($submission['value']) ?>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <form action="/dashboard/submission" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                            <?php if ($team['division'] === 'FFR'): ?>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Link YouTube <span class="text-red-500">*</span></label>
+                                <input type="url" name="youtube_link" required
+                                    value="<?= $submission && $submission['type'] === 'youtube_link' ? htmlspecialchars($submission['value']) : '' ?>"
+                                    placeholder="https://www.youtube.com/watch?v=..."
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out sm:text-sm">
+                                <p class="mt-1 text-xs text-gray-500">Upload video robot ke YouTube, tempelkan linknya di sini.</p>
+                            <?php else: ?>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">File Karya <span class="text-red-500">*</span></label>
+                                <input type="file" name="submission_file" required
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand file:text-white hover:file:bg-brand/90 transition duration-150">
+                                <p class="mt-1 text-xs text-gray-500">Maksimal 10MB.</p>
+                            <?php endif; ?>
+                            <button type="submit"
+                                class="mt-4 w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand hover:bg-brand/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150">
+                                <?= $submission ? 'Update' : 'Upload' ?> Karya
+                            </button>
+                        </form>
                     </div>
                 <?php endif; ?>
             <?php else: ?>

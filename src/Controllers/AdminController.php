@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Utils\Session;
 
 use App\Utils\Security;
+use App\Models\Submission;
 
 class AdminController extends Controller
 {
@@ -56,6 +57,26 @@ class AdminController extends Controller
             'payments' => $payments,
             'csrf_token' => Security::generateCsrfToken(),
             'page_title' => 'Pembayaran'
+        ], 'admin');
+    }
+
+    public function submissions()
+    {
+        $this->requireAdmin();
+
+        $division = $_GET['div'] ?? '';
+        $allowed = ['FFR', 'LF', 'PLC', 'LKTI'];
+        if (!in_array($division, $allowed)) {
+            $division = 'FFR';
+        }
+
+        $submissionModel = new Submission();
+        $all = $submissionModel->getByDivision($division);
+
+        $this->view('admin/submissions', [
+            'submissions' => $all,
+            'division' => $division,
+            'page_title' => "Karya $division"
         ], 'admin');
     }
 

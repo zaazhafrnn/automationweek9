@@ -44,6 +44,18 @@ $body_class = $body_class ?? 'text-gray-800 font-sans antialiased min-h-screen b
                         Pembayaran
                     </a>
                 </li>
+                <li class="px-6 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Karya Per Divisi</li>
+                <?php
+                $divs = ['FFR' => '🤖', 'LF' => '🏎️', 'PLC' => '💻', 'LKTI' => '📄'];
+                $current_div = $_GET['div'] ?? '';
+                foreach ($divs as $d => $icon): ?>
+                    <li>
+                        <a href="/admin/submissions?div=<?= $d ?>" class="flex items-center px-6 py-2 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors <?= strpos($_SERVER['REQUEST_URI'], '/admin/submissions') !== false && $current_div === $d ? 'bg-gray-800 text-white border-l-4 border-indigo-500' : '' ?>">
+                            <span class="mr-3"><?= $icon ?></span>
+                            <?= $d ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
             </ul>
         </nav>
 
