@@ -7,6 +7,9 @@
     <title>Automation Week 9</title>
     <link rel="icon" href="/image/logo-aw.png">
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="font-sans text-gray-800 antialiased">
@@ -15,12 +18,11 @@
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 no-underline text-white">
                 <img src="/image/logo-aw.png" alt="AW" class="w-10 h-10 object-contain bg-white rounded-full">
-                <span class="font-bold text-lg">Automation Week 9</span>
+                <span class="font-bold text-lg font-display">Automation Week 9</span>
             </a>
             <div class="hidden md:flex items-center gap-6 text-sm font-medium">
                 <a href="#competitions" class="text-gray-300 hover:text-white transition-colors no-underline">Lomba</a>
                 <a href="#videos" class="text-gray-300 hover:text-white transition-colors no-underline">Video</a>
-                <a href="#timeline" class="text-gray-300 hover:text-white transition-colors no-underline">Timeline</a>
                 <a href="#contact" class="text-gray-300 hover:text-white transition-colors no-underline">Kontak</a>
                 <a href="/login" class="px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm transition-colors bg-brand">Login/Daftar</a>
             </div>
@@ -29,7 +31,6 @@
         <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 space-y-2 bg-gray-900/95">
             <a href="#competitions" class="block text-gray-300 hover:text-white no-underline text-sm">Lomba</a>
             <a href="#videos" class="block text-gray-300 hover:text-white no-underline text-sm">Video</a>
-            <a href="#timeline" class="block text-gray-300 hover:text-white no-underline text-sm">Timeline</a>
             <a href="#contact" class="block text-gray-300 hover:text-white no-underline text-sm">Kontak</a>
             <a href="/login" class="block text-center px-4 py-2 rounded-lg text-sm font-semibold text-white bg-brand">Login/Daftar</a>
         </div>
@@ -40,7 +41,7 @@
         <div class="relative z-1 px-4 max-w-4xl">
             <img src="/image/logo-aw.png" alt="AW Logo" class="w-48 h-48 mx-auto mb-6 object-contain bg-white rounded-full shadow-xl">
             <p class="text-sm font-semibold uppercase tracking-wider mb-2 opacity-80">Politeknik Perkapalan Negeri Surabaya</p>
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight">Automation<br><span class="text-6xl md:text-8xl" style="color:#facc15;">Week 9</span></h1>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight font-display">Automation<br><span class="text-6xl md:text-8xl" style="color:#facc15;">Week 9</span></h1>
             <p class="text-xl md:text-2xl font-light mb-2 italic">"Fuel the Red Automation"</p>
             <p class="text-base md:text-lg mb-8 max-w-2xl mx-auto opacity-90">Kompetisi Nasional bergengsi tingkat SMA/SMK/MA sederajat. Total hadiah puluhan juta rupiah!</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -89,23 +90,49 @@
         </div>
     </div>
 
-    <section id="competitions" class="py-16 px-4" style="background: #f8f9fa;">
+    <section id="competitions" class="py-16 px-4 bg-gray-50">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Kategori Lomba</h2>
-                <p class="text-gray-600 max-w-3xl mx-auto text-lg">Automation Week merupakan event tahunan terbesar dari Himpunan Mahasiswa Teknik Otomasi PPNS. Empat kompetisi bergengsi tingkat Nasional.</p>
+            <div class="mb-12 text-center">
+                <p class="text-xs font-bold uppercase tracking-widest mb-3 text-brand">4 Kategori Lomba</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 font-display">Kategori & Jadwal Lomba</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+                    Berikut 4 kategori lomba yang tersedia di Automation Week. Klik Guide Book pada masing-masing kartu untuk melihat detail peraturan & kriteria!
+                </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <div class="rounded-xl p-6 shadow-md border border-gray-200 transition-transform hover:scale-[1.02] bg-white flex flex-col">
-                    <div class="text-center mb-4">
-                        <img src="/image/LKTI_AW8.png" alt="LKTI" class="w-20 h-20 mx-auto object-contain">
-                    </div>
-                    <h3 class="text-xl font-bold text-center mb-3">LKTI</h3>
-                    <p class="text-sm text-gray-600 text-center flex-grow">Lomba Karya Tulis Ilmiah — mengembangkan ide kreatif dan inovatif dalam memecahkan masalah lingkungan sekitar.</p>
-                    <div class="text-center mt-4">
-                        <a href="https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb" target="_blank" class="inline-block px-5 py-2 rounded-full text-sm font-semibold text-white shadow-sm transition-all hover:scale-105" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
-                            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 transition-all flex flex-col overflow-hidden">
+                    <div class="h-2 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
+                    <div class="p-8 flex flex-col items-center flex-grow">
+                        <img src="/image/LKTI_AW8.png" alt="LKTI" class="w-24 h-24 object-contain mb-4 rounded-xl border border-gray-200 shadow-sm bg-white">
+                        <h3 class="text-2xl font-bold mb-2 font-display text-yellow-600">LKTI</h3>
+                        <p class="text-center text-gray-600 mb-3 text-sm">Lomba Karya Tulis Ilmiah — mengembangkan ide kreatif dan inovatif dalam memecahkan masalah lingkungan sekitar.</p>
+                        <ul class="w-full mb-5">
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-yellow-400"></span>
+                                    <span>Dibuka</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">22 Sep 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-yellow-500"></span>
+                                    <span>Deadline Abstrak</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">9 Okt 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-violet-600"></span>
+                                    <span>Hari-H</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">28 Okt 2025</span>
+                            </li>
+                        </ul>
+                        <a href="https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb" target="_blank"
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-yellow-500 to-yellow-600 shadow hover:scale-105 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -113,16 +140,38 @@
                         </a>
                     </div>
                 </div>
-
-                <div class="rounded-xl p-6 shadow-md border border-gray-200 transition-transform hover:scale-[1.02] bg-white flex flex-col">
-                    <div class="text-center mb-4">
-                        <img src="/image/FFR_AW8.png" alt="FFR" class="w-20 h-20 mx-auto object-contain">
-                    </div>
-                    <h3 class="text-xl font-bold text-center mb-3">FFR</h3>
-                    <p class="text-sm text-gray-600 text-center flex-grow">Fire Fighting Roboboat — kapal tanpa awak yang bergerak otomatis dengan misi memadamkan api.</p>
-                    <div class="text-center mt-4">
-                        <a href="https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0" target="_blank" class="inline-block px-5 py-2 rounded-full text-sm font-semibold text-white shadow-sm transition-all hover:scale-105" style="background: linear-gradient(135deg, #17a2b8, #007bff);">
-                            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 transition-all flex flex-col overflow-hidden">
+                    <div class="h-2 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
+                    <div class="p-8 flex flex-col items-center flex-grow">
+                        <img src="/image/FFR_AW8.png" alt="FFR" class="w-24 h-24 object-contain mb-4 rounded-xl border border-gray-200 shadow-sm bg-white">
+                        <h3 class="text-2xl font-bold mb-2 font-display text-cyan-600">FFR</h3>
+                        <p class="text-center text-gray-600 mb-3 text-sm">Fire Fighting Roboboat — kapal tanpa awak yang bergerak otomatis dengan misi memadamkan api.</p>
+                        <ul class="w-full mb-5">
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-cyan-500"></span>
+                                    <span>Dibuka</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">22 Sep 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-blue-600"></span>
+                                    <span>Deadline Bayar</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">27 Okt 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-violet-600"></span>
+                                    <span>Hari-H</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">28 Okt 2025</span>
+                            </li>
+                        </ul>
+                        <a href="https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0" target="_blank"
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 shadow hover:scale-105 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -130,16 +179,38 @@
                         </a>
                     </div>
                 </div>
-
-                <div class="rounded-xl p-6 shadow-md border border-gray-200 transition-transform hover:scale-[1.02] bg-white flex flex-col">
-                    <div class="text-center mb-4">
-                        <img src="/image/PLC_AW8.png" alt="PLC" class="w-20 h-20 mx-auto object-contain">
-                    </div>
-                    <h3 class="text-xl font-bold text-center mb-3">PLC</h3>
-                    <p class="text-sm text-gray-600 text-center flex-grow">Programmable Logic Controller — mengasah logika dan kemampuan dalam bidang pemrograman PLC.</p>
-                    <div class="text-center mt-4">
-                        <a href="https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO" target="_blank" class="inline-block px-5 py-2 rounded-full text-sm font-semibold text-white shadow-sm transition-all hover:scale-105" style="background: linear-gradient(135deg, #dc3545, #c82333);">
-                            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 transition-all flex flex-col overflow-hidden">
+                    <div class="h-2 bg-gradient-to-r from-red-600 to-red-800"></div>
+                    <div class="p-8 flex flex-col items-center flex-grow">
+                        <img src="/image/PLC_AW8.png" alt="PLC" class="w-24 h-24 object-contain mb-4 rounded-xl border border-gray-200 shadow-sm bg-white">
+                        <h3 class="text-2xl font-bold mb-2 font-display text-red-700">PLC</h3>
+                        <p class="text-center text-gray-600 mb-3 text-sm">Programmable Logic Controller — mengasah logika dan kemampuan dalam bidang pemrograman PLC.</p>
+                        <ul class="w-full mb-5">
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-red-600"></span>
+                                    <span>Dibuka</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">22 Sep 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-red-800"></span>
+                                    <span>Deadline Bayar</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">23 Okt 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-violet-600"></span>
+                                    <span>Hari-H</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">28 Okt 2025</span>
+                            </li>
+                        </ul>
+                        <a href="https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO" target="_blank"
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-red-600 to-red-800 shadow hover:scale-105 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -147,16 +218,38 @@
                         </a>
                     </div>
                 </div>
-
-                <div class="rounded-xl p-6 shadow-md border border-gray-200 transition-transform hover:scale-[1.02] bg-white flex flex-col">
-                    <div class="text-center mb-4">
-                        <img src="/image/LF_AW8.png" alt="LF" class="w-20 h-20 mx-auto object-contain">
-                    </div>
-                    <h3 class="text-xl font-bold text-center mb-3">Line Follower</h3>
-                    <p class="text-sm text-gray-600 text-center flex-grow">Robot berbasis mikrokontroler yang ditantang mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.</p>
-                    <div class="text-center mt-4">
-                        <a href="https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq" target="_blank" class="inline-block px-5 py-2 rounded-full text-sm font-semibold text-white shadow-sm transition-all hover:scale-105" style="background: linear-gradient(135deg, #5028a7, #9a3ebe);">
-                            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 transition-all flex flex-col overflow-hidden">
+                    <div class="h-2 bg-gradient-to-r from-violet-800 to-purple-400"></div>
+                    <div class="p-8 flex flex-col items-center flex-grow">
+                        <img src="/image/LF_AW8.png" alt="Line Follower" class="w-24 h-24 object-contain mb-4 rounded-xl border border-gray-200 shadow-sm bg-white">
+                        <h3 class="text-2xl font-bold mb-2 font-display text-purple-700">Line Follower</h3>
+                        <p class="text-center text-gray-600 mb-3 text-sm">Robot berbasis mikrokontroler yang ditantang mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.</p>
+                        <ul class="w-full mb-5">
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-violet-800"></span>
+                                    <span>Dibuka</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">22 Sep 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 border-b text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-purple-400"></span>
+                                    <span>Deadline Bayar</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">27 Okt 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2 text-[15px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-violet-600"></span>
+                                    <span>Hari-H</span>
+                                </div>
+                                <span class="text-gray-600 font-medium">28 Okt 2025</span>
+                            </li>
+                        </ul>
+                        <a href="https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq" target="_blank"
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-violet-800 to-purple-400 shadow hover:scale-105 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -164,7 +257,6 @@
                         </a>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -178,7 +270,7 @@
     <section id="videos" class="py-16 px-4 bg-gray-50">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Video</h2>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 font-display">Video</h2>
                 <p class="text-gray-600">Lihat keseruan Automation Week tahun-tahun sebelumnya.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -210,55 +302,9 @@
         </div>
     </section>
 
-    <section id="timeline" class="py-16 px-4 bg-white">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Timeline</h2>
-                <p class="text-gray-600">Jadwal penting Automation Week 9.</p>
-            </div>
-            <div class="timeline-container">
-                <div class="timeline-item">
-                    <div class="timeline-dot" style="background:var(--color-brand);"></div>
-                    <div class="timeline-content">
-                        <h4 class="font-bold text-gray-900">Pendaftaran & Pengumpulan Abstrak LKTI</h4>
-                        <p class="text-sm text-gray-500">22 September – 9 Oktober 2025</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot" style="background:#2563eb;"></div>
-                    <div class="timeline-content">
-                        <h4 class="font-bold text-gray-900">Pendaftaran & Pembayaran FFR</h4>
-                        <p class="text-sm text-gray-500">22 September – 27 Oktober 2025</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot" style="background:#059669;"></div>
-                    <div class="timeline-content">
-                        <h4 class="font-bold text-gray-900">Pendaftaran & Pembayaran PLC</h4>
-                        <p class="text-sm text-gray-500">22 September – 23 Oktober 2025</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot" style="background:#d97706;"></div>
-                    <div class="timeline-content">
-                        <h4 class="font-bold text-gray-900">Pendaftaran & Pembayaran Line Follower</h4>
-                        <p class="text-sm text-gray-500">22 September – 27 Oktober 2025</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot" style="background:#7c3aed;"></div>
-                    <div class="timeline-content">
-                        <h4 class="font-bold text-gray-900">Hari Pelaksanaan Lomba</h4>
-                        <p class="text-sm text-gray-500">28 Oktober 2025</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="py-16 px-4 bg-gray-50">
         <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Sponsor</h2>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 font-display">Sponsor</h2>
             <p class="text-gray-600 mb-8">Didukung oleh berbagai mitra dan sponsor.</p>
             <div class="flex flex-wrap justify-center gap-8 items-center opacity-60">
                 <div class="w-32 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-sm font-medium">Logo Sponsor</div>
@@ -271,7 +317,7 @@
 
     <section id="contact" class="py-16 px-4 bg-white">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Kontak</h2>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 font-display">Kontak</h2>
             <p class="text-gray-600 mb-8">Hubungi kami untuk informasi lebih lanjut.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <div class="p-6 rounded-xl border border-gray-200 shadow-sm bg-gray-50">
@@ -310,6 +356,10 @@
     </footer>
 
     <style>
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
         .marquee-track {
             display: inline-flex;
         }
@@ -328,48 +378,14 @@
             animation-play-state: paused;
         }
 
-        .timeline-container {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            left: 0.75rem;
-            top: 0.5rem;
-            bottom: 0.5rem;
-            width: 2px;
-            background: #e5e7eb;
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-bottom: 2rem;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: -1.35rem;
-            top: 0.25rem;
-            width: 1rem;
-            height: 1rem;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 0 2px #e5e7eb;
-            z-index: 1;
-        }
-
-        .timeline-content {
-            padding-left: 0.5rem;
-        }
-
         html {
             scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
         }
     </style>
 
