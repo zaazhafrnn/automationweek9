@@ -26,10 +26,8 @@ class Sidebar extends Component
         $html .= '<div class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[width] duration-200 ease-linear md:flex left-0 group-data-[state=collapsed]:w-[--sidebar-width-icon] border-r border-sidebar-border bg-sidebar text-sidebar-foreground flex-col">';
 
         $html .= '<div class="flex items-center gap-2 p-2">';
-        $html .= Icon::make()->name('panel-left')->class('size-4 shrink-0 text-sidebar-foreground');
         $html .= '<span data-sidebar-title class="truncate text-sm font-semibold flex-1">' . htmlspecialchars($this->title) . '</span>';
         $html .= '<button type="button" data-sidebar="trigger" class="inline-flex size-7 items-center justify-center rounded-md text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" aria-label="Toggle Sidebar">';
-        $html .= Icon::make()->name('chevron-left')->class('size-4 transition-transform duration-200 group-data-[state=collapsed]:rotate-180');
         $html .= '</button>';
         $html .= '</div>';
 

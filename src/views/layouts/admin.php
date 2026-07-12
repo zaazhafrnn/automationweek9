@@ -37,7 +37,7 @@ foreach (['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' =
 
     <div class="group/sidebar-wrapper flex min-h-svh w-full">
 
-        <?= Sidebar::make()->title('Panel Admin')->items($sidebarItems) ?>
+        <?= Sidebar::make()->title('Admin Dashboard AW9')->items($sidebarItems) ?>
 
         <main class="flex flex-1 flex-col">
             <header class="flex h-10 shrink-0 items-center gap-2 border-b bg-background px-4">
