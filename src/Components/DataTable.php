@@ -55,7 +55,6 @@ class DataTable extends Component
 
         $html = '<div class="flex flex-col gap-4" data-datatable="' . $id . '" data-per-page="' . $perPage . '">';
 
-        // Toolbar
         if ($this->searchable || $this->columnSelectable) {
             $html .= '<div class="flex items-center justify-between gap-2">';
             if ($this->searchable) {
@@ -68,8 +67,7 @@ class DataTable extends Component
                 $html .= '<div class="relative">';
                 $html .= '<details class="group">';
                 $html .= '<summary class="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer list-none [&::-webkit-details-marker]:hidden">';
-                $html .= Icon::make()->name('settings')->class('h-4 w-4');
-                $html .= 'Columns';
+                $html .= 'Kolom';
                 $html .= Icon::make()->name('chevron-down')->class('h-4 w-4 transition-transform group-open:rotate-180');
                 $html .= '</summary>';
                 $html .= '<div class="absolute right-0 z-50 mt-1 min-w-[150px] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md">';
@@ -87,7 +85,6 @@ class DataTable extends Component
             $html .= '</div>';
         }
 
-        // Table
         $html .= '<div class="relative w-full overflow-x-auto">';
         $html .= '<table data-slot="table" class="w-full caption-bottom text-sm">';
         $html .= '<thead data-slot="table-header" class="[&_tr]:border-b">';
@@ -103,7 +100,7 @@ class DataTable extends Component
             $html .= '<div class="flex items-center">';
             $html .= htmlspecialchars($col['label']);
             if ($sortable) {
-                $html .= Icon::make()->name('chevrons-up-down')->class('ml-2 h-4 w-4');
+                $html .= Icon::make()->name('arrow-up-down')->class('ml-2 h-4 w-4');
             }
             $html .= '</div></th>';
         }
@@ -139,7 +136,6 @@ class DataTable extends Component
 
         $html .= '</tbody></table></div>';
 
-        // Pagination
         if ($this->perPage > 0 && count($this->rows) > $this->perPage) {
             $html .= '<div class="flex items-center justify-between text-sm text-muted-foreground">';
             $html .= '<span data-dt-info>Showing 1-' . min($this->perPage, count($this->rows)) . ' of ' . count($this->rows) . '</span>';
@@ -161,96 +157,121 @@ class DataTable extends Component
 
     private function initScript(): string
     {
-        // ponytail: column visibility + search + sort + pagination, no frameworks
         return <<<JS
 <script>
-if(typeof window.__dtInit==='undefined'){
-window.__dtInit=true;
-function dtApply(tbl){
-var pp=parseInt(tbl.dataset.perPage)||0;
-var rows=Array.from(tbl.querySelectorAll('[data-dt-row]'));
-var q=(tbl.querySelector('[data-dt-search]')||{}).value||'';
-var page=parseInt((tbl.querySelector('[data-dt-page]')||{}).textContent)||1;
-var matched=rows;
-if(q){
-var lq=q.toLowerCase();
-matched=rows.filter(function(r){
-return Array.from(r.querySelectorAll('td')).some(function(c){return c.textContent.toLowerCase().includes(lq);});
-});
-}
-rows.forEach(function(r){r.style.display='none';});
-matched.forEach(function(r){r.style.display='';});
-if(pp>0&&matched.length>pp){
-var tp=Math.ceil(matched.length/pp);
-if(page>tp)page=tp;
-var start=(page-1)*pp;
-var end=Math.min(start+pp,matched.length);
-matched.forEach(function(r,i){r.style.display=i>=start&&i<end?'':'none';});
-var info=tbl.querySelector('[data-dt-info]');
-if(info)info.textContent='Showing '+(start+1)+'-'+end+' of '+matched.length;
-var pe=tbl.querySelector('[data-dt-prev]');
-var ne=tbl.querySelector('[data-dt-next]');
-if(pe){pe.disabled=page<=1;}
-if(ne){ne.disabled=page>=tp;}
-var pg=tbl.querySelector('[data-dt-page]');
-if(pg)pg.textContent=page;
-}
-}
-function dtToggleCol(tbl,key,show){
-var th=tbl.querySelector('[data-dt-col-head="'+key+'"]');
-var tds=tbl.querySelectorAll('[data-dt-col-body="'+key+'"]');
-var disp=show?'':'none';
-if(th)th.style.display=disp;
-tds.forEach(function(td){td.style.display=disp;});
-}
-document.addEventListener('input',function(e){
-var inp=e.target.closest('[data-dt-search]');
-if(!inp)return;
-var tbl=inp.closest('[data-datatable]');
-if(!tbl)return;
-var p=tbl.querySelector('[data-dt-page]');if(p)p.textContent=1;
-dtApply(tbl);
-});
-document.addEventListener('click',function(e){
-var btn=e.target.closest('[data-dt-prev],[data-dt-next]');
-if(!btn)return;
-var tbl=btn.closest('[data-datatable]');
-if(!tbl)return;
-var p=tbl.querySelector('[data-dt-page]');if(!p)return;
-var pg=parseInt(p.textContent);
-p.textContent=btn.hasAttribute('data-dt-next')?pg+1:pg-1;
-dtApply(tbl);
-});
-document.addEventListener('click',function(e){
-var th=e.target.closest('[data-dt-sort]');
-if(!th)return;
-var tbl=th.closest('[data-datatable]');
-if(!tbl)return;
-var tbody=tbl.querySelector('tbody');
-var rows=Array.from(tbody.querySelectorAll('[data-dt-row]'));
-var dir=th.dataset.dtDir||'';
-dir=dir==='asc'?'desc':'asc';
-tbl.querySelectorAll('[data-dt-sort]').forEach(function(h){delete h.dataset.dtDir;});
-th.dataset.dtDir=dir;
-var idx=Array.from(th.parentElement.children).indexOf(th);
-var sorted=rows.slice().sort(function(a,b){
-var av=a.querySelectorAll('td')[idx].textContent.trim();
-var bv=b.querySelectorAll('td')[idx].textContent.trim();
-var an=parseFloat(av),bn=parseFloat(bv);
-if(!isNaN(an)&&!isNaN(bn)){av=an;bv=bn;}
-return av<bv?dir==='asc'?-1:1:av>bv?dir==='asc'?1:-1:0;
-});
-sorted.forEach(function(r){tbody.appendChild(r);});
-var p=tbl.querySelector('[data-dt-page]');if(p)p.textContent=1;
-dtApply(tbl);
-});
-document.addEventListener('change',function(e){
-var cb=e.target.closest('[data-dt-col-toggle]');
-if(!cb)return;
-var tbl=cb.closest('[data-datatable]');
-if(!tbl)return;
-dtToggleCol(tbl,cb.dataset.dtColToggle,cb.checked);
-});
+if (typeof window.__dtInit === 'undefined') {
+  window.__dtInit = true;
+
+  function dtApply(tbl) {
+    var perPage = parseInt(tbl.dataset.perPage) || 0;
+    var rows = Array.from(tbl.querySelectorAll('[data-dt-row]'));
+    var query = (tbl.querySelector('[data-dt-search]') || {}).value || '';
+    var page = parseInt((tbl.querySelector('[data-dt-page]') || {}).textContent) || 1;
+    var matched = rows;
+
+    if (query) {
+      var lq = query.toLowerCase();
+      matched = rows.filter(function (r) {
+        return Array.from(r.querySelectorAll('td')).some(function (c) {
+          return c.textContent.toLowerCase().includes(lq);
+        });
+      });
+    }
+
+    rows.forEach(function (r) { r.style.display = 'none'; });
+    matched.forEach(function (r) { r.style.display = ''; });
+
+    if (perPage > 0 && matched.length > perPage) {
+      var totalPages = Math.ceil(matched.length / perPage);
+      if (page > totalPages) page = totalPages;
+      var start = (page - 1) * perPage;
+      var end = Math.min(start + perPage, matched.length);
+
+      matched.forEach(function (r, i) {
+        r.style.display = i >= start && i < end ? '' : 'none';
+      });
+
+      var info = tbl.querySelector('[data-dt-info]');
+      if (info) info.textContent = 'Showing ' + (start + 1) + '-' + end + ' of ' + matched.length;
+
+      var prev = tbl.querySelector('[data-dt-prev]');
+      var next = tbl.querySelector('[data-dt-next]');
+      if (prev) prev.disabled = page <= 1;
+      if (next) next.disabled = page >= totalPages;
+
+      var pg = tbl.querySelector('[data-dt-page]');
+      if (pg) pg.textContent = page;
+    }
+  }
+
+  function dtToggleCol(tbl, key, show) {
+    var th = tbl.querySelector('[data-dt-col-head="' + key + '"]');
+    var tds = tbl.querySelectorAll('[data-dt-col-body="' + key + '"]');
+    var disp = show ? '' : 'none';
+    if (th) th.style.display = disp;
+    tds.forEach(function (td) { td.style.display = disp; });
+  }
+
+  document.addEventListener('input', function (e) {
+    var inp = e.target.closest('[data-dt-search]');
+    if (!inp) return;
+    var tbl = inp.closest('[data-datatable]');
+    if (!tbl) return;
+    var p = tbl.querySelector('[data-dt-page]');
+    if (p) p.textContent = 1;
+    dtApply(tbl);
+  });
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-dt-prev],[data-dt-next]');
+    if (!btn) return;
+    var tbl = btn.closest('[data-datatable]');
+    if (!tbl) return;
+    var p = tbl.querySelector('[data-dt-page]');
+    if (!p) return;
+    var pg = parseInt(p.textContent);
+    p.textContent = btn.hasAttribute('data-dt-next') ? pg + 1 : pg - 1;
+    dtApply(tbl);
+  });
+
+  document.addEventListener('click', function (e) {
+    var th = e.target.closest('[data-dt-sort]');
+    if (!th) return;
+    var tbl = th.closest('[data-datatable]');
+    if (!tbl) return;
+    var tbody = tbl.querySelector('tbody');
+    var rows = Array.from(tbody.querySelectorAll('[data-dt-row]'));
+    var dir = th.dataset.dtDir || '';
+    dir = dir === 'asc' ? 'desc' : 'asc';
+
+    tbl.querySelectorAll('[data-dt-sort]').forEach(function (h) {
+      delete h.dataset.dtDir;
+    });
+    th.dataset.dtDir = dir;
+
+    var idx = Array.from(th.parentElement.children).indexOf(th);
+    var sorted = rows.slice().sort(function (a, b) {
+      var av = a.querySelectorAll('td')[idx].textContent.trim();
+      var bv = b.querySelectorAll('td')[idx].textContent.trim();
+      var an = parseFloat(av);
+      var bn = parseFloat(bv);
+      if (!isNaN(an) && !isNaN(bn)) { av = an; bv = bn; }
+      return av < bv ? (dir === 'asc' ? -1 : 1) : av > bv ? (dir === 'asc' ? 1 : -1) : 0;
+    });
+
+    sorted.forEach(function (r) { tbody.appendChild(r); });
+    var p = tbl.querySelector('[data-dt-page]');
+    if (p) p.textContent = 1;
+    dtApply(tbl);
+  });
+
+  document.addEventListener('change', function (e) {
+    var cb = e.target.closest('[data-dt-col-toggle]');
+    if (!cb) return;
+    var tbl = cb.closest('[data-datatable]');
+    if (!tbl) return;
+    dtToggleCol(tbl, cb.dataset.dtColToggle, cb.checked);
+  });
 }
 </script>
 JS;

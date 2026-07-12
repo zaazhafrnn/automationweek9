@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Components;
 
 abstract class Component

@@ -1,4 +1,8 @@
-<?php /** @var array $submissions */ /** @var string $division */ /** @var string $page_title */
+<?php
+
+/** @var array $submissions */
+/** @var string $division */
+/** @var string $page_title */
 
 use App\Components\DataTable; ?>
 
@@ -13,12 +17,18 @@ use App\Components\DataTable; ?>
     <div class="p-6 pt-0">
         <?= DataTable::make()
             ->columns([
-                ['key' => 'team', 'label' => 'Tim', 'render' => fn($row) =>
+                [
+                    'key' => 'team',
+                    'label' => 'Tim',
+                    'render' => fn($row) =>
                     '<div class="font-medium">' . htmlspecialchars($row['team_name']) . '</div>' .
-                    '<div class="text-sm text-muted-foreground">Ketua: ' . htmlspecialchars($row['leader']) . '</div>'
+                        '<div class="text-sm text-muted-foreground">Ketua: ' . htmlspecialchars($row['leader']) . '</div>'
                 ],
                 ['key' => 'email', 'label' => 'Email'],
-                ['key' => 'file', 'label' => 'Karya', 'render' => fn($row) =>
+                [
+                    'key' => 'file',
+                    'label' => 'Karya',
+                    'render' => fn($row) =>
                     $row['type'] === 'youtube_link'
                         ? '<a href="' . htmlspecialchars($row['file']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($row['file']) . '</a>'
                         : '<a href="/uploads/submissions/' . htmlspecialchars($row['file']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($row['file']) . '</a>'

@@ -1,4 +1,7 @@
-<?php /** @var array $teams */ /** @var string $page_title */
+<?php
+
+/** @var array $teams */
+/** @var string $page_title */
 
 use App\Components\DataTable; ?>
 
@@ -13,16 +16,25 @@ use App\Components\DataTable; ?>
                 ['key' => 'name', 'label' => 'Nama Tim'],
                 ['key' => 'school', 'label' => 'Asal Sekolah'],
                 ['key' => 'divisi', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . htmlspecialchars($row['divisi']) . '</span>'],
-                ['key' => 'leader', 'label' => 'Ketua', 'render' => fn($row) =>
+                [
+                    'key' => 'leader',
+                    'label' => 'Ketua',
+                    'render' => fn($row) =>
                     '<div class="font-medium">' . htmlspecialchars($row['leaderName']) . '</div>' .
-                    ($row['leaderPhone'] ? '<div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['leaderPhone']) . '</div>' : '')
+                        ($row['leaderPhone'] ? '<div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['leaderPhone']) . '</div>' : '')
                 ],
-                ['key' => 'm1', 'label' => 'Anggota 1', 'render' => fn($row) =>
+                [
+                    'key' => 'm1',
+                    'label' => 'Anggota 1',
+                    'render' => fn($row) =>
                     $row['m1Name']
                         ? '<div class="font-medium">' . htmlspecialchars($row['m1Name']) . '</div><div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['m1Phone'] ?? '') . '</div>'
                         : '<span class="text-muted-foreground">-</span>'
                 ],
-                ['key' => 'm2', 'label' => 'Anggota 2', 'render' => fn($row) =>
+                [
+                    'key' => 'm2',
+                    'label' => 'Anggota 2',
+                    'render' => fn($row) =>
                     $row['m2Name']
                         ? '<div class="font-medium">' . htmlspecialchars($row['m2Name']) . '</div><div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['m2Phone'] ?? '') . '</div>'
                         : '<span class="text-muted-foreground">-</span>'

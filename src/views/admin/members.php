@@ -1,4 +1,7 @@
-<?php /** @var array $members */ /** @var string $page_title */
+<?php
+
+/** @var array $members */
+/** @var string $page_title */
 
 use App\Components\DataTable; ?>
 

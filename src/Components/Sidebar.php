@@ -21,15 +21,10 @@ class Sidebar extends Component
 
     public function render(): string
     {
-        // ponytail: shadcn sidebar component in native PHP, simplified structure
-        // Uses CSS custom properties for width, cookie for collapse state
         $html = '<aside data-state="expanded" data-collapsible="icon" class="group peer hidden md:block text-sidebar-foreground">';
-        // Width spacer (takes up flow space, sidebar itself is fixed)
         $html .= '<div class="relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[state=collapsed]:w-[--sidebar-width-icon]"></div>';
-        // Fixed sidebar
         $html .= '<div class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[width] duration-200 ease-linear md:flex left-0 group-data-[state=collapsed]:w-[--sidebar-width-icon] border-r border-sidebar-border bg-sidebar text-sidebar-foreground flex-col">';
 
-        // Header
         $html .= '<div class="flex items-center gap-2 p-2">';
         $html .= Icon::make()->name('panel-left')->class('size-4 shrink-0 text-sidebar-foreground');
         $html .= '<span data-sidebar-title class="truncate text-sm font-semibold flex-1">' . htmlspecialchars($this->title) . '</span>';
@@ -38,7 +33,6 @@ class Sidebar extends Component
         $html .= '</button>';
         $html .= '</div>';
 
-        // Content
         $html .= '<div class="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[state=collapsed]:overflow-hidden">';
         $html .= '<div class="relative flex w-full min-w-0 flex-col p-2">';
         $html .= '<div class="w-full text-sm">';
@@ -75,7 +69,6 @@ class Sidebar extends Component
         $html .= '</ul></div></div>';
         $html .= '</div>';
 
-        // Footer
         $html .= '<div class="flex flex-col gap-2 p-2">';
         $html .= '<form action="/logout" method="POST">';
         $csrf = \App\Utils\Security::generateCsrfToken();
@@ -93,22 +86,33 @@ class Sidebar extends Component
 
     private function initScript(): string
     {
-        // ponytail: cookie-based collapse, toggles data-state on aside
         return <<<JS
 <script>
-(function(){
-var el=document.querySelector('[data-collapsible]');
-if(!el)return;
-var btn=el.querySelector('[data-sidebar="trigger"]');
-var KEY='sidebar_state';
-function getCookie(){var m=document.cookie.match('(^|;)\\s*'+KEY+'=([^;]*)');return m?m[2]:'';}
-function setCookie(v){document.cookie=KEY+'='+v+';path=/;max-age=604800';}
-function apply(){el.dataset.state=getCookie()==='collapsed'?'collapsed':'expanded';}
-btn.addEventListener('click',function(){
-setCookie(el.dataset.state==='expanded'?'collapsed':'expanded');
-apply();
-});
-apply();
+(function () {
+    var el = document.querySelector('[data-collapsible]');
+    if (!el) return;
+    var btn = el.querySelector('[data-sidebar="trigger"]');
+    var KEY = 'sidebar_state';
+
+    function getCookie() {
+        var m = document.cookie.match('(^|;)\\s*' + KEY + '=([^;]*)');
+        return m ? m[2] : '';
+    }
+
+    function setCookie(v) {
+        document.cookie = KEY + '=' + v + ';path=/;max-age=604800';
+    }
+
+    function apply() {
+        el.dataset.state = getCookie() === 'collapsed' ? 'collapsed' : 'expanded';
+    }
+
+    btn.addEventListener('click', function () {
+        setCookie(el.dataset.state === 'expanded' ? 'collapsed' : 'expanded');
+        apply();
+    });
+
+    apply();
 })();
 </script>
 JS;
