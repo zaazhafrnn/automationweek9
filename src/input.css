@@ -1,4 +1,45 @@
 @import "tailwindcss";
+
 @theme {
-    --color-brand: #bc0301;
+    --color-background: oklch(1 0 0);
+    --color-foreground: oklch(0.145 0.017 285.823);
+    --color-card: oklch(1 0 0);
+    --color-card-foreground: oklch(0.145 0.017 285.823);
+    --color-popover: oklch(1 0 0);
+    --color-popover-foreground: oklch(0.145 0.017 285.823);
+    --color-primary: oklch(0.205 0.015 285.823);
+    --color-primary-foreground: oklch(0.985 0 0);
+    --color-secondary: oklch(0.97 0.004 264.531);
+    --color-secondary-foreground: oklch(0.205 0.015 285.823);
+    --color-muted: oklch(0.97 0.004 264.531);
+    --color-muted-foreground: oklch(0.556 0.019 270.879);
+    --color-accent: oklch(0.97 0.004 264.531);
+    --color-accent-foreground: oklch(0.205 0.015 285.823);
+    --color-destructive: oklch(0.577 0.245 27.325);
+    --color-destructive-foreground: oklch(0.985 0 0);
+    --color-border: oklch(0.922 0.004 264.531);
+    --color-input: oklch(0.922 0.004 264.531);
+    --color-ring: oklch(0.708 0.028 264.531);
+    --color-sidebar-background: oklch(0.985 0 0);
+    --color-sidebar-foreground: oklch(0.145 0.017 285.823);
+    --color-sidebar-primary: oklch(0.205 0.015 285.823);
+    --color-sidebar-primary-foreground: oklch(0.985 0 0);
+    --color-sidebar-accent: oklch(0.97 0.004 264.531);
+    --color-sidebar-accent-foreground: oklch(0.205 0.015 285.823);
+    --color-sidebar-border: oklch(0.922 0.004 264.531);
+    --color-sidebar-ring: oklch(0.708 0.028 264.531);
+    --radius: 0.625rem;
 }
+
+@layer base {
+    :root {
+        --sidebar-width: 16rem;
+        --sidebar-width-icon: 3rem;
+    }
+    * { border-color: var(--color-border); }
+    body { background-color: var(--color-background); color: var(--color-foreground); }
+}
+
+/* ponytail: Tailwind v4 compiles w-[--sidebar-width] without var(), override in output */
+.w-\[--sidebar-width\] { width: var(--sidebar-width); }
+.w-\[--sidebar-width-icon\] { width: var(--sidebar-width-icon); }
