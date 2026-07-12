@@ -10,14 +10,12 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 ?>
 <div class="min-h-screen relative grid grid-cols-1 gap-4 xl:grid-cols-2">
     <div class="flex-1 flex flex-col sm:px-12 lg:px-16 py-8">
-        <div class="flex items-center gap-2">
-            <span class="navbar-logo">
-                <img src="/image/logo-aw.png" alt="automationweek logo" class="h-28 mix-blend-multiply w-auto select-none pointer-events-none">
-            </span>
-        </div>
-
         <div class="flex-1 flex flex-col justify-center items-center">
             <div class="w-full max-w-md">
+                <div class="flex justify-center mb-6">
+                    <img src="/image/logo-aw.png" alt="automationweek logo" class="h-28 mix-blend-multiply w-auto select-none pointer-events-none">
+                </div>
+
                 <div class="text-center mb-8">
                     <h1 class="text-4xl sm:text-5xl font-serif leading-tight mb-4">
                         AutomationWeek IX
