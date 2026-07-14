@@ -48,7 +48,7 @@ class SubmissionController extends Controller
             }
 
             $file = $_FILES['submission_file'];
-            if ($file['size'] > 10 * 1024 * 1024) {
+            if ($file['size'] > 1000 * 1024 * 1024) {
                 Session::flash('submission_error', 'File terlalu besar. Maksimal 10MB.');
                 $this->redirect('/dashboard');
                 return;
