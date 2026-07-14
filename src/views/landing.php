@@ -351,7 +351,7 @@
                         <circle cx="17.5" cy="6.5" r="1.5" />
                     </svg></a>
             </div>
-            <p class="text-sm text-gray-600">&copy; 2025 Automation Week 9. HMT Otomasi PPNS.</p>
+            <p class="text-sm text-gray-600">&copy; 2026 Automation Week 9. HMT Otomasi PPNS.</p>
         </div>
     </footer>
 
