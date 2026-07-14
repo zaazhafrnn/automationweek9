@@ -8,13 +8,18 @@ class Team extends Model
 {
     public function create(int $userId, array $data): bool
     {
+        $st = $this->db->prepare("SELECT email FROM users WHERE id = ?");
+        $st->execute([$userId]);
+        $email = $st->fetchColumn() ?: '';
+
         $stmt = $this->db->prepare("
-            INSERT INTO teams (user_id, name, teamSchool, division, leaderName, leaderPhoneNumber, firstMemberName, firstMemberPhoneNumber, secondMemberName, secondMemberPhoneNumber) 
-            VALUES (:user_id, :name, :teamSchool, :division, :leaderName, :leaderPhoneNumber, :firstMemberName, :firstMemberPhoneNumber, :secondMemberName, :secondMemberPhoneNumber)
+            INSERT INTO teams (user_id, email, name, teamSchool, division, leaderName, leaderPhoneNumber, firstMemberName, firstMemberPhoneNumber, secondMemberName, secondMemberPhoneNumber) 
+            VALUES (:user_id, :email, :name, :teamSchool, :division, :leaderName, :leaderPhoneNumber, :firstMemberName, :firstMemberPhoneNumber, :secondMemberName, :secondMemberPhoneNumber)
         ");
 
         return $stmt->execute([
             ':user_id' => $userId,
+            ':email' => $email,
             ':name' => $data['name'],
             ':teamSchool' => $data['teamSchool'],
             ':division' => $data['division'],
