@@ -27,9 +27,10 @@ class Submission extends Model
     public function getAll(): array
     {
         $stmt = $this->db->prepare("
-            SELECT s.*, t.name as team_name, t.division, t.email, t.leaderName
+            SELECT s.*, t.name as team_name, t.division, u.email, t.leaderName
             FROM submissions s
             JOIN teams t ON s.team_id = t.id
+            JOIN users u ON t.user_id = u.id
             ORDER BY s.updated_at DESC
         ");
         $stmt->execute();
@@ -39,9 +40,10 @@ class Submission extends Model
     public function getByDivision(string $division): array
     {
         $stmt = $this->db->prepare("
-            SELECT s.*, t.name as team_name, t.division, t.email, t.leaderName
+            SELECT s.*, t.name as team_name, t.division, u.email, t.leaderName
             FROM submissions s
             JOIN teams t ON s.team_id = t.id
+            JOIN users u ON t.user_id = u.id
             WHERE t.division = :division
             ORDER BY s.updated_at DESC
         ");
