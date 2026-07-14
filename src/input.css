@@ -1,6 +1,28 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: "SF Pro Display";
+    font-weight: 400;
+    src: url("../fonts/SF-Pro-Display-Regular.otf") format("opentype");
+}
+@font-face {
+    font-family: "SF Pro Display";
+    font-weight: 700;
+    src: url("../fonts/SF-Pro-Display-Bold.otf") format("opentype");
+}
+@font-face {
+    font-family: "SF Pro Text";
+    font-weight: 400;
+    src: url("../fonts/SF-Pro-Text-Regular.otf") format("opentype");
+}
+@font-face {
+    font-family: "SF Pro Text";
+    font-weight: 700;
+    src: url("../fonts/SF-Pro-Text-Bold.otf") format("opentype");
+}
+
 @theme {
+    --font-sans: "SF Pro Text", "SF Pro Display", ui-sans-serif, system-ui, sans-serif;
     --color-background: oklch(1 0 0);
     --color-foreground: oklch(0.145 0.017 285.823);
     --color-card: oklch(1 0 0);
@@ -28,6 +50,7 @@
     --color-sidebar-accent-foreground: oklch(0.205 0.015 285.823);
     --color-sidebar-border: oklch(0.922 0.004 264.531);
     --color-sidebar-ring: oklch(0.708 0.028 264.531);
+    --color-brand: #dc2626;
     --radius: 0.625rem;
 }
 
