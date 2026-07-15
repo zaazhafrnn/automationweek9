@@ -214,6 +214,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                 <button type="button" id="retry-btn" class="w-full block text-center py-2.5 px-4 border border-white/50 rounded-xl shadow-sm text-sm font-medium text-gray-400 hover:text-white hover:bg-white/20 transition cursor-pointer">Gunakan Email Lain</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -260,8 +261,8 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 fetch('/icons/user-round-x.svg').then(r => r.text())
             ]);
             form.dataset.loaderCircle = lc;
-            form.dataset.userRound = ur;
-            form.dataset.userRoundX = urx;
+            form.dataset.userRound = ur.replace(/width="\d+"/, '').replace(/height="\d+"/, '');
+            form.dataset.userRoundX = urx.replace(/width="\d+"/, '').replace(/height="\d+"/, '');
             document.querySelectorAll('[data-password-toggle]').forEach(btn => {
                 btn.innerHTML = eye;
                 btn.addEventListener('click', () => {
@@ -335,8 +336,14 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
             if (ab) ab.disabled = false;
             var ee = document.getElementById('email-error');
             var ei = document.getElementById('email');
-            if (ee) { ee.textContent = 'Email sudah terdaftar'; ee.classList.remove('hidden'); }
-            if (ei) { ei.classList.remove('border-white/10'); ei.classList.add('border-red-500', 'text-red-400'); }
+            if (ee) {
+                ee.textContent = 'Email sudah terdaftar';
+                ee.classList.remove('hidden');
+            }
+            if (ei) {
+                ei.classList.remove('border-white/10');
+                ei.classList.add('border-red-500', 'text-red-400');
+            }
         });
 
         form.addEventListener('keydown', function(e) {
@@ -366,23 +373,49 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         var ec = document.getElementById('confirm-password-error');
         var ce = document.getElementById('confirm-email');
 
-        var errs = [
-            { el: en, inp: ni, msg: 'nama wajib diisi!' },
-            { el: ee, inp: ei, msg: 'email wajib diisi!' },
-            { el: ep, inp: pi, msg: 'password wajib diisi!' },
-            { el: ec, inp: ci, msg: 'konfirmasi password wajib diisi!' }
+        var errs = [{
+                el: en,
+                inp: ni,
+                msg: 'nama wajib diisi!'
+            },
+            {
+                el: ee,
+                inp: ei,
+                msg: 'email wajib diisi!'
+            },
+            {
+                el: ep,
+                inp: pi,
+                msg: 'password wajib diisi!'
+            },
+            {
+                el: ec,
+                inp: ci,
+                msg: 'konfirmasi password wajib diisi!'
+            }
         ];
 
         function clr() {
             errs.forEach(function(x) {
-                if (x.el) { x.el.classList.add('hidden'); }
-                if (x.inp) { x.inp.classList.remove('border-red-500', 'text-red-400'); x.inp.classList.add('border-white/10'); }
+                if (x.el) {
+                    x.el.classList.add('hidden');
+                }
+                if (x.inp) {
+                    x.inp.classList.remove('border-red-500', 'text-red-400');
+                    x.inp.classList.add('border-white/10');
+                }
             });
         }
 
         function shw(errEl, inp, msg) {
-            if (errEl) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
-            if (inp) { inp.classList.remove('border-white/10'); inp.classList.add('border-red-500', 'text-red-400'); }
+            if (errEl) {
+                errEl.textContent = msg;
+                errEl.classList.remove('hidden');
+            }
+            if (inp) {
+                inp.classList.remove('border-white/10');
+                inp.classList.add('border-red-500', 'text-red-400');
+            }
         }
 
         clr();
@@ -391,10 +424,20 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
         if (window.__regStep === 1) {
             var err = false;
-            if (!ni || !ni.value.trim()) { shw(en, ni, 'nama wajib diisi!'); err = true; }
-            if (!ei || !ei.value.trim()) { shw(ee, ei, 'email wajib diisi!'); err = true; }
-            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ei.value.trim())) { shw(ee, ei, 'email harus berupa "email@mail.com"'); err = true; }
-            else if (ei.dataset.rejected === 'true') { shw(ee, ei, 'Email sudah terdaftar'); err = true; }
+            if (!ni || !ni.value.trim()) {
+                shw(en, ni, 'nama wajib diisi!');
+                err = true;
+            }
+            if (!ei || !ei.value.trim()) {
+                shw(ee, ei, 'email wajib diisi!');
+                err = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ei.value.trim())) {
+                shw(ee, ei, 'email harus berupa "email@mail.com"');
+                err = true;
+            } else if (ei.dataset.rejected === 'true') {
+                shw(ee, ei, 'Email sudah terdaftar');
+                err = true;
+            }
             if (err) return;
 
             window.__regStep = 2;
@@ -407,10 +450,20 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         }
 
         var err = false;
-        if (!pi || !pi.value) { shw(ep, pi, 'password wajib diisi!'); err = true; }
-        else if (pi.value.length < 8) { shw(ep, pi, 'password minimal 8 karakter!'); err = true; }
-        if (!ci || !ci.value) { shw(ec, ci, 'konfirmasi password wajib diisi!'); err = true; }
-        else if (pi.value !== ci.value) { shw(ec, ci, 'password tidak cocok!'); err = true; }
+        if (!pi || !pi.value) {
+            shw(ep, pi, 'password wajib diisi!');
+            err = true;
+        } else if (pi.value.length < 8) {
+            shw(ep, pi, 'password minimal 8 karakter!');
+            err = true;
+        }
+        if (!ci || !ci.value) {
+            shw(ec, ci, 'konfirmasi password wajib diisi!');
+            err = true;
+        } else if (pi.value !== ci.value) {
+            shw(ec, ci, 'password tidak cocok!');
+            err = true;
+        }
         if (err) return;
 
         if (ab) ab.disabled = true;
@@ -426,7 +479,9 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
             var res = await fetch('/register', {
                 method: 'POST',
-                headers: { 'Accept': 'application/json' },
+                headers: {
+                    'Accept': 'application/json'
+                },
                 body: fd
             });
             var data = await res.json();
@@ -447,7 +502,10 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 if (ei2) ei2.innerHTML = f.dataset.userRoundX || '';
                 if (re2) re2.classList.remove('hidden');
                 if (ei) ei.dataset.rejected = 'true';
-                if (ab) { ab.disabled = false; ab.textContent = origText; }
+                if (ab) {
+                    ab.disabled = false;
+                    ab.textContent = origText;
+                }
             } else {
                 for (var k in data.errors) {
                     var el = document.getElementById(k.replace(/_error$/, '-error'));
@@ -468,10 +526,16 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                     if (bb) bb.classList.add('hidden');
                     if (ab) ab.textContent = 'Lanjutkan';
                 }
-                if (ab) { ab.disabled = false; ab.textContent = origText; }
+                if (ab) {
+                    ab.disabled = false;
+                    ab.textContent = origText;
+                }
             }
         } catch (e) {
-            if (ab) { ab.disabled = false; ab.textContent = origText; }
+            if (ab) {
+                ab.disabled = false;
+                ab.textContent = origText;
+            }
         }
     };
 </script>
