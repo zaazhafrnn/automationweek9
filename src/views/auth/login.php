@@ -11,13 +11,13 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 <div class="min-h-screen relative grid grid-cols-1 gap-4 xl:grid-cols-2">
     <div class="flex-1 flex flex-col sm:px-12 lg:px-16 py-8">
         <div class="flex-1 flex flex-col justify-center items-center">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-md px-8 md:px-0 xl:px-0">
                 <div class="flex justify-center mb-6">
-                    <img src="/image/logo-aw.png" alt="automationweek logo" class="h-28 mix-blend-multiply w-auto select-none pointer-events-none">
+                    <img src="/image/logo-aw.png" alt="automationweek logo" class="h-20 sm:h-28 mix-blend-multiply w-auto select-none pointer-events-none">
                 </div>
 
                 <div class="text-center mb-8">
-                    <h1 class="text-4xl sm:text-5xl font-serif leading-tight mb-4">
+                    <h1 class="text-3xl sm:text-4xl font-serif leading-tight mb-4">
                         AutomationWeek IX
                     </h1>
                     <p class="text-sm sm:text-base">
@@ -27,7 +27,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 </div>
 
                 <div class="flex justify-center bg-red-600/10 -mb-6 pb-6 rounded-t-4xl border border-red-500">
-                    <div class="inline-flex items-center gap-2 px-3 py-4 text-xs">
+                    <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 px-3 py-2 sm:py-4 text-xs">
                         <span class="text-brand font-semibold">Pendaftaran lomba dibuka</span>
                         <span>20 Agustus - 20 Oktober 2026</span>
                     </div>
@@ -39,7 +39,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
 
                             <div>
-                                <label for="email" class="block text-sm font-medium mb-1 text-gray-300">
+                                <label for="email" class="block max-sm:text-xs text-sm font-medium mb-1 text-gray-300">
                                     Email<span class="text-red-500">*</span>
                                 </label>
                                 <input
@@ -49,22 +49,22 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                     placeholder="Masukkan email"
                                     required
                                     value="<?= htmlspecialchars($old_email ?? '') ?>"
-                                    class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
+                                    class="appearance-none block w-full px-3 py-2.5 max-sm:py-2 border rounded-xl shadow-sm
                                            bg-[#2a2926] placeholder-gray-500 text-white
-                                           focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
+                                           focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm max-sm:text-xs
                                            <?= isset($email_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
                                     oninput="
                                         this.classList.remove('border-red-500', 'text-red-400');
                                         this.classList.add('border-white/10');
                                         document.getElementById('email-error')?.classList.add('hidden');
                                     ">
-                                <p id="email-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($email_error) ? '' : 'hidden' ?>">
+                                <p id="email-error" class="mt-1 ml-1 max-sm:text-xs text-sm text-red-400 <?= isset($email_error) ? '' : 'hidden' ?>">
                                     <?= htmlspecialchars($email_error ?? '') ?>
                                 </p>
                             </div>
 
                             <div>
-                                <label for="password" class="block text-sm font-medium mb-1 text-gray-300">
+                                <label for="password" class="block max-sm:text-xs text-sm font-medium mb-1 text-gray-300">
                                     Password<span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
@@ -76,9 +76,9 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                         required
                                         minlength="8"
                                         style="padding-right: 3.5rem"
-                                        class="appearance-none block w-full px-3 py-2.5 border rounded-xl shadow-sm
+                                        class="appearance-none block w-full px-3 py-2.5 max-sm:py-2 border rounded-xl shadow-sm
                                                bg-[#2a2926] placeholder-gray-500 text-white
-                                               focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm
+                                               focus:outline-none focus:border-white/40 transition duration-150 ease-in-out sm:text-sm max-sm:text-xs
                                                <?= isset($password_error) ? 'border-red-500 text-red-400' : 'border-white/10' ?>"
                                         oninput="
                                             this.classList.remove('border-red-500', 'text-red-400');
@@ -87,15 +87,15 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                         ">
                                     <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer" data-password-toggle="password"></button>
                                 </div>
-                                <p id="password-error" class="mt-1 ml-1 text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
+                                <p id="password-error" class="mt-1 ml-1 max-sm:text-xs text-sm text-red-400 <?= isset($password_error) ? '' : 'hidden' ?>">
                                     <?= htmlspecialchars($password_error ?? '') ?>
                                 </p>
                             </div>
 
                             <button
                                 type="submit"
-                                class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm
-                                       text-sm font-bold text-[#161512] bg-white hover:bg-gray-200
+                                class="w-full flex justify-center py-2.5 max-sm:py-2 px-4 border border-transparent rounded-xl shadow-sm
+                                       text-sm max-sm:text-xs font-bold text-[#161512] bg-white hover:bg-gray-200
                                        transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer">
                                 Login
                             </button>
@@ -103,8 +103,8 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                     </div>
                 </div>
 
-                <div class="mt-6 text-center">
-                    <p class="text-sm">
+                <div class="mt-2 text-center">
+                    <p class="max-sm:text-xs text-sm">
                         Belum punya akun?
                         <a
                             href="/register"
@@ -119,7 +119,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         </div>
     </div>
 
-    <div class="hidden lg:flex justify-self-start items-center w-full">
+    <div class="hidden xl:flex justify-self-start items-center w-full">
         <div class="flex justify-self-start rounded-2xl w-full max-w-xl xl:max-w-none xl:aspect-auto xl:h-[85vh] xl:min-h-[500px] items-center overflow-hidden mt-8 ml-0 mr-auto">
             <video
                 class="w-full h-full object-cover"
