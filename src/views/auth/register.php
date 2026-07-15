@@ -53,7 +53,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                         <?php endif; ?>
 
                         <div id="register-form">
-                            <form action="/register" method="POST" class="space-y-4">
+                            <form action="/register" method="POST" class="space-y-4" novalidate>
                                 <input
                                     type="hidden"
                                     name="csrf_token"
@@ -112,9 +112,9 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                 </div>
 
                                 <div id="step-2-fields" class="space-y-4 hidden">
-                                    <div class="text-center text-sm flex flex-col">
-                                        <span class="text-gray-100 font-thin -mb-1">Daftar untuk akun</span>
-                                        <span id="confirm-email" class="text-white font-medium"></span>
+                                    <div class="text-center text-sm flex flex-col -mt-2">
+                                        <span class="text-gray-100 font-thin -mb-1 text-xs">Daftar untuk akun</span>
+                                        <span id="confirm-email" class="text-white font-bold"></span>
                                     </div>
                                     <div>
                                         <label for="password" class="block max-sm:text-xs text-sm font-medium mb-1 text-gray-300">
@@ -178,9 +178,10 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                     <button
                                         type="button"
                                         id="action-btn"
+                                        onclick="handleRegister(event)"
                                         class="w-full flex justify-center py-2.5 max-sm:py-2 px-4 border border-transparent rounded-xl shadow-sm
                                                text-sm max-sm:text-xs font-bold text-[#161512] bg-white hover:bg-gray-200
-                                               transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer">
+                                               transition duration-150 ease-in-out cursor-pointer" style="touch-action: manipulation">
                                         Lanjutkan
                                     </button>
                                     <button
@@ -314,129 +315,163 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         }
 
         function goToStep1() {
-            step = 1;
-            step1.classList.remove('hidden');
-            step2.classList.add('hidden');
-            backBtn.classList.add('hidden');
-            actionBtn.textContent = 'Lanjutkan';
+            window.__regStep = 1;
+            var s1 = document.getElementById('step-1-fields');
+            var s2 = document.getElementById('step-2-fields');
+            var bb = document.getElementById('back-btn');
+            var ab = document.getElementById('action-btn');
+            if (s1) s1.classList.remove('hidden');
+            if (s2) s2.classList.add('hidden');
+            if (bb) bb.classList.add('hidden');
+            if (ab) ab.textContent = 'Lanjutkan';
         }
 
         backBtn.addEventListener('click', goToStep1);
-        document.getElementById('retry-btn')?.addEventListener('click', () => {
+        document.getElementById('retry-btn')?.addEventListener('click', function() {
             document.getElementById('register-error').classList.add('hidden');
             document.getElementById('register-form').classList.remove('hidden');
             goToStep1();
-            actionBtn.disabled = false;
-            actionBtn.textContent = 'Lanjutkan';
-            showFieldError(errEmail, 'Email sudah terdaftar');
+            var ab = document.getElementById('action-btn');
+            if (ab) ab.disabled = false;
+            var ee = document.getElementById('email-error');
+            var ei = document.getElementById('email');
+            if (ee) { ee.textContent = 'Email sudah terdaftar'; ee.classList.remove('hidden'); }
+            if (ei) { ei.classList.remove('border-white/10'); ei.classList.add('border-red-500', 'text-red-400'); }
         });
 
-        form.addEventListener('keydown', e => {
+        form.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
                 e.preventDefault();
-                actionBtn.click();
-            }
-        });
-
-        actionBtn.addEventListener('click', async () => {
-            clearErrors();
-
-            if (step === 1) {
-                let err = false;
-                if (!nameInput.value.trim()) {
-                    showFieldError(errName, 'nama wajib diisi!');
-                    err = true;
-                }
-                if (!emailInput.value.trim()) {
-                    showFieldError(errEmail, 'email wajib diisi!');
-                    err = true;
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
-                    showFieldError(errEmail, 'email harus berupa "email@mail.com"');
-                    err = true;
-                } else if (emailInput.dataset.rejected === 'true') {
-                    showFieldError(errEmail, 'Email sudah terdaftar');
-                    err = true;
-                }
-                if (err) return;
-
-                step = 2;
-                document.getElementById('confirm-email').textContent = emailInput.value.trim();
-                step1.classList.add('hidden');
-                step2.classList.remove('hidden');
-                backBtn.classList.remove('hidden');
-                actionBtn.textContent = 'Daftar';
-                return;
-            }
-
-            let err = false;
-            if (!passInput.value) {
-                showFieldError(errPass, 'password wajib diisi!');
-                err = true;
-            } else if (passInput.value.length < 8) {
-                showFieldError(errPass, 'password minimal 8 karakter!');
-                err = true;
-            }
-            if (!confirmInput.value) {
-                showFieldError(errConfirm, 'konfirmasi password wajib diisi!');
-                err = true;
-            } else if (passInput.value !== confirmInput.value) {
-                showFieldError(errConfirm, 'password tidak cocok!');
-                err = true;
-            }
-            if (err) return;
-
-            actionBtn.disabled = true;
-            const originalText = actionBtn.textContent;
-            actionBtn.innerHTML = form.dataset.loaderCircle;
-
-            try {
-                const fd = new FormData();
-                fd.append('csrf_token', document.querySelector('input[name="csrf_token"]').value);
-                fd.append('name', nameInput.value.trim());
-                fd.append('email', emailInput.value.trim());
-                fd.append('password', passInput.value);
-
-                const res = await fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    body: fd
-                });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('register-form').classList.add('hidden');
-                    document.getElementById('success-icon').innerHTML = form.dataset.userRound;
-                    document.getElementById('success-email').textContent = emailInput.value.trim();
-                    document.getElementById('register-success').classList.remove('hidden');
-                } else if (data.errors?.email_error) {
-                    document.getElementById('register-form').classList.add('hidden');
-                    document.getElementById('error-icon').innerHTML = form.dataset.userRoundX;
-                    document.getElementById('register-error').classList.remove('hidden');
-                    emailInput.dataset.rejected = 'true';
-                    actionBtn.disabled = false;
-                    actionBtn.textContent = originalText;
-                } else {
-                    for (const [k, v] of Object.entries(data.errors || {})) {
-                        const el = document.getElementById(k.replace(/_error$/, '-error'));
-                        if (el) {
-                            el.textContent = v;
-                            el.classList.remove('hidden');
-                            const inp = document.getElementById(k.replace(/_error$/, ''));
-                            if (inp) {
-                                inp.classList.remove('border-white/10');
-                                inp.classList.add('border-red-500', 'text-red-400');
-                            }
-                        }
-                    }
-                    if (data.errors?.name_error || data.errors?.email_error) goToStep1();
-                    actionBtn.disabled = false;
-                    actionBtn.textContent = originalText;
-                }
-            } catch (e) {
-                actionBtn.disabled = false;
-                actionBtn.textContent = originalText;
+                handleRegister(e);
             }
         });
     }
+
+    window.handleRegister = async function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        var f = document.querySelector('form[action="/register"]');
+        if (!f) return;
+
+        var s1 = document.getElementById('step-1-fields');
+        var s2 = document.getElementById('step-2-fields');
+        var ab = document.getElementById('action-btn');
+        var bb = document.getElementById('back-btn');
+        var ni = document.getElementById('name');
+        var ei = document.getElementById('email');
+        var pi = document.getElementById('password');
+        var ci = document.getElementById('confirm_password');
+        var en = document.getElementById('name-error');
+        var ee = document.getElementById('email-error');
+        var ep = document.getElementById('password-error');
+        var ec = document.getElementById('confirm-password-error');
+        var ce = document.getElementById('confirm-email');
+
+        var errs = [
+            { el: en, inp: ni, msg: 'nama wajib diisi!' },
+            { el: ee, inp: ei, msg: 'email wajib diisi!' },
+            { el: ep, inp: pi, msg: 'password wajib diisi!' },
+            { el: ec, inp: ci, msg: 'konfirmasi password wajib diisi!' }
+        ];
+
+        function clr() {
+            errs.forEach(function(x) {
+                if (x.el) { x.el.classList.add('hidden'); }
+                if (x.inp) { x.inp.classList.remove('border-red-500', 'text-red-400'); x.inp.classList.add('border-white/10'); }
+            });
+        }
+
+        function shw(errEl, inp, msg) {
+            if (errEl) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+            if (inp) { inp.classList.remove('border-white/10'); inp.classList.add('border-red-500', 'text-red-400'); }
+        }
+
+        clr();
+
+        if (window.__regStep === undefined) window.__regStep = 1;
+
+        if (window.__regStep === 1) {
+            var err = false;
+            if (!ni || !ni.value.trim()) { shw(en, ni, 'nama wajib diisi!'); err = true; }
+            if (!ei || !ei.value.trim()) { shw(ee, ei, 'email wajib diisi!'); err = true; }
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ei.value.trim())) { shw(ee, ei, 'email harus berupa "email@mail.com"'); err = true; }
+            else if (ei.dataset.rejected === 'true') { shw(ee, ei, 'Email sudah terdaftar'); err = true; }
+            if (err) return;
+
+            window.__regStep = 2;
+            if (ce) ce.textContent = (ei ? ei.value.trim() : '');
+            if (s1) s1.classList.add('hidden');
+            if (s2) s2.classList.remove('hidden');
+            if (bb) bb.classList.remove('hidden');
+            if (ab) ab.textContent = 'Daftar';
+            return;
+        }
+
+        var err = false;
+        if (!pi || !pi.value) { shw(ep, pi, 'password wajib diisi!'); err = true; }
+        else if (pi.value.length < 8) { shw(ep, pi, 'password minimal 8 karakter!'); err = true; }
+        if (!ci || !ci.value) { shw(ec, ci, 'konfirmasi password wajib diisi!'); err = true; }
+        else if (pi.value !== ci.value) { shw(ec, ci, 'password tidak cocok!'); err = true; }
+        if (err) return;
+
+        if (ab) ab.disabled = true;
+        var origText = ab ? ab.textContent : '';
+        if (ab) ab.innerHTML = f.dataset.loaderCircle || '...';
+
+        try {
+            var fd = new FormData();
+            fd.append('csrf_token', (document.querySelector('input[name="csrf_token"]') || {}).value || '');
+            fd.append('name', ni ? ni.value.trim() : '');
+            fd.append('email', ei ? ei.value.trim() : '');
+            fd.append('password', pi ? pi.value : '');
+
+            var res = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: fd
+            });
+            var data = await res.json();
+            if (data.success) {
+                var rf = document.getElementById('register-form');
+                var si = document.getElementById('success-icon');
+                var se = document.getElementById('success-email');
+                var rs = document.getElementById('register-success');
+                if (rf) rf.classList.add('hidden');
+                if (si) si.innerHTML = f.dataset.userRound || '';
+                if (se) se.textContent = ei ? ei.value.trim() : '';
+                if (rs) rs.classList.remove('hidden');
+            } else if (data.errors && data.errors.email_error) {
+                var rf2 = document.getElementById('register-form');
+                var ei2 = document.getElementById('error-icon');
+                var re2 = document.getElementById('register-error');
+                if (rf2) rf2.classList.add('hidden');
+                if (ei2) ei2.innerHTML = f.dataset.userRoundX || '';
+                if (re2) re2.classList.remove('hidden');
+                if (ei) ei.dataset.rejected = 'true';
+                if (ab) { ab.disabled = false; ab.textContent = origText; }
+            } else {
+                for (var k in data.errors) {
+                    var el = document.getElementById(k.replace(/_error$/, '-error'));
+                    if (el) {
+                        el.textContent = data.errors[k];
+                        el.classList.remove('hidden');
+                        var inp = document.getElementById(k.replace(/_error$/, ''));
+                        if (inp) {
+                            inp.classList.remove('border-white/10');
+                            inp.classList.add('border-red-500', 'text-red-400');
+                        }
+                    }
+                }
+                if (data.errors && (data.errors.name_error || data.errors.email_error)) {
+                    window.__regStep = 1;
+                    if (s1) s1.classList.remove('hidden');
+                    if (s2) s2.classList.add('hidden');
+                    if (bb) bb.classList.add('hidden');
+                    if (ab) ab.textContent = 'Lanjutkan';
+                }
+                if (ab) { ab.disabled = false; ab.textContent = origText; }
+            }
+        } catch (e) {
+            if (ab) { ab.disabled = false; ab.textContent = origText; }
+        }
+    };
 </script>
