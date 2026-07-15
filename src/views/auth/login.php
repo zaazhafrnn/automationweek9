@@ -96,7 +96,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                 type="submit"
                                 class="w-full flex justify-center py-2.5 max-sm:py-2 px-4 border border-transparent rounded-xl shadow-sm
                                        text-sm max-sm:text-xs font-bold text-[#161512] bg-white hover:bg-gray-200
-                                       transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer">
+                                       transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer" ontouchstart="">
                                 Login
                             </button>
                         </form>
