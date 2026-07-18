@@ -35,6 +35,32 @@ class Team extends Model
         return $stmt->fetch();
     }
 
+    public function update(int $id, array $data): bool
+    {
+        $stmt = $this->db->prepare("UPDATE teams SET
+            name = :name,
+            teamSchool = :teamSchool,
+            leaderName = :leaderName,
+            leaderPhoneNumber = :leaderPhoneNumber,
+            firstMemberName = :firstMemberName,
+            firstMemberPhoneNumber = :firstMemberPhoneNumber,
+            secondMemberName = :secondMemberName,
+            secondMemberPhoneNumber = :secondMemberPhoneNumber
+            WHERE id = :id");
+
+        return $stmt->execute([
+            ':id' => $id,
+            ':name' => $data['name'],
+            ':teamSchool' => $data['teamSchool'],
+            ':leaderName' => $data['leaderName'],
+            ':leaderPhoneNumber' => $data['leaderPhoneNumber'],
+            ':firstMemberName' => $data['firstMemberName'],
+            ':firstMemberPhoneNumber' => $data['firstMemberPhoneNumber'],
+            ':secondMemberName' => $data['secondMemberName'],
+            ':secondMemberPhoneNumber' => $data['secondMemberPhoneNumber'],
+        ]);
+    }
+
     public function getAllTeams(): array
     {
         $stmt = $this->db->prepare("SELECT t.*, u.email as user_email FROM teams t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC");

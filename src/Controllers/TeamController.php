@@ -43,7 +43,8 @@ class TeamController extends Controller
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
-            $this->view('dashboard/team_register', ['error' => 'Invalid CSRF token', 'csrf_token' => Security::generateCsrfToken()]);
+            Session::flash('team_register_error', 'Invalid session. Silakan coba lagi.');
+            $this->redirect('/dashboard');
             return;
         }
 
@@ -62,13 +63,15 @@ class TeamController extends Controller
         $secondMemberPhoneNumber = trim($_POST['secondMemberPhoneNumber'] ?? '');
 
         if (empty($teamName) || empty($division) || empty($leaderName) || empty($leaderPhoneNumber)) {
-            $this->view('dashboard/team_register', ['error' => 'Please fill all required fields.', 'csrf_token' => Security::generateCsrfToken()]);
+            Session::flash('team_register_error', 'Harap isi semua field yang wajib diisi.');
+            $this->redirect('/dashboard');
             return;
         }
 
         $allowedDivisions = ['LF', 'PLC', 'FFR', 'LKTI'];
         if (!in_array($division, $allowedDivisions)) {
-            $this->view('dashboard/team_register', ['error' => 'Invalid division selected.', 'csrf_token' => Security::generateCsrfToken()]);
+            Session::flash('team_register_error', 'Divisi yang dipilih tidak valid.');
+            $this->redirect('/dashboard');
             return;
         }
 
@@ -91,7 +94,53 @@ class TeamController extends Controller
             ]);
             $this->redirect('/dashboard');
         } catch (\Exception $e) {
-            $this->view('dashboard/team_register', ['error' => 'Registration failed: ' . $e->getMessage(), 'csrf_token' => Security::generateCsrfToken()]);
+            Session::flash('team_register_error', 'Registrasi gagal: ' . $e->getMessage());
+            $this->redirect('/dashboard');
         }
+    }
+
+    public function update()
+    {
+        $this->requireAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/dashboard');
+        }
+
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            Session::flash('team_update_error', 'Invalid session. Silakan coba lagi.');
+            $this->redirect('/dashboard');
+            return;
+        }
+
+        $team = $this->teamModel->findByUserId(Session::get('user_id'));
+        if (!$team) {
+            $this->redirect('/dashboard/team/register');
+        }
+
+        $data = [
+            'name' => trim($_POST['name'] ?? $team['name']),
+            'teamSchool' => trim($_POST['teamSchool'] ?? ''),
+            'leaderName' => trim($_POST['leaderName'] ?? $team['leaderName']),
+            'leaderPhoneNumber' => trim($_POST['leaderPhoneNumber'] ?? ''),
+            'firstMemberName' => trim($_POST['firstMemberName'] ?? ''),
+            'firstMemberPhoneNumber' => trim($_POST['firstMemberPhoneNumber'] ?? ''),
+            'secondMemberName' => trim($_POST['secondMemberName'] ?? ''),
+            'secondMemberPhoneNumber' => trim($_POST['secondMemberPhoneNumber'] ?? ''),
+        ];
+
+        if (empty($data['name']) || empty($data['leaderName'])) {
+            Session::flash('team_update_error', 'Nama tim dan ketua harus diisi.');
+            $this->redirect('/dashboard');
+            return;
+        }
+
+        try {
+            $this->teamModel->update($team['id'], $data);
+            Session::flash('team_update_success', 'Data tim berhasil diperbarui!');
+        } catch (\Exception $e) {
+            Session::flash('team_update_error', 'Gagal memperbarui: ' . $e->getMessage());
+        }
+        $this->redirect('/dashboard');
     }
 }
