@@ -40,6 +40,7 @@ class Team extends Model
         $stmt = $this->db->prepare("UPDATE teams SET
             name = :name,
             teamSchool = :teamSchool,
+            division = :division,
             leaderName = :leaderName,
             leaderPhoneNumber = :leaderPhoneNumber,
             firstMemberName = :firstMemberName,
@@ -52,6 +53,7 @@ class Team extends Model
             ':id' => $id,
             ':name' => $data['name'],
             ':teamSchool' => $data['teamSchool'],
+            ':division' => $data['division'] ?? '',
             ':leaderName' => $data['leaderName'],
             ':leaderPhoneNumber' => $data['leaderPhoneNumber'],
             ':firstMemberName' => $data['firstMemberName'],

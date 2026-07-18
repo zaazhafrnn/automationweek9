@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Utils\Session;
 use App\Utils\Security;
 use App\Models\Team;
+use App\Models\TeamDocumentationUpload;
 use App\Models\Payment;
 use App\Models\Submission;
 
@@ -22,9 +23,14 @@ class DashboardController extends Controller
 
         $payment = null;
         $submission = null;
+        $uploads = [];
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
             $submission = (new Submission())->findByTeamId($team['id']);
+            $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
+            foreach ($rows as $r) {
+                $uploads[$r['member_number']][$r['upload_type']] = $r['file_name'];
+            }
         }
 
         $this->view('dashboard/index', [
@@ -33,6 +39,7 @@ class DashboardController extends Controller
             'team' => $team,
             'payment' => $payment,
             'submission' => $submission,
+            'uploads' => $uploads,
         ]);
     }
 }

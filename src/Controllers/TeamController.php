@@ -4,16 +4,19 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Team;
+use App\Models\TeamDocumentationUpload;
 use App\Utils\Session;
 use App\Utils\Security;
 
 class TeamController extends Controller
 {
-    private $teamModel;
+    private Team $teamModel;
+    private TeamDocumentationUpload $uploadModel;
 
     public function __construct()
     {
         $this->teamModel = new Team();
+        $this->uploadModel = new TeamDocumentationUpload();
     }
 
     public function registerForm()
@@ -62,8 +65,8 @@ class TeamController extends Controller
         $secondMemberName = trim($_POST['secondMemberName'] ?? '');
         $secondMemberPhoneNumber = trim($_POST['secondMemberPhoneNumber'] ?? '');
 
-        if (empty($teamName) || empty($division) || empty($leaderName) || empty($leaderPhoneNumber)) {
-            Session::flash('team_register_error', 'Harap isi semua field yang wajib diisi.');
+        if (empty($teamName) || empty($division)) {
+            Session::flash('team_register_error', 'Harap isi nama tim dan pilih divisi.');
             $this->redirect('/dashboard');
             return;
         }
@@ -121,6 +124,7 @@ class TeamController extends Controller
         $data = [
             'name' => trim($_POST['name'] ?? $team['name']),
             'teamSchool' => trim($_POST['teamSchool'] ?? ''),
+            'division' => $_POST['division'] ?? $team['division'],
             'leaderName' => trim($_POST['leaderName'] ?? $team['leaderName']),
             'leaderPhoneNumber' => trim($_POST['leaderPhoneNumber'] ?? ''),
             'firstMemberName' => trim($_POST['firstMemberName'] ?? ''),
@@ -137,6 +141,39 @@ class TeamController extends Controller
 
         try {
             $this->teamModel->update($team['id'], $data);
+
+            // Handle file uploads: studentCard_N, igFollow_N, twibbon_N
+            $uploadDir = BASE_PATH . '/public/uploads/teams/';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+            $uploadTypes = ['studentCard' => 'student_card', 'igFollow' => 'ig_follow', 'twibbon' => 'twibbon'];
+            $members = [1, 2, 3];
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+            foreach ($members as $m) {
+                foreach ($uploadTypes as $inputName => $dbType) {
+                    $key = $inputName . '_' . $m;
+                    if (empty($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) continue;
+
+                    $file = $_FILES[$key];
+                    if (!in_array($file['type'], $allowedTypes)) continue;
+
+                    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                    $slug = preg_replace('/[^a-z0-9]/i', '-', $team['name']);
+                    $fileName = $slug . '_' . $dbType . '_' . $m . '_' . date('Ymd_His') . '.' . $ext;
+                    $dest = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($file['tmp_name'], $dest)) {
+                        // Delete old file
+                        $old = $this->uploadModel->findOne($team['id'], $m, $dbType);
+                        if ($old && $old['file_name'] && file_exists($uploadDir . $old['file_name'])) {
+                            unlink($uploadDir . $old['file_name']);
+                        }
+                        $this->uploadModel->upsert($team['id'], $m, $dbType, $fileName);
+                    }
+                }
+            }
+
             Session::flash('team_update_success', 'Data tim berhasil diperbarui!');
         } catch (\Exception $e) {
             Session::flash('team_update_error', 'Gagal memperbarui: ' . $e->getMessage());
