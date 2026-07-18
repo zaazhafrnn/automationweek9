@@ -50,7 +50,8 @@ class PaymentController extends Controller
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
-            $this->view('dashboard/payment', ['error' => 'Invalid CSRF token', 'csrf_token' => Security::generateCsrfToken()]);
+            Session::flash('payment_error', 'Invalid session. Silakan coba lagi.');
+            $this->redirect('/dashboard');
             return;
         }
 
@@ -65,7 +66,8 @@ class PaymentController extends Controller
         }
 
         if (!isset($_FILES['proofImage']) || $_FILES['proofImage']['error'] !== UPLOAD_ERR_OK) {
-            $this->view('dashboard/payment', ['error' => 'Please select a file to upload.', 'csrf_token' => Security::generateCsrfToken(), 'team' => $team, 'payment' => $this->paymentModel->findByTeamId($team['id'])]);
+            Session::flash('payment_error', 'Pilih file untuk diupload.');
+            $this->redirect('/dashboard');
             return;
         }
 
@@ -74,7 +76,8 @@ class PaymentController extends Controller
         $maxSize = 2 * 1024 * 1024;
 
         if ($file['size'] > $maxSize) {
-            $this->view('dashboard/payment', ['error' => 'File too large. Max 2MB.', 'csrf_token' => Security::generateCsrfToken(), 'team' => $team, 'payment' => $this->paymentModel->findByTeamId($team['id'])]);
+            Session::flash('payment_error', 'File terlalu besar. Maksimal 2MB.');
+            $this->redirect('/dashboard');
             return;
         }
 
@@ -82,7 +85,8 @@ class PaymentController extends Controller
         $mime = finfo_file($finfo, $file['tmp_name']);
 
         if (!in_array($mime, $allowedTypes)) {
-            $this->view('dashboard/payment', ['error' => 'Only images (JPEG, PNG, GIF, WebP) are allowed.', 'csrf_token' => Security::generateCsrfToken(), 'team' => $team, 'payment' => $this->paymentModel->findByTeamId($team['id'])]);
+            Session::flash('payment_error', 'Hanya gambar (JPEG, PNG, GIF, WebP) yang diizinkan.');
+            $this->redirect('/dashboard');
             return;
         }
 
@@ -97,7 +101,8 @@ class PaymentController extends Controller
         $dest = $uploadDir . '/' . $filename;
 
         if (!move_uploaded_file($file['tmp_name'], $dest)) {
-            $this->view('dashboard/payment', ['error' => 'Failed to save file.', 'csrf_token' => Security::generateCsrfToken(), 'team' => $team, 'payment' => $this->paymentModel->findByTeamId($team['id'])]);
+            Session::flash('payment_error', 'Gagal menyimpan file.');
+            $this->redirect('/dashboard');
             return;
         }
 
