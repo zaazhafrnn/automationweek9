@@ -123,14 +123,14 @@ class TeamController extends Controller
 
         $data = [
             'name' => trim($_POST['name'] ?? $team['name']),
-            'teamSchool' => trim($_POST['teamSchool'] ?? ''),
+            'teamSchool' => trim($_POST['teamSchool'] ?? $team['teamSchool'] ?? ''),
             'division' => $_POST['division'] ?? $team['division'],
-            'leaderName' => trim($_POST['leaderName'] ?? $team['leaderName']),
-            'leaderPhoneNumber' => trim($_POST['leaderPhoneNumber'] ?? ''),
-            'firstMemberName' => trim($_POST['firstMemberName'] ?? ''),
-            'firstMemberPhoneNumber' => trim($_POST['firstMemberPhoneNumber'] ?? ''),
-            'secondMemberName' => trim($_POST['secondMemberName'] ?? ''),
-            'secondMemberPhoneNumber' => trim($_POST['secondMemberPhoneNumber'] ?? ''),
+            'leaderName' => trim($_POST['leaderName'] ?? $team['leaderName'] ?? ''),
+            'leaderPhoneNumber' => trim($_POST['leaderPhoneNumber'] ?? $team['leaderPhoneNumber'] ?? ''),
+            'firstMemberName' => trim($_POST['firstMemberName'] ?? $team['firstMemberName'] ?? ''),
+            'firstMemberPhoneNumber' => trim($_POST['firstMemberPhoneNumber'] ?? $team['firstMemberPhoneNumber'] ?? ''),
+            'secondMemberName' => trim($_POST['secondMemberName'] ?? $team['secondMemberName'] ?? ''),
+            'secondMemberPhoneNumber' => trim($_POST['secondMemberPhoneNumber'] ?? $team['secondMemberPhoneNumber'] ?? ''),
         ];
 
         if (empty($data['name']) || empty($data['leaderName'])) {
@@ -146,12 +146,12 @@ class TeamController extends Controller
             $uploadDir = BASE_PATH . '/public/uploads/teams/';
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
-            $uploadTypes = ['studentCard' => 'student_card', 'igFollow' => 'ig_follow', 'twibbon' => 'twibbon'];
+            $columnMap = ['studentCard' => 'student_card', 'igFollow' => 'ig_follow', 'twibbon' => 'twibbon'];
             $members = [1, 2, 3];
             $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
             foreach ($members as $m) {
-                foreach ($uploadTypes as $inputName => $dbType) {
+                foreach ($columnMap as $inputName => $column) {
                     $key = $inputName . '_' . $m;
                     if (empty($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) continue;
 
@@ -160,16 +160,16 @@ class TeamController extends Controller
 
                     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
                     $slug = preg_replace('/[^a-z0-9]/i', '-', $team['name']);
-                    $fileName = $slug . '_' . $dbType . '_' . $m . '_' . date('Ymd_His') . '.' . $ext;
+                    $fileName = $slug . '_' . $column . '_' . $m . '_' . date('Ymd_His') . '.' . $ext;
                     $dest = $uploadDir . $fileName;
 
                     if (move_uploaded_file($file['tmp_name'], $dest)) {
-                        // Delete old file
-                        $old = $this->uploadModel->findOne($team['id'], $m, $dbType);
-                        if ($old && $old['file_name'] && file_exists($uploadDir . $old['file_name'])) {
-                            unlink($uploadDir . $old['file_name']);
+                        $existing = $this->uploadModel->findOne($team['id'], $m);
+                        $oldFile = $existing && $existing[$column] ? $existing[$column] : null;
+                        if ($oldFile && file_exists($uploadDir . $oldFile)) {
+                            unlink($uploadDir . $oldFile);
                         }
-                        $this->uploadModel->upsert($team['id'], $m, $dbType, $fileName);
+                        $this->uploadModel->upsertColumn($team['id'], $m, $column, $fileName);
                     }
                 }
             }

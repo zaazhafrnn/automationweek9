@@ -13,27 +13,34 @@ class TeamDocumentationUpload extends Model
         return $stmt->fetchAll();
     }
 
-    public function findOne(int $teamId, int $member, string $type): array|false
+    public function findOne(int $teamId, int $member): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM team_documentation_uploads WHERE team_id = :team_id AND member_number = :member AND upload_type = :type LIMIT 1");
-        $stmt->execute([':team_id' => $teamId, ':member' => $member, ':type' => $type]);
+        $stmt = $this->db->prepare("SELECT * FROM team_documentation_uploads WHERE team_id = :team_id AND member_number = :member LIMIT 1");
+        $stmt->execute([':team_id' => $teamId, ':member' => $member]);
         return $stmt->fetch();
     }
 
-    public function upsert(int $teamId, int $member, string $type, string $fileName): bool
+    public function upsertColumn(int $teamId, int $member, string $column, string $fileName): bool
     {
-        $existing = $this->findOne($teamId, $member, $type);
-        if ($existing) {
-            $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET file_name = :file WHERE id = :id");
-            return $stmt->execute([':file' => $fileName, ':id' => $existing['id']]);
+        $allowed = ['student_card', 'ig_follow', 'twibbon'];
+        if (!in_array($column, $allowed)) return false;
+
+        $existing = $this->findOne($teamId, $member);
+        if (!$existing) {
+            $stmt = $this->db->prepare("INSERT INTO team_documentation_uploads (team_id, member_number) VALUES (:team_id, :member)");
+            $stmt->execute([':team_id' => $teamId, ':member' => $member]);
         }
-        $stmt = $this->db->prepare("INSERT INTO team_documentation_uploads (team_id, member_number, upload_type, file_name) VALUES (:team_id, :member, :type, :file)");
-        return $stmt->execute([':team_id' => $teamId, ':member' => $member, ':type' => $type, ':file' => $fileName]);
+
+        $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET $column = :file WHERE team_id = :team_id AND member_number = :member");
+        return $stmt->execute([':file' => $fileName, ':team_id' => $teamId, ':member' => $member]);
     }
 
-    public function delete(int $teamId, int $member, string $type): bool
+    public function deleteColumn(int $teamId, int $member, string $column): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM team_documentation_uploads WHERE team_id = :team_id AND member_number = :member AND upload_type = :type");
-        return $stmt->execute([':team_id' => $teamId, ':member' => $member, ':type' => $type]);
+        $allowed = ['student_card', 'ig_follow', 'twibbon'];
+        if (!in_array($column, $allowed)) return false;
+
+        $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET $column = NULL WHERE team_id = :team_id AND member_number = :member");
+        return $stmt->execute([':team_id' => $teamId, ':member' => $member]);
     }
 }

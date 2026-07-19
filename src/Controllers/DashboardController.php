@@ -29,7 +29,11 @@ class DashboardController extends Controller
             $submission = (new Submission())->findByTeamId($team['id']);
             $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
             foreach ($rows as $r) {
-                $uploads[$r['member_number']][$r['upload_type']] = $r['file_name'];
+                $uploads[$r['member_number']] = [
+                    'student_card' => $r['student_card'],
+                    'ig_follow' => $r['ig_follow'],
+                    'twibbon' => $r['twibbon'],
+                ];
             }
         }
 
