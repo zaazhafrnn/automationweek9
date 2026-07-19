@@ -68,7 +68,8 @@ foreach ($tabDone as $n => $done) {
                 class="tab-trigger relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors
                   <?= $defaultTab === $num ? 'border-brand text-brand' : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300' ?>
                   <?= $num === 2 && !$team ? 'opacity-40 pointer-events-none' : '' ?>
-                  <?= ($num === 3 || $num === 4) && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
+                  <?= $num === 3 && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
+                  <?= $num === 4 && (!$team || empty($team['leaderName']) || empty($upload1['ig_follow']) || empty($upload1['twibbon'])) ? 'opacity-40 pointer-events-none' : '' ?>
                   <?= $num === 5 && !$tabDone[5] ? 'opacity-40 pointer-events-none' : '' ?>
                   ">
                 <?php if ($tabDone[$num]): ?>
