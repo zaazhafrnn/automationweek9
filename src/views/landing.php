@@ -1,6 +1,3 @@
-<?php
-/* Hallmark · macrostructure: Marquee Hero · H1 hero knobs: centered, static, tagline-centered, with-competition-grid · theme: custom · vibe: "nocturnal automation, high-octane engineering, light red and white canvas with red and orange branding accents" · paper: #ffffff · accent: #ba1229 · display: Space Grotesk · body: Inter · axes: light / geometric-sans / warm · studied: no · context: explicit · v1.1.0 */
-?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -10,90 +7,141 @@
     <title>Automation Week 9</title>
     <link class="w-4 h-4" rel="icon" href="/image/logo-aw.png">
     <link rel="stylesheet" href="/css/app.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: url('/image/hero-landing.png') left center/cover no-repeat;
+        }
+
+        @media (min-width: 640px) {
+            .hero-bg {
+                background-position: center;
+            }
+        }
+
+        .marquee-track {
+            display: inline-flex;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased text-foreground">
-
-    <!-- Nav Pill (N5 archetype) -->
-    <nav class="nav-pill" aria-label="Primary">
-        <a href="/" class="flex items-center gap-2 no-underline text-foreground">
+    <nav class="nav-pill relative" aria-label="Primary">
+        <button type="button"
+            id="mobile-nav-pill-toggle"
+            class="flex md:pointer-events-none items-center gap-2 pr-2 no-underline text-foreground bg-transparent border-none outline-none focus:outline-none relative z-20"
+            aria-haspopup="true"
+            aria-expanded="false"
+            style="appearance: none; -webkit-appearance: none; padding: 0; margin: 0;">
             <img src="/image/logo-aw.png" alt="AW" class="w-6 h-6 object-contain bg-white rounded-full border border-border">
-            <span class="font-bold text-sm font-display tracking-tight">Automation Week 9</span>
-        </a>
-        <div class="hidden md:flex items-center gap-6 text-xs font-semibold text-muted">
+            <span class="font-bold text-sm tracking-tight whitespace-nowrap">Automation Week 9</span>
+            <span class="md:hidden mx-1">
+                <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4" />
+                </svg>
+            </span>
+        </button>
+
+        <div class="hidden md:flex items-center gap-6 text-xs font-semibold">
             <a href="#competitions" class="hover:text-primary transition-colors no-underline">Lomba</a>
             <a href="#videos" class="hover:text-primary transition-colors no-underline">Video</a>
             <a href="#contact" class="hover:text-primary transition-colors no-underline">Kontak</a>
         </div>
-        <a href="/login" class="px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-sm transition-all bg-accent hover:bg-accent/90 no-underline">Login/Daftar</a>
-    </nav>
 
-    <!-- Marquee Hero Section (H1 archetype) -->
+        <div id="mobile-nav-pill-dropdown"
+            class="absolute left-0 right-auto w-max min-w-[180px] bg-white border border-border rounded-xl shadow-lg py-2 z-10 hidden md:hidden"
+            style="top: calc(100% + 0.5rem);">
+            <a href="#competitions" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Lomba</a>
+            <a href="#videos" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Video</a>
+            <a href="#contact" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Kontak</a>
+        </div>
+
+        <a href="/login" class="px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-sm transition-all bg-accent hover:bg-accent/90 no-underline">Login</a>
+    </nav>
     <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+        <div class="absolute inset-0 z-0 hero-bg"></div>
         <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-12">
-            <img src="/image/logo-aw.png" alt="AW Logo" class="w-36 h-36 mb-6 object-contain bg-white rounded-full shadow-2xl p-1 border border-border">
-            
-            <!-- 4 Logos of the Competitions side-by-side -->
-            <div class="flex items-center justify-center gap-6 sm:gap-8 mb-8">
-                <a href="#competitions" class="w-12 h-12 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
+            <img src="/image/logo-aw.png" alt="AW Logo" class="w-28 h-28 mb-6 object-contain bg-white rounded-full shadow-2xl p-1 border border-border">
+
+            <div class="flex items-center justify-center gap-3 sm:gap-4 mb-8 bg-white/70 rounded-full p-2">
+                <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
                     <img src="/image/LKTI_AW8.png" alt="LKTI Logo" class="w-full h-full object-contain">
                 </a>
-                <a href="#competitions" class="w-12 h-12 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
+                <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
                     <img src="/image/FFR_AW8.png" alt="FFR Logo" class="w-full h-full object-contain">
                 </a>
-                <a href="#competitions" class="w-12 h-12 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
+                <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
                     <img src="/image/PLC_AW8.png" alt="PLC Logo" class="w-full h-full object-contain">
                 </a>
-                <a href="#competitions" class="w-12 h-12 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
+                <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
                     <img src="/image/LF_AW8.png" alt="Line Follower Logo" class="w-full h-full object-contain">
                 </a>
             </div>
 
-            <p class="text-xs font-bold uppercase tracking-widest text-accent mb-3 opacity-90">Politeknik Perkapalan Negeri Surabaya</p>
-            <h1 class="text-6xl md:text-8xl font-black mb-6 leading-none font-display tracking-tight text-primary">Automation <span class="text-orange">Week 9</span></h1>
-            <p class="text-lg md:text-xl font-medium tracking-wide text-muted mb-8 italic">"Fuel the Red Automation"</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/dashboard/team/register" class="px-8 py-3.5 rounded-full text-sm font-bold text-white shadow-lg transition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline">Daftar Sekarang</a>
-                <a href="#competitions" class="px-8 py-3.5 rounded-full text-sm font-bold text-foreground border border-border hover:bg-card transition-all no-underline">Lihat Lomba</a>
+            <p class="text-xs font-bold uppercase tracking-tighter md:tracking-wide text-white mb-3">Politeknik Perkapalan Negeri Surabaya</p>
+            <h1 class="text-3xl md:text-6xl font-black mb-6 leading-none font-poppins tracking-tight text-white">Automation <span class="text-white">Week 9</span></h1>
+            <p class="text-lg md:text-xl font-medium tracking-wide text-white mb-8 italic">"Fuel the Red Automation"</p>
+            <div class="flex flex-row w-full max-w-xs sm:max-w-none gap-3 sm:gap-4 justify-center mx-auto">
+                <a href="/dashboard/team/register" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg transition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
+                <a href="#competitions" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm text-white font-bold text-foreground border border-border hover:text-black hover:bg-card transition-all no-underline text-center">Lihat Lomba</a>
+            </div>
+        </div>
+        <div class="absolute left-0 right-0 bottom-0 z-20">
+            <div class="py-3.5 border-y border-border overflow-hidden whitespace-nowrap relative" style="background: linear-gradient(90deg, #ba1229 0%, #f27c29 50%, #ba1229 100%);">
+                <div class="marquee-track inline-flex text-white text-xs font-semibold tracking-wide" style="animation: marquee 45s linear infinite;">
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 4 kategori: LF · PLC · FFR · LKTI</span>
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 4 kategori: LF · PLC · FFR · LKTI</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- scrolling marquee track -->
-    <div class="py-3.5 border-y border-border overflow-hidden whitespace-nowrap relative" style="background: linear-gradient(90deg, #ba1229 0%, #f27c29 50%, #ba1229 100%);">
-        <div class="marquee-track inline-flex text-white text-xs font-semibold tracking-wide" style="animation: marquee 45s linear infinite;">
-            <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
-            <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
-            <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 4 kategori: LF · PLC · FFR · LKTI</span>
-            <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
-            <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
-            <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 4 kategori: LF · PLC · FFR · LKTI</span>
-        </div>
-    </div>
 
-    <!-- Competitions Section -->
     <section id="competitions" class="py-24 px-4 bg-background">
         <div class="max-w-6xl mx-auto">
             <div class="mb-16 text-center">
                 <p class="text-xs font-bold uppercase tracking-widest mb-3 text-accent">4 Kategori Lomba</p>
-                <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 font-display tracking-tight">Kategori & Jadwal Lomba</h2>
+                <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Kategori & Jadwal Lomba</h2>
                 <p class="text-muted max-w-2xl mx-auto text-base md:text-lg">
                     Ikuti 4 kategori kompetisi nasional bergengsi tingkat SMA/SMK/MA sederajat di Automation Week. Unduh Guide Book untuk kriteria lengkap.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- LKTI -->
                 <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
                     <div class="h-1.5 bg-gradient-to-r from-yellow-500 to-yellow-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
                             <img src="/image/LKTI_AW8.png" alt="LKTI" class="w-16 h-16 object-contain">
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 font-display text-accent tracking-tight">LKTI</h3>
+                        <h3 class="text-2xl font-bold mb-2 text-accent tracking-tight">LKTI</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Lomba Karya Tulis Ilmiah — mengembangkan ide kreatif dan inovatif dalam memecahkan masalah lingkungan sekitar.</p>
                         <ul class="w-full mb-8 text-sm">
                             <li class="flex items-center justify-between py-3 border-b border-border">
@@ -116,14 +164,13 @@
                     </div>
                 </div>
 
-                <!-- FFR -->
                 <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
                     <div class="h-1.5 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
                             <img src="/image/FFR_AW8.png" alt="FFR" class="w-16 h-16 object-contain">
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 font-display text-cyan-600 tracking-tight">FFR</h3>
+                        <h3 class="text-2xl font-bold mb-2 text-cyan-600 tracking-tight">FFR</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Fire Fighting Roboboat — kapal tanpa awak yang bergerak otomatis dengan misi memadamkan api.</p>
                         <ul class="w-full mb-8 text-sm">
                             <li class="flex items-center justify-between py-3 border-b border-border">
@@ -146,14 +193,13 @@
                     </div>
                 </div>
 
-                <!-- PLC -->
                 <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
                     <div class="h-1.5 bg-gradient-to-r from-accent to-red-800"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
                             <img src="/image/PLC_AW8.png" alt="PLC" class="w-16 h-16 object-contain">
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 font-display text-accent tracking-tight">PLC</h3>
+                        <h3 class="text-2xl font-bold mb-2 text-accent tracking-tight">PLC</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Programmable Logic Controller — mengasah logika dan kemampuan dalam bidang pemrograman PLC industri.</p>
                         <ul class="w-full mb-8 text-sm">
                             <li class="flex items-center justify-between py-3 border-b border-border">
@@ -176,14 +222,13 @@
                     </div>
                 </div>
 
-                <!-- Line Follower -->
                 <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
                     <div class="h-1.5 bg-gradient-to-r from-purple-600 to-purple-400"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
                             <img src="/image/LF_AW8.png" alt="Line Follower" class="w-16 h-16 object-contain">
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 font-display text-purple-700 tracking-tight">Line Follower</h3>
+                        <h3 class="text-2xl font-bold mb-2 text-purple-700 tracking-tight">Line Follower</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Robot mikrokontroler yang ditantang mengikuti lintasan secara otomatis dengan kecepatan tinggi.</p>
                         <ul class="w-full mb-8 text-sm">
                             <li class="flex items-center justify-between py-3 border-b border-border">
@@ -209,7 +254,6 @@
         </div>
     </section>
 
-    <!-- Poster Banner -->
     <section class="py-12 px-4 bg-background">
         <div class="max-w-6xl mx-auto">
             <div class="border border-border rounded-2xl overflow-hidden shadow-xl">
@@ -218,11 +262,10 @@
         </div>
     </section>
 
-    <!-- Videos Section -->
     <section id="videos" class="py-24 px-4 bg-background">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 font-display tracking-tight">Keseruan Dokumentasi</h2>
+                <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Keseruan Dokumentasi</h2>
                 <p class="text-muted max-w-lg mx-auto text-sm md:text-base">Lihat profil jurusan Teknik Otomasi PPNS serta rekap keseruan Automation Week tahun-tahun sebelumnya.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -254,10 +297,9 @@
         </div>
     </section>
 
-    <!-- Sponsor Section -->
     <section class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-3xl font-bold text-foreground mb-4 font-display tracking-tight">Sponsor</h2>
+            <h2 class="text-3xl font-bold text-foreground mb-4 tracking-tight">Sponsor</h2>
             <p class="text-muted mb-12 text-sm max-w-sm mx-auto">Didukung oleh berbagai mitra industri dan sponsor terpercaya.</p>
             <div class="flex flex-wrap justify-center gap-8 items-center opacity-75">
                 <div class="w-32 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-muted text-xs font-semibold shadow-sm">Logo Sponsor</div>
@@ -268,25 +310,24 @@
         </div>
     </section>
 
-    <!-- Contact & Location (Utilitarian layout) -->
     <section id="contact" class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 font-display tracking-tight">Kontak</h2>
+            <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Kontak</h2>
             <p class="text-muted mb-12 max-w-sm mx-auto text-sm">Hubungi kami untuk informasi lebih lanjut mengenai kompetisi dan pendaftaran.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto text-left">
                 <div class="p-6 rounded-2xl border border-border bg-card shadow-md flex flex-col items-start hover:border-accent transition-colors">
                     <div class="p-2.5 bg-accent/10 border border-accent/20 rounded-xl mb-4 text-accent">
                         <?= \App\Components\Icon::make()->name('phone')->class('w-5 h-5') ?>
                     </div>
-                    <h4 class="font-bold text-foreground font-display tracking-tight text-lg">Hubungi Kami</h4>
+                    <h4 class="font-bold text-foreground tracking-tight text-lg">Hubungi Kami</h4>
                     <p class="text-sm text-muted mt-2 leading-relaxed">Hubungi panitia via WhatsApp untuk bantuan dan pertanyaan pendaftaran:</p>
-                    <span class="text-foreground font-semibold text-sm mt-3">+62 812-3456-7890</span>
+                    <span class="text-foreground font-semibold text-sm mt-3">+62 819-9828-2954</span>
                 </div>
                 <div class="p-6 rounded-2xl border border-border bg-card shadow-md flex flex-col items-start hover:border-accent transition-colors">
                     <div class="p-2.5 bg-accent/10 border border-accent/20 rounded-xl mb-4 text-accent">
                         <?= \App\Components\Icon::make()->name('mail')->class('w-5 h-5') ?>
                     </div>
-                    <h4 class="font-bold text-foreground font-display tracking-tight text-lg">Surel Resmi</h4>
+                    <h4 class="font-bold text-foreground tracking-tight text-lg">Surel Resmi</h4>
                     <p class="text-sm text-muted mt-2 leading-relaxed">Hubungi panitia via email resmi untuk permohonan kerjasama dan proposal:</p>
                     <span class="text-foreground font-semibold text-sm mt-3">automationweek@ppns.ac.id</span>
                 </div>
@@ -294,10 +335,9 @@
         </div>
     </section>
 
-    <!-- Statement Footer (Ft5 archetype) -->
     <footer class="py-16 px-4 bg-secondary/50 border-t border-border">
         <div class="max-w-6xl mx-auto flex flex-col items-center">
-            <p class="font-display font-black text-primary text-3xl md:text-5xl tracking-tight text-center max-w-xl leading-tight mb-8">
+            <p class="font-black text-primary text-3xl md:text-5xl tracking-tight text-center max-w-xl leading-tight mb-8">
                 Fuel the Red Automation.
             </p>
             <div class="flex justify-center gap-4 mb-8">
@@ -319,48 +359,43 @@
             </div>
             <div class="w-full pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center text-xs text-muted gap-4">
                 <span class="font-bold text-primary">Automation Week 9</span>
-                <span>&copy; 2026 HMT Otomasi PPNS. All rights reserved.</span>
+                <span>&copy; 2026 Himpunan Mahasiswa Teknik Otomasi PPNS. All rights reserved.</span>
             </div>
         </div>
     </footer>
 
-    <!-- Style overrides -->
-    <style>
-        .font-display {
-            font-family: 'Space Grotesk', 'Inter', sans-serif;
-        }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var pill = document.getElementById('mobile-nav-pill-toggle');
+            var dropdown = document.getElementById('mobile-nav-pill-dropdown');
+            if (!pill || !dropdown) return;
 
-        .marquee-track {
-            display: inline-flex;
-        }
-
-        @keyframes marquee {
-            0% {
-                transform: translateX(0);
+            function close() {
+                dropdown.classList.add('hidden');
+                dropdown.classList.remove('block');
+                pill.setAttribute('aria-expanded', 'false');
             }
 
-            100% {
-                transform: translateX(-50%);
+            function open() {
+                dropdown.classList.remove('hidden');
+                dropdown.classList.add('block');
+                pill.setAttribute('aria-expanded', 'true');
             }
-        }
 
-        .marquee-track:hover {
-            animation-play-state: paused;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
-        }
-    </style>
-
-
-
+            pill.addEventListener('click', function(e) {
+                if (window.innerWidth >= 768) return;
+                e.stopPropagation();
+                dropdown.classList.contains('block') ? close() : open();
+            });
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth >= 768) return;
+                if (!dropdown.contains(e.target) && !pill.contains(e.target)) close();
+            });
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) close();
+            });
+        });
+    </script>
 </body>
 
 </html>
