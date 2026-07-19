@@ -20,8 +20,8 @@ class Icon extends Component
         }
         $svg = file_get_contents($path);
         $svg = preg_replace('/class="lucide[^"]*"/', '', $svg);
-        $class = $this->attrs['class'] ?? '';
+        $class = trim($this->attrs['class'] ?? '');
         $svg = preg_replace('/<svg/', '<svg class="' . htmlspecialchars($class) . '"', $svg);
-        return $svg;
+        return str_replace(["\r", "\n"], '', $svg);
     }
 }
