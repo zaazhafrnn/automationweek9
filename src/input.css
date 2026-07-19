@@ -5,16 +5,19 @@
     font-weight: 400;
     src: url("../fonts/SF-Pro-Display-Regular.otf") format("opentype");
 }
+
 @font-face {
     font-family: "SF Pro Display";
     font-weight: 700;
     src: url("../fonts/SF-Pro-Display-Bold.otf") format("opentype");
 }
+
 @font-face {
     font-family: "SF Pro Text";
     font-weight: 400;
     src: url("../fonts/SF-Pro-Text-Regular.otf") format("opentype");
 }
+
 @font-face {
     font-family: "SF Pro Text";
     font-weight: 700;
@@ -60,36 +63,19 @@
         --sidebar-width: 16rem;
         --sidebar-width-icon: 3rem;
     }
-    * { border-color: var(--color-border); }
+
+    * {
+        border-color: var(--color-border);
+    }
+
     body {
         background-color: var(--color-background);
         color: var(--color-foreground);
-        background-image: 
+        background-image:
             radial-gradient(circle at 10% 25%, rgba(186, 18, 41, 0.04) 0%, transparent 65%),
             radial-gradient(circle at 90% 75%, rgba(242, 124, 41, 0.04) 0%, transparent 65%);
         background-attachment: fixed;
     }
-}
-
-/* custom components */
-.nav-pill {
-    position: fixed;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.5rem 1.25rem;
-    max-width: calc(100vw - 2rem);
-    background: color-mix(in oklch, var(--color-card) 75%, transparent);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    backdrop-filter: blur(16px) saturate(120%);
-    border: 1px solid var(--color-border);
-    border-radius: 9999px;
-    box-shadow: 0 12px 40px -12px oklch(0% 0 0 / 0.5);
-    z-index: 50;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-glow {
@@ -98,6 +84,7 @@
     border-radius: 1rem;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .card-glow:hover {
     border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
     box-shadow: 0 0 30px -5px oklch(45% 0.12 25 / 0.15);
@@ -112,10 +99,15 @@
     box-shadow: 0 8px 30px oklch(0% 0 0 / 0.3);
     transition: border-color 0.3s ease;
 }
+
 .video-frame:hover {
     border-color: var(--color-accent);
 }
 
-/* ponytail: Tailwind v4 compiles w-[--sidebar-width] without var(), override in output */
-.w-\[--sidebar-width\] { width: var(--sidebar-width); }
-.w-\[--sidebar-width-icon\] { width: var(--sidebar-width-icon); }
+.w-\[--sidebar-width\] {
+    width: var(--sidebar-width);
+}
+
+.w-\[--sidebar-width-icon\] {
+    width: var(--sidebar-width-icon);
+}

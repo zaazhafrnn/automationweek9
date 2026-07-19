@@ -49,16 +49,16 @@
 </head>
 
 <body class="font-sans antialiased text-foreground">
-    <nav class="nav-pill" aria-label="Primary">
+    <nav class="fixed top-4 left-1/2 -translate-x-1/2 flex items-center gap-8 py-2 px-3 max-w-[calc(100vw-2rem)] bg-card/75 [-webkit-backdrop-filter:blur(16px)_saturate(120%)] [backdrop-filter:blur(16px)_saturate(120%)] border border-border rounded-full shadow-[0_12px_40px_-12px_oklch(0%_0_0/0.5)] z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]" aria-label="Primary">
         <button type="button"
             id="mobile-nav-pill-toggle"
-            class="flex md:pointer-events-none items-center gap-2 pr-2 no-underline text-foreground bg-transparent border-none outline-none focus:outline-none relative z-20"
+            class="flex md:pointer-events-none items-center gap-2 no-underline text-foreground bg-transparent border-none outline-none focus:outline-none relative z-20"
             aria-haspopup="true"
             aria-expanded="false"
             style="appearance: none; -webkit-appearance: none; padding: 0; margin: 0;">
             <img src="/image/logo-aw.png" alt="AW" class="w-6 h-6 object-contain bg-white rounded-full border border-border">
             <span class="font-bold text-sm tracking-tight whitespace-nowrap">Automation Week 9</span>
-            <span class="md:hidden mx-1">
+            <span class="md:hidden inline-flex items-center justify-center transition-transform duration-200" id="mobile-nav-pill-chevron">
                 <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4" />
                 </svg>
@@ -105,7 +105,7 @@
             <h1 class="text-3xl md:text-6xl font-black mb-6 leading-none font-poppins tracking-tight text-white">Automation <span class="text-white">Week 9</span></h1>
             <p class="text-lg md:text-xl font-medium tracking-wide text-white mb-8 italic">"Fuel the Red Automation"</p>
             <div class="flex flex-row w-full max-w-xs sm:max-w-none gap-3 sm:gap-4 justify-center mx-auto">
-                <a href="/dashboard/team/register" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg transition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
+                <a href="/dashboard/team/register" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg border border-whitetransition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
                 <a href="#competitions" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm text-white font-bold text-foreground border border-border hover:text-black hover:bg-card transition-all no-underline text-center">Lihat Lomba</a>
             </div>
         </div>
@@ -368,18 +368,21 @@
         document.addEventListener('DOMContentLoaded', function() {
             var pill = document.getElementById('mobile-nav-pill-toggle');
             var dropdown = document.getElementById('mobile-nav-pill-dropdown');
+            var chevron = document.getElementById('mobile-nav-pill-chevron');
             if (!pill || !dropdown) return;
 
             function close() {
                 dropdown.classList.add('hidden');
                 dropdown.classList.remove('block');
                 pill.setAttribute('aria-expanded', 'false');
+                if (chevron) chevron.classList.remove('rotate-180');
             }
 
             function open() {
                 dropdown.classList.remove('hidden');
                 dropdown.classList.add('block');
                 pill.setAttribute('aria-expanded', 'true');
+                if (chevron) chevron.classList.add('rotate-180');
             }
 
             pill.addEventListener('click', function(e) {
@@ -390,6 +393,9 @@
             document.addEventListener('click', function(e) {
                 if (window.innerWidth >= 768) return;
                 if (!dropdown.contains(e.target) && !pill.contains(e.target)) close();
+            });
+            dropdown.addEventListener('click', function(e) {
+                if (e.target.closest('a')) close();
             });
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 768) close();
