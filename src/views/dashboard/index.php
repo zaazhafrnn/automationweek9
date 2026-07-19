@@ -7,6 +7,7 @@ use App\Components\Icon;
 /** @var array|null $team */
 /** @var array|null $payment */
 /** @var array|null $submission */
+/** @var array $uploads */
 
 $main_class = 'flex-grow w-full';
 
@@ -20,12 +21,13 @@ $tabs = [
   5 => ['label' => 'Review & Submit'],
 ];
 
+$upload1 = $uploads[1] ?? [];
 $tabDone = [
   1 => (bool) $team,
   2 => !empty($team['leaderName']),
-  3 => !empty($team['leaderName']),
-  4 => $payment && $payment['status'] === 'verified',
-  5 => false,
+  3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
+  4 => (bool) $payment,
+  5 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']) && (bool) $payment,
 ];
 
 $defaultTab = 1;
@@ -67,7 +69,7 @@ foreach ($tabDone as $n => $done) {
                   <?= $defaultTab === $num ? 'border-brand text-brand' : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300' ?>
                   <?= $num === 2 && !$team ? 'opacity-40 pointer-events-none' : '' ?>
                   <?= ($num === 3 || $num === 4) && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
-                  <?= $num === 5 && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
+                  <?= $num === 5 && !$tabDone[5] ? 'opacity-40 pointer-events-none' : '' ?>
                   ">
                 <?php if ($tabDone[$num]): ?>
                   <?= Icon::make()->name('check')->class('w-4 h-4 text-green-500 shrink-0') ?>
