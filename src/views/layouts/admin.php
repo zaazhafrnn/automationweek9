@@ -9,7 +9,7 @@ $div = $_GET['div'] ?? '';
 
 $sidebarItems = [];
 $sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];
-$sidebarItems[] = ['label' => 'Anggota', 'icon' => 'users', 'route' => '/admin/members', 'active' => $uri === '/admin/members'];
+$sidebarItems[] = ['label' => 'Akun', 'icon' => 'users', 'route' => '/admin/members', 'active' => $uri === '/admin/members'];
 $sidebarItems[] = ['label' => 'Tim', 'icon' => 'trophy', 'route' => '/admin/teams', 'active' => $uri === '/admin/teams'];
 $sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
 $sidebarItems[] = ['label' => 'Upload karya', 'header' => true];
@@ -41,9 +41,13 @@ foreach (['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' =
 
         <main class="flex flex-1 flex-col">
             <header class="flex h-10 shrink-0 items-center gap-2 border-b bg-background px-4">
-                <h1 class="text-base font-semibold text-foreground">
-                    <?= isset($page_title) ? htmlspecialchars($page_title) : 'Dasbor' ?>
-                </h1>
+                <nav class="flex items-center text-sm font-medium text-muted-foreground gap-2">
+                    <a href="/admin/dashboard" class="hover:text-foreground transition-colors">Admin</a>
+                    <span class="text-muted-foreground/50">/</span>
+                    <span class="text-foreground">
+                        <?= isset($page_title) ? htmlspecialchars($page_title) : 'Dasbor' ?>
+                    </span>
+                </nav>
                 <div class="ml-auto text-sm font-medium text-muted-foreground">
                     <?= htmlspecialchars(\App\Utils\Session::get('user_name') ?? 'Admin') ?>
                 </div>

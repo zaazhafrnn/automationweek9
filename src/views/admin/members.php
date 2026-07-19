@@ -7,8 +7,8 @@ use App\Components\DataTable; ?>
 
 <div class="rounded-xl border bg-card text-card-foreground shadow-sm">
     <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-2xl font-semibold leading-none tracking-tight">Semua Anggota</h3>
-        <p class="text-sm text-muted-foreground">Daftar semua anggota yang terdaftar.</p>
+        <h3 class="text-2xl font-semibold leading-none tracking-tight">Semua Akun</h3>
+        <p class="text-sm text-muted-foreground">Daftar semua akun yang terdaftar.</p>
     </div>
     <div class="p-6 pt-0">
         <?= DataTable::make()
@@ -20,7 +20,7 @@ use App\Components\DataTable; ?>
             ->searchable()
             ->columnSelectable()
             ->pageable()
-            ->emptyText('Belum ada anggota yang terdaftar.')
+            ->emptyText('Belum ada akun yang terdaftar.')
             ->render() ?>
     </div>
 </div>

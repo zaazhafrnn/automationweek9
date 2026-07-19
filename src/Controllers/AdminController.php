@@ -29,7 +29,7 @@ class AdminController extends Controller
 
         $this->view('admin/members', [
             'members' => $members,
-            'page_title' => 'Anggota'
+            'page_title' => 'Akun'
         ], 'admin');
     }
 
