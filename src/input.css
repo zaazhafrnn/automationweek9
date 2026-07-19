@@ -23,34 +23,35 @@
 
 @theme {
     --font-sans: "SF Pro Text", "SF Pro Display", ui-sans-serif, system-ui, sans-serif;
-    --color-background: oklch(1 0 0);
-    --color-foreground: oklch(0.145 0.017 285.823);
-    --color-card: oklch(1 0 0);
-    --color-card-foreground: oklch(0.145 0.017 285.823);
-    --color-popover: oklch(1 0 0);
-    --color-popover-foreground: oklch(0.145 0.017 285.823);
-    --color-primary: oklch(0.205 0.015 285.823);
-    --color-primary-foreground: oklch(0.985 0 0);
-    --color-secondary: oklch(0.97 0.004 264.531);
-    --color-secondary-foreground: oklch(0.205 0.015 285.823);
-    --color-muted: oklch(0.97 0.004 264.531);
-    --color-muted-foreground: oklch(0.556 0.019 270.879);
-    --color-accent: oklch(0.97 0.004 264.531);
-    --color-accent-foreground: oklch(0.205 0.015 285.823);
-    --color-destructive: oklch(0.577 0.245 27.325);
-    --color-destructive-foreground: oklch(0.985 0 0);
-    --color-border: oklch(0.922 0.004 264.531);
-    --color-input: oklch(0.922 0.004 264.531);
-    --color-ring: oklch(0.708 0.028 264.531);
-    --color-sidebar-background: oklch(0.985 0 0);
-    --color-sidebar-foreground: oklch(0.145 0.017 285.823);
-    --color-sidebar-primary: oklch(0.205 0.015 285.823);
-    --color-sidebar-primary-foreground: oklch(0.985 0 0);
-    --color-sidebar-accent: oklch(0.97 0.004 264.531);
-    --color-sidebar-accent-foreground: oklch(0.205 0.015 285.823);
-    --color-sidebar-border: oklch(0.922 0.004 264.531);
-    --color-sidebar-ring: oklch(0.708 0.028 264.531);
-    --color-brand: #dc2626;
+    --font-display: "Space Grotesk", "SF Pro Display", ui-sans-serif, system-ui, sans-serif;
+    --color-background: #ffffff;
+    --color-foreground: #1a1a1a;
+    --color-card: #ffffff;
+    --color-card-foreground: #1a1a1a;
+    --color-popover: #ffffff;
+    --color-popover-foreground: #1a1a1a;
+    --color-primary: #ba1229;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #f7f7f7;
+    --color-secondary-foreground: #1a1a1a;
+    --color-muted: #666666;
+    --color-muted-foreground: #888888;
+    --color-accent: #ba1229;
+    --color-accent-foreground: #ffffff;
+    --color-orange: #f27c29;
+    --color-gold: #f27c29;
+    --color-border: #e5e5e5;
+    --color-input: #ffffff;
+    --color-ring: #ba1229;
+    --color-sidebar-background: #ffffff;
+    --color-sidebar-foreground: #1a1a1a;
+    --color-sidebar-primary: #ba1229;
+    --color-sidebar-primary-foreground: #ffffff;
+    --color-sidebar-accent: #f7f7f7;
+    --color-sidebar-accent-foreground: #1a1a1a;
+    --color-sidebar-border: #e5e5e5;
+    --color-sidebar-ring: #ba1229;
+    --color-brand: #ba1229;
     --radius: 0.625rem;
 }
 
@@ -60,7 +61,57 @@
         --sidebar-width-icon: 3rem;
     }
     * { border-color: var(--color-border); }
-    body { background-color: var(--color-background); color: var(--color-foreground); }
+    body {
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+        background-image: 
+            radial-gradient(circle at 10% 25%, rgba(186, 18, 41, 0.04) 0%, transparent 65%),
+            radial-gradient(circle at 90% 75%, rgba(242, 124, 41, 0.04) 0%, transparent 65%);
+        background-attachment: fixed;
+    }
+}
+
+/* custom components */
+.nav-pill {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 1.25rem;
+    background: color-mix(in oklch, var(--color-card) 75%, transparent);
+    backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    box-shadow: 0 12px 40px -12px oklch(0% 0 0 / 0.5);
+    z-index: 50;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-glow {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-glow:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+    box-shadow: 0 0 30px -5px oklch(45% 0.12 25 / 0.15);
+    transform: translateY(-2px);
+}
+
+.video-frame {
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: var(--color-card);
+    box-shadow: 0 8px 30px oklch(0% 0 0 / 0.3);
+    transition: border-color 0.3s ease;
+}
+.video-frame:hover {
+    border-color: var(--color-accent);
 }
 
 /* ponytail: Tailwind v4 compiles w-[--sidebar-width] without var(), override in output */
