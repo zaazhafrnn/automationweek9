@@ -1,0 +1,67 @@
+CREATE DATABASE IF NOT EXISTS automationweek_9 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE automationweek_9;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'member',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    teamSchool VARCHAR(255) NOT NULL,
+    division VARCHAR(100) NOT NULL,
+    leaderName VARCHAR(255) NOT NULL,
+    leaderPhoneNumber VARCHAR(100) NOT NULL,
+    firstMemberName VARCHAR(255) DEFAULT '',
+    firstMemberPhoneNumber VARCHAR(100) DEFAULT '',
+    secondMemberName VARCHAR(255) DEFAULT '',
+    secondMemberPhoneNumber VARCHAR(100) DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS payments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    teamId INT NOT NULL,
+    proofImage VARCHAR(255) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    submittedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    verifiedAt TIMESTAMP NULL DEFAULT NULL,
+    verifiedBy INT NULL,
+    note TEXT NULL,
+    FOREIGN KEY (teamId) REFERENCES teams(id) ON DELETE CASCADE,
+    FOREIGN KEY (verifiedBy) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS submissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    team_id INT NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    value TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS team_documentation_uploads (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    team_id INT NOT NULL,
+    member_number INT NOT NULL,
+    upload_type VARCHAR(100) NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Seed an admin user (Password is 'password')
+INSERT INTO users (name, email, password, role)
+VALUES ('Admin', 'admin@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeMCFwG7Apa9IlJ5YnK', 'admin')
+ON DUPLICATE KEY UPDATE id=id;
