@@ -33,61 +33,71 @@ $UPLOAD_URL = '/uploads/teams/';
         $isOptional = $m['num'] > 1;
         $p = $m['num'];
         $existingCard = $uploads[$p]['student_card'] ?? null;
-        $cardRequired = !$isOptional && !$existingCard;
+        $hasData = $name !== '' || $phone !== '' || $existingCard;
+        $disabled = $isOptional && !$hasData;
         $cardAttrs = ['accept' => 'image/*', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-input'];
-        $cardAttrs['required'] = $cardRequired;
       ?>
-        <div class="member-group" data-member="<?= $p ?>" <?= $isOptional ? 'data-optional="true"' : '' ?>>
+        <div class="member-group relative" data-member="<?= $p ?>" data-optional="true">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
             <div>
               <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($m['label']) ?></p>
               <?php if ($m['role']): ?><p class="text-xs text-gray-400"><?= htmlspecialchars($m['role']) ?></p><?php endif; ?>
-              <?php if ($isOptional): ?><p class="text-xs text-gray-400">Opsional — isi jika ada anggota</p><?php endif; ?>
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap <?= $isOptional ? '' : '<span class="text-red-500">*</span>' ?></label>
-              <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($name) ?>" <?= $isOptional ? '' : 'required' ?>
-                data-error="err-anggota-<?= $p ?>-name"
-                class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
-                oninput="this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
-              <p id="err-anggota-<?= $p ?>-name" class="text-xs text-red-500 mt-1 hidden">Nama lengkap wajib diisi</p>
+          <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
+                <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($name) ?>"
+                  data-error="err-anggota-<?= $p ?>-name"
+                  class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
+                  oninput="this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
+                <p id="err-anggota-<?= $p ?>-name" class="text-xs text-red-500 mt-1 hidden">Nama lengkap wajib diisi</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA</label>
+                <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>"
+                  data-error="err-anggota-<?= $p ?>-phone"
+                  class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
+                  oninput="this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
+                <p id="err-anggota-<?= $p ?>-phone" class="text-xs text-red-500 mt-1 hidden">No. telepon wajib diisi</p>
+              </div>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA <?= $isOptional ? '' : '<span class="text-red-500">*</span>' ?></label>
-              <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" <?= $isOptional ? '' : 'required' ?>
-                data-error="err-anggota-<?= $p ?>-phone"
-                class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
-                oninput="this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
-              <p id="err-anggota-<?= $p ?>-phone" class="text-xs text-red-500 mt-1 hidden">No. telepon wajib diisi</p>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar / Mahasiswa</label>
+              <?php if ($existingCard): ?>
+                <?= Attachment::make()
+                    ->state('done')
+                    ->mediaVariant('image')
+                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
+                    ->title(basename($existingCard))
+                    ->description('Sudah diupload')
+                    ->withPreview()
+                    ->fileInput('studentCard_' . $p, $cardAttrs)
+                    ->render() ?>
+              <?php else: ?>
+                <?= Attachment::make()
+                    ->state('idle')
+                    ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
+                    ->title('Upload Kartu Pelajar')
+                    ->description('Scan atau foto kartu pelajar/mahasiswa')
+                    ->withPreview()
+                    ->fileInput('studentCard_' . $p, $cardAttrs)
+                    ->render() ?>
+              <?php endif; ?>
+              <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
             </div>
           </div>
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar / Mahasiswa <?= $isOptional ? '' : '<span class="text-red-500">*</span>' ?></label>
-            <?php if ($existingCard): ?>
-              <?= Attachment::make()
-                  ->state('done')
-                  ->mediaVariant('image')
-                  ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
-                  ->title(basename($existingCard))
-                  ->description('Sudah diupload')
-                  ->withPreview()
-                  ->fileInput('studentCard_' . $p, $cardAttrs)
-                  ->render() ?>
-            <?php else: ?>
-              <?= Attachment::make()
-                  ->state('idle')
-                  ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
-                  ->title('Upload Kartu Pelajar')
-                  ->description('Scan atau foto kartu pelajar/mahasiswa')
-                  ->withPreview()
-                  ->fileInput('studentCard_' . $p, $cardAttrs)
-                  ->render() ?>
-            <?php endif; ?>
-            <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
-          </div>
+          <?php if ($disabled): ?>
+            <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer"
+                 onclick="this.classList.add('hidden'); this.previousElementSibling.classList.remove('opacity-30','pointer-events-none');">
+              <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-brand bg-brand/5 border border-dashed border-brand/30 rounded-xl hover:bg-brand/10 transition-all">
+                <?= Icon::make()->name('users')->class('w-4 h-4') ?>
+                + Tambah Member
+              </button>
+            </div>
+          <?php endif; ?>
         </div>
         <?php if ($i < count($members) - 1): ?><hr class="border-gray-100"><?php endif; ?>
       <?php endforeach; ?>

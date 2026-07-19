@@ -25,7 +25,7 @@ $tabDone = [
   2 => !empty($team['leaderName']),
   3 => (bool) $team,
   4 => $payment && $payment['status'] === 'verified',
-  5 => (bool) $submission,
+  5 => (bool) $team,
 ];
 
 $defaultTab = 1;
@@ -67,7 +67,7 @@ foreach ($tabDone as $n => $done) {
                   <?= $defaultTab === $num ? 'border-brand text-brand' : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300' ?>
                   <?= $num === 2 && !$team ? 'opacity-40 pointer-events-none' : '' ?>
                   <?= ($num === 3 || $num === 4) && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
-                  <?= $num === 5 && (!$payment || $payment['status'] !== 'verified') ? 'opacity-40 pointer-events-none' : '' ?>">
+                  ">
                 <?php if ($tabDone[$num]): ?>
                   <?= Icon::make()->name('check')->class('w-4 h-4 text-green-500 shrink-0') ?>
                 <?php else: ?>
@@ -120,7 +120,7 @@ foreach ($tabDone as $n => $done) {
     const nextBtn = document.getElementById('nextTab');
     const indicator = document.getElementById('tabIndicator');
 
-    let current = parseInt(sessionStorage.getItem('dashboardTab')) || <?= $defaultTab ?>;
+    let current = <?= $defaultTab ?>;
     let total = 5;
 
     function activateTab(num, pushHistory) {

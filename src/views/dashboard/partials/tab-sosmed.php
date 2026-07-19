@@ -7,11 +7,11 @@ use App\Components\Icon;
 /** @var array $uploads */
 $members = [];
 if ($team) {
-  $members[] = ['num' => 1, 'name' => $team['leaderName'] ?? 'Anggota 1'];
-  $two = $team['division'] === 'LF' || $team['division'] === 'PLC';
-  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI';
-  if ($two || $three) $members[] = ['num' => 2, 'name' => $team['firstMemberName'] ?? 'Anggota 2'];
-  if ($three) $members[] = ['num' => 3, 'name' => $team['secondMemberName'] ?? 'Anggota 3'];
+  $members[] = ['num' => 1, 'name' => $team['leaderName'] ?? 'Anggota 1', 'active' => true];
+  $hasM2 = !empty($team['firstMemberName']);
+  $hasM3 = !empty($team['secondMemberName']);
+  $members[] = ['num' => 2, 'name' => $team['firstMemberName'] ?? 'Anggota 2', 'active' => $hasM2];
+  $members[] = ['num' => 3, 'name' => $team['secondMemberName'] ?? 'Anggota 3', 'active' => $hasM3];
 }
 $UPLOAD_URL = '/uploads/teams/';
 ?>
@@ -28,93 +28,88 @@ $UPLOAD_URL = '/uploads/teams/';
       <?php foreach ($members as $i => $m):
         $p = $m['num'];
         $isOptional = $p > 1;
+        $disabled = !$m['active'];
         $existingIg = $uploads[$p]['ig_follow'] ?? null;
         $existingTwibbon = $uploads[$p]['twibbon'] ?? null;
       ?>
-        <div class="member-group" data-member="<?= $p ?>" <?= $isOptional ? 'data-optional="true"' : '' ?>>
+        <div class="member-group relative" data-member="<?= $p ?>">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
             <div>
               <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($m['name']) ?></p>
-              <?php if ($isOptional): ?><p class="text-xs text-gray-400">Opsional</p><?php endif; ?>
+              <?php if ($isOptional && !$disabled): ?><p class="text-xs text-gray-400">Anggota aktif</p><?php endif; ?>
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram <span class="text-red-500">*</span></label>
-              <?php
-              $igAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-ig', 'class' => 'member-input'];
-              $igAttrs['required'] = !$isOptional && !$existingIg;
-              if ($existingIg):
-              ?>
-                <?= Attachment::make()
-                    ->state('done')
-                    ->mediaVariant('image')
-                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
-                    ->title(basename($existingIg))
-                    ->description('Sudah diupload')
-                    ->withPreview()
-                    ->fileInput('igFollow_' . $p, $igAttrs)
-                    ->render() ?>
-              <?php else: ?>
-                <?= Attachment::make()
-                    ->state('idle')
-                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
-                    ->title('Screenshot Follow')
-                    ->description('Bukti follow Instagram @lombax')
-                    ->withPreview()
-                    ->fileInput('igFollow_' . $p, $igAttrs)
-                    ->render() ?>
-              <?php endif; ?>
-              <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon <span class="text-red-500">*</span></label>
-              <?php
-              $twibbonAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'class' => 'member-input'];
-              $twibbonAttrs['required'] = !$isOptional && !$existingTwibbon;
-              if ($existingTwibbon):
-              ?>
-                <?= Attachment::make()
-                    ->state('done')
-                    ->mediaVariant('image')
-                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
-                    ->title(basename($existingTwibbon))
-                    ->description('Sudah diupload')
-                    ->withPreview()
-                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
-                    ->render() ?>
-              <?php else: ?>
-                <?= Attachment::make()
-                    ->state('idle')
-                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
-                    ->title('Upload Twibbon')
-                    ->description('Foto profil dengan twibbon')
-                    ->withPreview()
-                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
-                    ->render() ?>
-              <?php endif; ?>
-              <p id="err-sosmed-<?= $p ?>-twibbon" class="text-xs text-red-500 mt-1 hidden">Twibbon wajib diupload</p>
+          <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram</label>
+                <?php
+                $igAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-ig', 'class' => 'member-input'];
+                if ($existingIg):
+                ?>
+                  <?= Attachment::make()
+                      ->state('done')
+                      ->mediaVariant('image')
+                      ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
+                      ->title(basename($existingIg))
+                      ->description('Sudah diupload')
+                      ->withPreview()
+                      ->fileInput('igFollow_' . $p, $igAttrs)
+                      ->render() ?>
+                <?php else: ?>
+                  <?= Attachment::make()
+                      ->state('idle')
+                      ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                      ->title('Screenshot Follow')
+                      ->description('Bukti follow Instagram @lombax')
+                      ->withPreview()
+                      ->fileInput('igFollow_' . $p, $igAttrs)
+                      ->render() ?>
+                <?php endif; ?>
+                <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon</label>
+                <?php
+                $twibbonAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'class' => 'member-input'];
+                if ($existingTwibbon):
+                ?>
+                  <?= Attachment::make()
+                      ->state('done')
+                      ->mediaVariant('image')
+                      ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
+                      ->title(basename($existingTwibbon))
+                      ->description('Sudah diupload')
+                      ->withPreview()
+                      ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                      ->render() ?>
+                <?php else: ?>
+                  <?= Attachment::make()
+                      ->state('idle')
+                      ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                      ->title('Upload Twibbon')
+                      ->description('Foto profil dengan twibbon')
+                      ->withPreview()
+                      ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                      ->render() ?>
+                <?php endif; ?>
+                <p id="err-sosmed-<?= $p ?>-twibbon" class="text-xs text-red-500 mt-1 hidden">Twibbon wajib diupload</p>
+              </div>
             </div>
           </div>
+          <?php if ($disabled): ?>
+            <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/80 cursor-default">
+              <div class="text-center">
+                <?= Icon::make()->name('lock')->class('w-5 h-5 text-gray-300 mx-auto mb-1') ?>
+                <p class="text-xs text-gray-400">Data anggota belum diisi</p>
+                <p class="text-xs text-gray-400">Isi di tab Data Anggota terlebih dahulu</p>
+              </div>
+            </div>
+          <?php endif; ?>
         </div>
         <?php if ($i < count($members) - 1): ?><hr class="border-gray-100"><?php endif; ?>
       <?php endforeach; ?>
     </div>
   </form>
-
-  <script>
-  document.querySelectorAll('[data-optional]').forEach(group => {
-    const inputs = group.querySelectorAll('.member-input');
-    function check() {
-      const hasValue = Array.from(inputs).some(i => i.files.length > 0);
-      inputs.forEach(i => {
-        if (hasValue) i.setAttribute('required', '');
-        else i.removeAttribute('required');
-      });
-    }
-    inputs.forEach(i => i.addEventListener('change', check));
-    check();
-  });
-  </script>
 <?php endif; ?>
