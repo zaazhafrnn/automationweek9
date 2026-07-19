@@ -49,7 +49,7 @@
 </head>
 
 <body class="font-sans antialiased text-foreground">
-    <nav class="nav-pill relative" aria-label="Primary">
+    <nav class="nav-pill" aria-label="Primary">
         <button type="button"
             id="mobile-nav-pill-toggle"
             class="flex md:pointer-events-none items-center gap-2 pr-2 no-underline text-foreground bg-transparent border-none outline-none focus:outline-none relative z-20"
