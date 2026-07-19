@@ -1,4 +1,7 @@
 <?php
+use App\Components\Attachment;
+use App\Components\Icon;
+
 /** @var array|null $team */
 /** @var array|null $payment */
 /** @var array|null $submission */
@@ -9,19 +12,19 @@ $submission_success = \App\Utils\Session::flash('submission_success');
 ?>
 <?php if (!$payment || $payment['status'] !== 'verified'): ?>
   <div class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl">
-    <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-gray-400 shrink-0') ?>
     <p class="text-sm text-gray-500">Selesaikan pembayaran untuk mengakses bagian ini.</p>
   </div>
 <?php else: ?>
   <?php if ($submission_success): ?>
     <div class="flex items-center gap-2 p-3 mb-4 bg-green-50 border border-green-200 rounded-xl">
-      <svg class="w-4 h-4 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <?= Icon::make()->name('check')->class('w-4 h-4 text-green-600 shrink-0') ?>
       <span class="text-sm text-green-800"><?= htmlspecialchars($submission_success) ?></span>
     </div>
   <?php endif; ?>
   <?php if ($submission_error): ?>
     <div class="flex items-center gap-2 p-3 mb-4 bg-red-50 border border-red-200 rounded-xl">
-      <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <?= Icon::make()->name('alert-circle')->class('w-4 h-4 text-red-600 shrink-0') ?>
       <span class="text-sm text-red-800"><?= htmlspecialchars($submission_error) ?></span>
     </div>
   <?php endif; ?>
@@ -92,11 +95,17 @@ $submission_success = \App\Utils\Session::flash('submission_success');
       <h3 class="text-sm font-semibold text-gray-900 mb-3">Pembayaran</h3>
       <?php if ($payment['status'] === 'verified'): ?>
         <div class="flex items-center gap-2 text-sm text-green-700">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <?= Icon::make()->name('check')->class('w-4 h-4 shrink-0') ?>
           Pembayaran Lunas
         </div>
         <?php if (!empty($payment['proofImage'])): ?>
-          <img src="/uploads/payments/<?= htmlspecialchars($payment['proofImage']) ?>" class="mt-2 max-h-32 rounded-lg border object-contain bg-gray-50">
+          <?= Attachment::make()
+              ->state('done')
+              ->mediaVariant('image')
+              ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
+              ->title(basename($payment['proofImage']))
+              ->description('Terverifikasi')
+              ->render() ?>
         <?php endif; ?>
       <?php elseif ($payment['status'] === 'rejected'): ?>
         <p class="text-sm text-red-600 mb-2">Ditolak: <?= htmlspecialchars($payment['note'] ?? '') ?></p>

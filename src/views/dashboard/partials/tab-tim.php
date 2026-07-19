@@ -1,4 +1,6 @@
 <?php
+use App\Components\Icon;
+
 /** @var array|null $team */
 /** @var string $csrf_token */
 $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
@@ -10,13 +12,13 @@ $err = $form_error ?: $update_error;
 <div class="space-y-6">
   <?php if ($err): ?>
     <div class="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
-      <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <?= Icon::make()->name('alert-circle')->class('w-4 h-4 text-red-600 shrink-0') ?>
       <span class="text-sm text-red-800"><?= htmlspecialchars($err) ?></span>
     </div>
   <?php endif; ?>
   <?php if ($update_success): ?>
     <div class="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl">
-      <svg class="w-4 h-4 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <?= Icon::make()->name('check')->class('w-4 h-4 text-green-600 shrink-0') ?>
       <span class="text-sm text-green-800"><?= htmlspecialchars($update_success) ?></span>
     </div>
   <?php endif; ?>

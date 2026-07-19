@@ -1,4 +1,6 @@
 <?php
+use App\Components\Attachment;
+use App\Components\Icon;
 
 /** @var string $csrf_token */
 /** @var array $team */
@@ -25,10 +27,8 @@
         <?php endif; ?>
 
         <?php if (isset($payment) && $payment && $payment['status'] === 'pending'): ?>
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-center">
-                <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-center gap-2">
+                <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-yellow-600 shrink-0') ?>
                 <p class="text-sm text-yellow-800">Pembayaran sebelumnya sedang menunggu verifikasi. Anda dapat mengunggah ulang bukti pembayaran.</p>
             </div>
         <?php endif; ?>
@@ -40,24 +40,14 @@
                 <label for="proofImage" class="block text-sm font-medium text-gray-700 mb-2">
                     Upload Bukti Transfer <span class="text-red-500">*</span>
                 </label>
-                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-red-400 transition cursor-pointer" id="dropzone">
-                    <div class="space-y-1 text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <div class="flex text-sm text-gray-600">
-                            <label for="proofImage" class="relative cursor-pointer rounded-md font-medium text-red-600 hover:text-red-500 focus-within:outline-none">
-                                <span>Pilih file</span>
-                                <input id="proofImage" name="proofImage" type="file" class="sr-only" accept="image/*" required>
-                            </label>
-                            <p class="pl-1">atau seret dan lepas</p>
-                        </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP — maks 2MB</p>
-                    </div>
-                </div>
-                <div id="filePreview" class="mt-2 hidden">
-                    <p class="text-sm text-gray-600" id="fileName"></p>
-                </div>
+                <?= Attachment::make()
+                    ->state('idle')
+                    ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
+                    ->title('Upload Bukti Transfer')
+                    ->description('PNG, JPG, GIF, WebP — maks 2MB')
+                    ->withPreview()
+                    ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true])
+                    ->render() ?>
             </div>
 
             <div class="pt-4 border-t border-gray-200">
@@ -69,40 +59,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const fileInput = document.getElementById('proofImage');
-        const dropzone = document.getElementById('dropzone');
-        const filePreview = document.getElementById('filePreview');
-        const fileName = document.getElementById('fileName');
-
-        fileInput.addEventListener('change', function() {
-            if (this.files.length > 0) {
-                fileName.textContent = 'File: ' + this.files[0].name + ' (' + (this.files[0].size / 1024).toFixed(1) + ' KB)';
-                filePreview.classList.remove('hidden');
-            } else {
-                filePreview.classList.add('hidden');
-            }
-        });
-
-        dropzone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.classList.add('border-red-400', 'bg-red-50');
-        });
-
-        dropzone.addEventListener('dragleave', function() {
-            this.classList.remove('border-red-400', 'bg-red-50');
-        });
-
-        dropzone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.classList.remove('border-red-400', 'bg-red-50');
-            if (e.dataTransfer.files.length > 0) {
-                fileInput.files = e.dataTransfer.files;
-                fileName.textContent = 'File: ' + e.dataTransfer.files[0].name + ' (' + (e.dataTransfer.files[0].size / 1024).toFixed(1) + ' KB)';
-                filePreview.classList.remove('hidden');
-            }
-        });
-    });
-</script>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Components\Icon;
+
 /** @var string $csrf_token */
 /** @var string $user_name */
 /** @var array|null $team */
@@ -45,9 +47,7 @@ foreach ($tabDone as $n => $done) {
       <form action="/logout" method="POST" class="m-0">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
         <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
+          <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>
           Logout
         </button>
       </form>
@@ -69,9 +69,7 @@ foreach ($tabDone as $n => $done) {
                   <?= ($num === 3 || $num === 4) && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
                   <?= $num === 5 && (!$payment || $payment['status'] !== 'verified') ? 'opacity-40 pointer-events-none' : '' ?>">
                 <?php if ($tabDone[$num]): ?>
-                  <svg class="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                  </svg>
+                  <?= Icon::make()->name('check')->class('w-4 h-4 text-green-500 shrink-0') ?>
                 <?php else: ?>
                   <span class="w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[10px] font-bold shrink-0"><?= $num ?></span>
                 <?php endif; ?>
@@ -102,16 +100,12 @@ foreach ($tabDone as $n => $done) {
       <div class="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-gray-100" id="tabNav">
         <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $defaultTab ?> dari 5</span>
         <button type="button" id="prevTab" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all disabled:opacity-30 disabled:pointer-events-none">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
+          <?= Icon::make()->name('chevron-left')->class('w-4 h-4') ?>
           Kembali
         </button>
         <button type="button" id="nextTab" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none">
           Simpan & Lanjut
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
+          <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
         </button>
       </div>
     </div>
@@ -155,9 +149,13 @@ foreach ($tabDone as $n => $done) {
       prevBtn.disabled = current <= 1;
       const isLast = current >= total;
       nextBtn.disabled = isLast;
+      <?php
+      $checkIcon = str_replace(["\r", "\n"], '', Icon::make()->name('check')->class('w-4 h-4'));
+      $chevronRight = str_replace(["\r", "\n"], '', Icon::make()->name('chevron-right')->class('w-4 h-4'));
+      ?>
       nextBtn.innerHTML = isLast ?
-        'Submit <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' :
-        'Simpan & Lanjut <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+        'Submit <?= $checkIcon ?>' :
+        'Simpan & Lanjut <?= $chevronRight ?>';
       indicator.textContent = `Tab ${num} dari ${total}`;
     }
 
@@ -222,6 +220,22 @@ foreach ($tabDone as $n => $done) {
       if (current < total) activateTab(current + 1);
     });
 
+    /* Attachment file preview */
+    document.addEventListener('change', function(e) {
+      if (!e.target.matches('[data-preview]')) return;
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var att = e.target.closest('[data-slot="attachment"]');
+      if (!att) return;
+      var media = att.querySelector('[data-slot="attachment-media"]');
+      if (!media) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        media.innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover">';
+      };
+      reader.readAsDataURL(file);
+    });
+
     /* Division card hints */
     const divCards = document.getElementById('divisionCards');
     const hint = document.getElementById('division_hint');
@@ -254,54 +268,6 @@ foreach ($tabDone as $n => $done) {
       });
     }
 
-    /* Dropzone */
-    function setupDropzone(dzId, inpId, phId, prevId, imgId) {
-      const dz = document.getElementById(dzId),
-        input = document.getElementById(inpId),
-        ph = document.getElementById(phId),
-        prev = document.getElementById(prevId),
-        img = document.getElementById(imgId);
-      if (!dz || !input) return;
 
-      function showPreview(f) {
-        const r = new FileReader();
-        r.onload = function(e) {
-          img.src = e.target.result;
-          ph?.classList.add('hidden');
-          prev?.classList.remove('hidden');
-          dz.classList.remove('border-dashed', 'border-gray-300', 'hover:border-brand');
-          dz.classList.add('border-solid', 'border-gray-200');
-        };
-        r.readAsDataURL(f);
-      }
-      input.addEventListener('change', function() {
-        if (this.files.length > 0) showPreview(this.files[0]);
-      });
-      prev?.addEventListener('click', function(e) {
-        if (e.target.tagName !== 'IMG' && !e.target.closest('img')) return;
-        input.click();
-      });
-      dz.addEventListener('click', function(e) {
-        if (e.target.tagName === 'IMG' || e.target.closest('img')) return;
-        input.click();
-      });
-      dz.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('border-brand', 'bg-brand/5');
-      });
-      dz.addEventListener('dragleave', function() {
-        this.classList.remove('border-brand', 'bg-brand/5');
-      });
-      dz.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('border-brand', 'bg-brand/5');
-        if (e.dataTransfer.files.length > 0) {
-          input.files = e.dataTransfer.files;
-          showPreview(e.dataTransfer.files[0]);
-        }
-      });
-    }
-    setupDropzone('paymentDropzone', 'proofImage', 'dropzonePlaceholder', 'dropzonePreview', 'previewImage');
-    setupDropzone('paymentDropzone2', 'proofImage2', 'dropzonePlaceholder2', 'dropzonePreview2', 'previewImage2');
   });
 </script>
