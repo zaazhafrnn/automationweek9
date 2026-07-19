@@ -124,7 +124,7 @@ foreach ($tabDone as $n => $done) {
     const nextBtn = document.getElementById('nextTab');
     const indicator = document.getElementById('tabIndicator');
 
-    let current = <?= $defaultTab ?>;
+    let current = parseInt(sessionStorage.getItem('dashboardTab')) || <?= $defaultTab ?>;
     let total = 5;
 
     function activateTab(num, pushHistory) {

@@ -4,25 +4,8 @@ use App\Components\Icon;
 /** @var array|null $team */
 /** @var string $csrf_token */
 $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
-$form_error = \App\Utils\Session::flash('team_register_error');
-$update_error = \App\Utils\Session::flash('team_update_error');
-$update_success = \App\Utils\Session::flash('team_update_success');
-$err = $form_error ?: $update_error;
 ?>
 <div class="space-y-6">
-  <?php if ($err): ?>
-    <div class="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
-      <?= Icon::make()->name('alert-circle')->class('w-4 h-4 text-red-600 shrink-0') ?>
-      <span class="text-sm text-red-800"><?= htmlspecialchars($err) ?></span>
-    </div>
-  <?php endif; ?>
-  <?php if ($update_success): ?>
-    <div class="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl">
-      <?= Icon::make()->name('check')->class('w-4 h-4 text-green-600 shrink-0') ?>
-      <span class="text-sm text-green-800"><?= htmlspecialchars($update_success) ?></span>
-    </div>
-  <?php endif; ?>
-
   <form action="<?= $team ? '/dashboard/team/update' : '/dashboard/team/register' ?>" method="POST" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 

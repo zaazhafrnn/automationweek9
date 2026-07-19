@@ -131,42 +131,20 @@ $UPLOAD_URL = '/uploads/teams/';
 
   <!-- Pembayaran -->
   <div class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-    <h3 class="text-sm font-semibold text-gray-900 mb-3">Pembayaran</h3>
-    <?php if ($payment && $payment['status'] === 'verified'): ?>
-      <div class="flex items-center gap-2 text-sm text-green-700">
-        <?= Icon::make()->name('check')->class('w-4 h-4 shrink-0') ?>
-        Pembayaran Lunas
-      </div>
-      <?php if (!empty($payment['proofImage'])): ?>
-        <?= Attachment::make()
-            ->state('done')
-            ->mediaVariant('image')
-            ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
-            ->title(basename($payment['proofImage']))
-            ->description('Terverifikasi')
-            ->render() ?>
-      <?php endif; ?>
-    <?php elseif ($payment && $payment['status'] === 'rejected'): ?>
-      <p class="text-sm text-red-600 mb-2">Ditolak: <?= htmlspecialchars($payment['note'] ?? '') ?></p>
+    <h3 class="text-sm font-semibold text-gray-900 mb-3">Bukti Pembayaran</h3>
+    <?php if ($payment && !empty($payment['proofImage'])): ?>
+      <?= Attachment::make()
+          ->state('done')
+          ->mediaVariant('image')
+          ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
+          ->title(basename($payment['proofImage']))
+          ->description('Sudah diupload')
+          ->render() ?>
     <?php else: ?>
-      <p class="text-sm text-yellow-600"><?= $payment && $payment['status'] === 'pending' ? 'Menunggu verifikasi pembayaran' : 'Lakukan pembayaran di tab Pembayaran' ?></p>
+      <div class="flex items-center gap-2 p-3 bg-gray-50 border border-dashed border-gray-200 rounded-xl">
+        <?= Icon::make()->name('upload')->class('w-4 h-4 text-gray-300 shrink-0') ?>
+        <p class="text-xs text-gray-400">Upload bukti pembayaran di tab Pembayaran</p>
+      </div>
     <?php endif; ?>
   </div>
 </div>
-
-<script>
-document.querySelectorAll('.review-form').forEach(form => {
-  const btn = form.querySelector('.review-btn');
-  const fields = form.querySelectorAll('.review-field');
-  const initial = new Map();
-  fields.forEach(f => { initial.set(f, f.type === 'file' ? '' : f.value); });
-  function check() {
-    const changed = Array.from(fields).some(f => f.type === 'file' ? f.files.length > 0 : f.value !== initial.get(f));
-    btn.className = changed
-      ? 'review-btn text-xs font-medium text-brand border border-brand/30 px-3 py-1.5 rounded-lg transition-colors'
-      : 'review-btn text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors';
-  }
-  fields.forEach(f => f.addEventListener('change', check));
-  fields.forEach(f => f.addEventListener('input', check));
-});
-</script>
