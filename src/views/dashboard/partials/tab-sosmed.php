@@ -8,10 +8,10 @@ use App\Components\Icon;
 $members = [];
 if ($team) {
   $members[] = ['num' => 1, 'name' => $team['leaderName'] ?? 'Anggota 1', 'active' => true];
-  $hasM2 = !empty($team['firstMemberName']);
-  $hasM3 = !empty($team['secondMemberName']);
-  $members[] = ['num' => 2, 'name' => $team['firstMemberName'] ?? 'Anggota 2', 'active' => $hasM2];
-  $members[] = ['num' => 3, 'name' => $team['secondMemberName'] ?? 'Anggota 3', 'active' => $hasM3];
+  $two = $team['division'] === 'LF' || $team['division'] === 'PLC';
+  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI';
+  if ($two || $three) $members[] = ['num' => 2, 'name' => $team['firstMemberName'] ?? 'Anggota 2', 'active' => !empty($team['firstMemberName'])];
+  if ($three) $members[] = ['num' => 3, 'name' => $team['secondMemberName'] ?? 'Anggota 3', 'active' => !empty($team['secondMemberName'])];
 }
 $UPLOAD_URL = '/uploads/teams/';
 ?>
@@ -45,7 +45,9 @@ $UPLOAD_URL = '/uploads/teams/';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram</label>
                 <?php
-                $igAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-ig', 'class' => 'member-input'];
+                $igRequired = !$disabled && !$existingIg;
+                $igAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-ig'];
+                if ($igRequired) $igAttrs['required'] = true;
                 if ($existingIg):
                 ?>
                   <?= Attachment::make()
@@ -54,6 +56,7 @@ $UPLOAD_URL = '/uploads/teams/';
                       ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
                       ->title(basename($existingIg))
                       ->description('Sudah diupload')
+                      ->clearable()
                       ->withPreview()
                       ->fileInput('igFollow_' . $p, $igAttrs)
                       ->render() ?>
@@ -63,6 +66,7 @@ $UPLOAD_URL = '/uploads/teams/';
                       ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
                       ->title('Screenshot Follow')
                       ->description('Bukti follow Instagram @lombax')
+                      ->clearable()
                       ->withPreview()
                       ->fileInput('igFollow_' . $p, $igAttrs)
                       ->render() ?>
@@ -72,7 +76,9 @@ $UPLOAD_URL = '/uploads/teams/';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon</label>
                 <?php
-                $twibbonAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'class' => 'member-input'];
+                $twibbonRequired = !$disabled && !$existingTwibbon;
+                $twibbonAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-twibbon'];
+                if ($twibbonRequired) $twibbonAttrs['required'] = true;
                 if ($existingTwibbon):
                 ?>
                   <?= Attachment::make()
@@ -81,6 +87,7 @@ $UPLOAD_URL = '/uploads/teams/';
                       ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
                       ->title(basename($existingTwibbon))
                       ->description('Sudah diupload')
+                      ->clearable()
                       ->withPreview()
                       ->fileInput('twibbon_' . $p, $twibbonAttrs)
                       ->render() ?>
@@ -90,6 +97,7 @@ $UPLOAD_URL = '/uploads/teams/';
                       ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
                       ->title('Upload Twibbon')
                       ->description('Foto profil dengan twibbon')
+                      ->clearable()
                       ->withPreview()
                       ->fileInput('twibbon_' . $p, $twibbonAttrs)
                       ->render() ?>

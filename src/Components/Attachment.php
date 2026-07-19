@@ -14,6 +14,8 @@ class Attachment extends Component
     private string $trigger = '';
     private string $mediaVariant = 'icon';
     private bool $preview = false;
+    private string $titleClass = '';
+    private bool $clearable = false;
 
     public function mediaVariant(string $variant): static
     {
@@ -51,6 +53,12 @@ class Attachment extends Component
         return $this;
     }
 
+    public function titleClass(string $class): static
+    {
+        $this->titleClass = $class;
+        return $this;
+    }
+
     public function description(string $description): static
     {
         $this->description = $description;
@@ -72,6 +80,12 @@ class Attachment extends Component
     public function withPreview(): static
     {
         $this->preview = true;
+        return $this;
+    }
+
+    public function clearable(bool $v = true): static
+    {
+        $this->clearable = $v;
         return $this;
     }
 
@@ -155,11 +169,12 @@ class Attachment extends Component
 
     private function titleClasses(): string
     {
-        $base = 'text-sm font-medium text-gray-900 truncate';
+        $base = 'text-sm font-medium text-red-500 italic truncate';
         if ($this->size === 'sm') $base .= ' text-xs';
         if ($this->state === 'uploading' || $this->state === 'processing') {
             $base .= ' animate-pulse bg-gray-200 text-transparent rounded inline-block';
         }
+        if ($this->titleClass) $base .= ' ' . $this->titleClass;
         return $base;
     }
 
@@ -247,6 +262,14 @@ class Attachment extends Component
 
         // Actions
         $html .= $this->renderActions();
+
+        // Clearable X button
+        if ($this->clearable) {
+            $html .= '<button type="button" aria-label="Hapus" data-clear-attachment'
+                . ' class="inline-flex items-center justify-center w-7 h-7 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors absolute top-2 right-2 z-20">'
+                . '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>'
+                . '</button>';
+        }
 
         // Trigger overlay (file input or button)
         if ($this->trigger) {

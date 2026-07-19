@@ -124,7 +124,7 @@ foreach ($tabDone as $n => $done) {
     const nextBtn = document.getElementById('nextTab');
     const indicator = document.getElementById('tabIndicator');
 
-    let current = parseInt(sessionStorage.getItem('dashboardTab')) || <?= $defaultTab ?>;
+    let current = <?= $defaultTab ?>;
     let total = 5;
 
     function activateTab(num, pushHistory) {
@@ -193,10 +193,14 @@ foreach ($tabDone as $n => $done) {
         const empty = f.type === 'file' ? f.files.length === 0 : !f.value.trim();
         if (empty) {
           f.classList.add('border-red-500');
+          var att = f.closest('[data-slot="attachment"]');
+          if (att) att.dataset.state = 'error';
           if (errEl) { errEl.textContent = errEl.dataset.msg || 'Field wajib diisi'; errEl.classList.remove('hidden'); }
           valid = false;
         } else {
           f.classList.remove('border-red-500');
+          var att = f.closest('[data-slot="attachment"]');
+          if (att) att.dataset.state = 'done';
           if (errEl) errEl.classList.add('hidden');
         }
       });
@@ -238,6 +242,19 @@ foreach ($tabDone as $n => $done) {
         media.innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover">';
       };
       reader.readAsDataURL(file);
+    });
+
+    /* Clear attachment file input */
+    document.addEventListener('click', function(e) {
+      var clearBtn = e.target.closest('[data-clear-attachment]');
+      if (!clearBtn) return;
+      var att = clearBtn.closest('[data-slot="attachment"]');
+      if (!att) return;
+      var input = att.querySelector('input[type="file"]');
+      if (input) input.value = '';
+      att.dataset.state = 'idle';
+      var media = att.querySelector('[data-slot="attachment-media"]');
+      if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
     });
 
     /* Division card hints */

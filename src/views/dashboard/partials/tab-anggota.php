@@ -35,9 +35,11 @@ $UPLOAD_URL = '/uploads/teams/';
         $existingCard = $uploads[$p]['student_card'] ?? null;
         $hasData = $name !== '' || $phone !== '' || $existingCard;
         $disabled = $isOptional && !$hasData;
-        $cardAttrs = ['accept' => 'image/*', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-input'];
+        $cardRequired = $hasData && !$existingCard;
+        $cardAttrs = ['accept' => 'image/*', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-file'];
+        if ($cardRequired) $cardAttrs['required'] = true;
       ?>
-        <div class="member-group relative" data-member="<?= $p ?>" data-optional="true">
+        <div class="member-group relative" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
             <div>
@@ -73,6 +75,7 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
                     ->title(basename($existingCard))
                     ->description('Sudah diupload')
+                    ->clearable()
                     ->withPreview()
                     ->fileInput('studentCard_' . $p, $cardAttrs)
                     ->render() ?>
@@ -82,18 +85,22 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
                     ->title('Upload Kartu Pelajar')
                     ->description('Scan atau foto kartu pelajar/mahasiswa')
+                    ->clearable()
                     ->withPreview()
                     ->fileInput('studentCard_' . $p, $cardAttrs)
                     ->render() ?>
               <?php endif; ?>
               <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
             </div>
+            <?php if ($isOptional && !$hasData): ?>
+              <button type="button" class="cancel-member text-xs text-red-400 hover:text-red-600 mt-3 hidden">Batalkan</button>
+            <?php endif; ?>
           </div>
           <?php if ($disabled): ?>
             <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer"
-                 onclick="this.classList.add('hidden'); this.previousElementSibling.classList.remove('opacity-30','pointer-events-none');">
-              <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-brand bg-brand/5 border border-dashed border-brand/30 rounded-xl hover:bg-brand/10 transition-all">
-                <?= Icon::make()->name('users')->class('w-4 h-4') ?>
+                 onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
+              <button type="button" class="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-brand bg-brand/5 border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/10 hover:border-brand/50 transition-all">
+                <?= Icon::make()->name('users')->class('w-5 h-5') ?>
                 + Tambah Member
               </button>
             </div>
@@ -108,15 +115,27 @@ $UPLOAD_URL = '/uploads/teams/';
   document.querySelectorAll('[data-optional]').forEach(group => {
     const inputs = group.querySelectorAll('.member-input');
     function check() {
-      const hasValue = Array.from(inputs).some(i => i.type === 'file' ? i.files.length > 0 : i.value.trim() !== '');
+      const activated = group.dataset.activated === 'true';
+      const hasValue = Array.from(inputs).some(i => i.value.trim() !== '');
       inputs.forEach(i => {
-        if (hasValue) i.setAttribute('required', '');
+        if (hasValue || activated) i.setAttribute('required', '');
         else i.removeAttribute('required');
       });
     }
     inputs.forEach(i => i.addEventListener('change', check));
     inputs.forEach(i => i.addEventListener('input', check));
     check();
+  });
+  document.querySelectorAll('.cancel-member').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var g = this.closest('[data-optional]');
+      g.dataset.activated = 'false';
+      g.querySelectorAll('.member-input').forEach(function(i) { i.value = ''; i.removeAttribute('required'); i.classList.remove('border-red-500'); });
+      g.querySelectorAll('[data-slot="attachment"]').forEach(function(a) { a.dataset.state = 'idle'; a.querySelector('input[type="file"]').value = ''; });
+      g.querySelector('.member-fields').classList.add('opacity-30', 'pointer-events-none');
+      g.querySelector('.member-overlay').classList.remove('hidden');
+      this.classList.add('hidden');
+    });
   });
   </script>
 <?php endif; ?>

@@ -8,6 +8,9 @@ use App\Components\Icon;
 /** @var array $uploads */
 $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
 $UPLOAD_URL = '/uploads/teams/';
+$origDivision = $team['division'] ?? '';
+$hasM2 = !empty($team['firstMemberName']);
+$hasM3 = !empty($team['secondMemberName']);
 ?>
 <div class="space-y-6">
   <!-- Team -->
@@ -26,10 +29,13 @@ $UPLOAD_URL = '/uploads/teams/';
     </div>
     <div class="mt-4">
       <label class="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <?php foreach ($DIVISION_LABELS as $k => $v): ?>
-          <label class="block rounded-lg border-2 p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand/5 transition-all <?= ($team['division'] ?? '') === $k ? 'border-brand bg-brand/5' : 'border-gray-200' ?>">
-            <input type="radio" name="division" value="<?= $k ?>" class="hidden review-field" <?= ($team['division'] ?? '') === $k ? 'checked' : '' ?>>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="reviewDivision">
+        <?php foreach ($DIVISION_LABELS as $k => $v):
+          $isOrig = $origDivision === $k;
+        ?>
+          <label class="review-division block rounded-lg border-2 p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand/5 transition-all <?= $isOrig ? 'border-brand bg-brand/5' : 'border-gray-200' ?>"
+            data-orig="<?= $isOrig ? '1' : '0' ?>">
+            <input type="radio" name="division" value="<?= $k ?>" class="hidden" <?= $isOrig ? 'checked' : '' ?>>
             <p class="text-xs font-medium text-gray-900"><?= htmlspecialchars($v) ?></p>
           </label>
         <?php endforeach; ?>
@@ -40,7 +46,7 @@ $UPLOAD_URL = '/uploads/teams/';
     </div>
   </form>
 
-  <!-- Anggota -->
+  <!-- Anggota + Kartu Pelajar -->
   <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="division" value="<?= htmlspecialchars($team['division']) ?>">
@@ -49,18 +55,52 @@ $UPLOAD_URL = '/uploads/teams/';
     $reviewMembers = [
       ['num' => 1, 'label' => 'Ketua Tim', 'nameKey' => 'leaderName', 'phoneKey' => 'leaderPhoneNumber'],
     ];
-    $hasM2 = !empty($team['firstMemberName']);
-    $hasM3 = !empty($team['secondMemberName']);
     if ($hasM2) $reviewMembers[] = ['num' => 2, 'label' => 'Anggota 2', 'nameKey' => 'firstMemberName', 'phoneKey' => 'firstMemberPhoneNumber'];
     if ($hasM3) $reviewMembers[] = ['num' => 3, 'label' => 'Anggota 3', 'nameKey' => 'secondMemberName', 'phoneKey' => 'secondMemberPhoneNumber'];
     ?>
     <div class="space-y-4">
-      <?php foreach ($reviewMembers as $m): ?>
+      <?php foreach ($reviewMembers as $m):
+        $p = $m['num'];
+        $existingCard = $uploads[$p]['student_card'] ?? null;
+      ?>
         <div>
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['label']) ?></p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($team[$m['nameKey']] ?? '') ?>" placeholder="Nama Lengkap" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
-            <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($team[$m['phoneKey']] ?? '') ?>" placeholder="No. Telepon" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
+            <div>
+              <label class="text-xs text-gray-500 mb-1 block">Nama Lengkap</label>
+              <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($team[$m['nameKey']] ?? '') ?>" placeholder="Nama Lengkap" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
+            </div>
+            <div>
+              <label class="text-xs text-gray-500 mb-1 block">No. Telepon / WA</label>
+              <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($team[$m['phoneKey']] ?? '') ?>" placeholder="No. Telepon" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
+            </div>
+          </div>
+          <div class="mt-2">
+            <label class="text-xs text-gray-500 mb-1 block">Kartu Pelajar / Mahasiswa</label>
+            <?php
+            $cardAttrs = ['accept' => 'image/*'];
+            if ($existingCard):
+            ?>
+              <?= Attachment::make()
+                  ->state('done')
+                  ->mediaVariant('image')
+                  ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
+                  ->title(basename($existingCard))
+                  ->titleClass('text-red-500 italic')
+                  ->description('Sudah diupload')
+                  ->withPreview()
+                  ->fileInput('studentCard_' . $p, $cardAttrs)
+                  ->render() ?>
+            <?php else: ?>
+              <?= Attachment::make()
+                  ->state('idle')
+                  ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
+                  ->title('Upload Kartu Pelajar')
+                  ->description('Scan atau foto kartu pelajar/mahasiswa')
+                  ->withPreview()
+                  ->fileInput('studentCard_' . $p, $cardAttrs)
+                  ->render() ?>
+            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>
@@ -71,7 +111,8 @@ $UPLOAD_URL = '/uploads/teams/';
   </form>
 
   <!-- Media Sosial -->
-  <div class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+  <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Media Sosial</h3>
     <?php
     $sosmedMembers = [
@@ -90,47 +131,71 @@ $UPLOAD_URL = '/uploads/teams/';
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['name']) ?></p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <p class="text-xs text-gray-500 mb-1">Bukti Follow IG</p>
-              <?php if ($ig): ?>
+              <label class="text-xs text-gray-500 mb-1 block">Bukti Follow IG</label>
+              <?php
+              $igAttrs = ['accept' => 'image/*'];
+              if ($ig):
+              ?>
                 <?= Attachment::make()
                     ->state('done')
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($ig) . '" class="w-full h-full object-cover">')
                     ->title(basename($ig))
+                    ->titleClass('text-red-500 italic')
                     ->description('Sudah diupload')
+                    ->withPreview()
+                    ->fileInput('igFollow_' . $p, $igAttrs)
                     ->render() ?>
               <?php else: ?>
-                <div class="flex items-center gap-2 p-3 bg-gray-50 border border-dashed border-gray-200 rounded-xl">
-                  <?= Icon::make()->name('image')->class('w-4 h-4 text-gray-300 shrink-0') ?>
-                  <p class="text-xs text-gray-400">Belum diupload</p>
-                </div>
+                <?= Attachment::make()
+                    ->state('idle')
+                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                    ->title('Screenshot Follow')
+                    ->description('Bukti follow Instagram @lombax')
+                    ->withPreview()
+                    ->fileInput('igFollow_' . $p, $igAttrs)
+                    ->render() ?>
               <?php endif; ?>
             </div>
             <div>
-              <p class="text-xs text-gray-500 mb-1">Twibbon</p>
-              <?php if ($twibbon): ?>
+              <label class="text-xs text-gray-500 mb-1 block">Twibbon</label>
+              <?php
+              $twibbonAttrs = ['accept' => 'image/*'];
+              if ($twibbon):
+              ?>
                 <?= Attachment::make()
                     ->state('done')
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($twibbon) . '" class="w-full h-full object-cover">')
                     ->title(basename($twibbon))
+                    ->titleClass('text-red-500 italic')
                     ->description('Sudah diupload')
+                    ->withPreview()
+                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
                     ->render() ?>
               <?php else: ?>
-                <div class="flex items-center gap-2 p-3 bg-gray-50 border border-dashed border-gray-200 rounded-xl">
-                  <?= Icon::make()->name('image')->class('w-4 h-4 text-gray-300 shrink-0') ?>
-                  <p class="text-xs text-gray-400">Belum diupload</p>
-                </div>
+                <?= Attachment::make()
+                    ->state('idle')
+                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                    ->title('Upload Twibbon')
+                    ->description('Foto profil dengan twibbon')
+                    ->withPreview()
+                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                    ->render() ?>
               <?php endif; ?>
             </div>
           </div>
         </div>
       <?php endforeach; ?>
     </div>
-  </div>
+    <div class="mt-4 flex justify-end">
+      <button type="submit" class="review-btn text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">Simpan</button>
+    </div>
+  </form>
 
   <!-- Pembayaran -->
-  <div class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+  <form action="/dashboard/payment" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-3">Bukti Pembayaran</h3>
     <?php if ($payment && !empty($payment['proofImage'])): ?>
       <?= Attachment::make()
@@ -138,13 +203,36 @@ $UPLOAD_URL = '/uploads/teams/';
           ->mediaVariant('image')
           ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
           ->title(basename($payment['proofImage']))
+          ->titleClass('text-red-500 italic')
           ->description('Sudah diupload')
+          ->withPreview()
+          ->fileInput('proofImage', ['accept' => 'image/*'])
           ->render() ?>
     <?php else: ?>
-      <div class="flex items-center gap-2 p-3 bg-gray-50 border border-dashed border-gray-200 rounded-xl">
-        <?= Icon::make()->name('upload')->class('w-4 h-4 text-gray-300 shrink-0') ?>
-        <p class="text-xs text-gray-400">Upload bukti pembayaran di tab Pembayaran</p>
-      </div>
+      <?= Attachment::make()
+          ->state('idle')
+          ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
+          ->title('Upload Bukti Transfer')
+          ->description('PNG, JPG, GIF, WebP — maks 2MB')
+          ->withPreview()
+          ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true])
+          ->render() ?>
     <?php endif; ?>
-  </div>
+    <div class="mt-4 flex justify-end">
+      <button type="submit" class="review-btn text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">Simpan</button>
+    </div>
+  </form>
 </div>
+
+<script>
+document.getElementById('reviewDivision')?.addEventListener('change', function(e) {
+  if (e.target.name !== 'division') return;
+  this.querySelectorAll('.review-division').forEach(function(l) {
+    var rb = l.querySelector('input[name="division"]');
+    var changed = rb && rb.checked && l.dataset.orig !== '1';
+    l.classList.toggle('ring-2', changed);
+    l.classList.toggle('ring-brand', changed);
+    l.classList.toggle('ring-offset-1', changed);
+  });
+});
+</script>
