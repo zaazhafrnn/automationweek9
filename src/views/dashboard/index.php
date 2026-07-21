@@ -40,15 +40,15 @@ foreach ($tabDone as $n => $done) {
 }
 ?>
 <div class="min-h-screen bg-gray-50">
-  <div class="bg-white border-b border-gray-200">
+  <div class="bg-brand border-b border-gray-200 text-white">
     <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
       <div>
-        <h1 class="text-lg font-bold text-gray-900">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
-        <p class="text-xs text-gray-500 -mt-0.5">Kelola pendaftaran tim kamu.</p>
+        <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
+        <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
       </div>
       <form action="/logout" method="POST" class="m-0">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
-        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
           <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>
           Logout
         </button>
@@ -60,13 +60,13 @@ foreach ($tabDone as $n => $done) {
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
       <div class="border-b border-gray-200">
         <div class="px-4 sm:px-6">
-          <div role="tablist" class="flex overflow-x-auto -mb-px gap-0" id="tabList">
+          <div role="tablist" class="flex overflow-x-auto gap-1 p-1" id="tabList">
             <?php foreach ($tabs as $num => $tab): ?>
               <button role="tab"
                 data-tab="<?= $num ?>"
                 data-state="<?= $defaultTab === $num ? 'active' : 'inactive' ?>"
-                class="tab-trigger relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors
-                  <?= $defaultTab === $num ? 'border-brand text-brand' : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300' ?>
+                class="tab-trigger relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors
+                  <?= $defaultTab === $num ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>
                   <?= $num === 2 && !$team ? 'opacity-40 pointer-events-none' : '' ?>
                   <?= $num === 3 && (!$team || empty($team['leaderName'])) ? 'opacity-40 pointer-events-none' : '' ?>
                   <?= $num === 4 && (!$team || empty($team['leaderName']) || empty($upload1['ig_follow']) || empty($upload1['twibbon'])) ? 'opacity-40 pointer-events-none' : '' ?>
@@ -80,6 +80,7 @@ foreach ($tabDone as $n => $done) {
                 <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
               </button>
             <?php endforeach; ?>
+
           </div>
         </div>
       </div>
@@ -131,8 +132,8 @@ foreach ($tabDone as $n => $done) {
       if (pushHistory !== false) sessionStorage.setItem('dashboardTab', num);
       tabs.forEach(t => {
         t.dataset.state = 'inactive';
-        t.classList.remove('border-brand', 'text-brand');
-        t.classList.add('border-transparent', 'text-gray-400', 'hover:text-gray-600', 'hover:border-gray-300');
+        t.classList.remove('bg-brand', 'text-white');
+        t.classList.add('text-gray-500');
       });
       panels.forEach(p => {
         p.dataset.state = 'inactive';
@@ -142,8 +143,8 @@ foreach ($tabDone as $n => $done) {
       const panel = document.querySelector(`.tab-panel[data-tab="${num}"]`);
       if (tab) {
         tab.dataset.state = 'active';
-        tab.classList.remove('border-transparent', 'text-gray-400', 'hover:text-gray-600', 'hover:border-gray-300');
-        tab.classList.add('border-brand', 'text-brand');
+        tab.classList.remove('text-gray-500');
+        tab.classList.add('bg-brand', 'text-white');
       }
       if (panel) {
         panel.dataset.state = 'active';
