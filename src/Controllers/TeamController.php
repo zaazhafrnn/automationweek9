@@ -19,30 +19,12 @@ class TeamController extends Controller
         $this->uploadModel = new TeamDocumentationUpload();
     }
 
-    public function registerForm()
-    {
-        $this->requireAuth();
-        if (Session::get('role') === 'admin') {
-            $this->redirect('/admin/dashboard');
-        }
-
-        $existingTeam = $this->teamModel->findByUserId(Session::get('user_id'));
-        if ($existingTeam) {
-            $this->redirect('/dashboard');
-        }
-
-        $this->view('dashboard/team_register', [
-            'user_name' => Session::get('user_name'),
-            'csrf_token' => Security::generateCsrfToken()
-        ]);
-    }
-
     public function register()
     {
         $this->requireAuth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/dashboard/team/register');
+            $this->redirect('/dashboard');
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
@@ -118,7 +100,7 @@ class TeamController extends Controller
 
         $team = $this->teamModel->findByUserId(Session::get('user_id'));
         if (!$team) {
-            $this->redirect('/dashboard/team/register');
+            $this->redirect('/dashboard');
         }
 
         $data = [
@@ -142,7 +124,6 @@ class TeamController extends Controller
         try {
             $this->teamModel->update($team['id'], $data);
 
-            // Handle file uploads: studentCard_N, igFollow_N, twibbon_N
             $uploadDir = BASE_PATH . '/public/uploads/teams/';
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 

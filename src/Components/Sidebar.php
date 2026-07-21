@@ -25,19 +25,17 @@ class Sidebar extends Component
         $html .= '<div class="relative w-[var(--sidebar-width)] bg-transparent transition-[width] duration-200 ease-linear group-data-[state=collapsed]:w-[var(--sidebar-width-icon)]"></div>';
         $html .= '<div class="fixed inset-y-0 z-20 hidden h-svh w-[var(--sidebar-width)] transition-[width] duration-200 ease-linear md:flex left-0 group-data-[state=collapsed]:w-[var(--sidebar-width-icon)] border-r border-sidebar-border bg-sidebar text-sidebar-foreground flex-col">';
 
-        // Header Area (Logo, title, and trigger button)
         $html .= '<div class="flex items-center justify-between gap-2 p-3 border-b border-white/15 mb-2 group-data-[state=collapsed]:p-2 group-data-[state=collapsed]:flex-col group-data-[state=collapsed]:gap-3">';
         $html .= '<div class="flex items-center gap-2 overflow-hidden flex-grow group-data-[state=collapsed]:justify-center">';
         $html .= '<img src="/image/logo-aw.png" alt="AW Logo" class="w-8 h-8 object-contain bg-white rounded-full border border-sidebar-border shrink-0">';
         $html .= '<span data-sidebar-title class="truncate text-xs font-bold font-display tracking-tight text-white flex-1 group-data-[state=collapsed]:hidden">' . htmlspecialchars($this->title) . '</span>';
         $html .= '</div>';
-        
+
         $html .= '<button type="button" data-sidebar="trigger" class="inline-flex size-7 shrink-0 items-center justify-center rounded-lg border border-sidebar-border text-sidebar-foreground/50 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer shadow-sm" aria-label="Toggle Sidebar">';
         $html .= Icon::make()->name('panel-left')->class('h-3.5 w-3.5 group-data-[state=collapsed]:rotate-180 transition-transform');
         $html .= '</button>';
         $html .= '</div>';
 
-        // Nav List Area
         $html .= '<div class="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 py-3 group-data-[state=collapsed]:px-1">';
         $html .= '<div class="w-full text-xs">';
         $html .= '<ul class="flex w-full min-w-0 flex-col gap-1">';
@@ -72,7 +70,6 @@ class Sidebar extends Component
         $html .= '</ul></div>';
         $html .= '</div>';
 
-        // Footer Area (Logout button)
         $html .= '<div class="flex flex-col gap-2 p-2 border-t border-white/15 group-data-[state=collapsed]:p-1">';
         $html .= '<form action="/logout" method="POST" class="m-0">';
         $csrf = \App\Utils\Security::generateCsrfToken();

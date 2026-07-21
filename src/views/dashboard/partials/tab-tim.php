@@ -1,8 +1,8 @@
 <?php
-use App\Components\Icon;
 
 /** @var array|null $team */
 /** @var string $csrf_token */
+
 $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
 ?>
 <div class="space-y-6">

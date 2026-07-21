@@ -1,4 +1,5 @@
 <?php
+
 use App\Components\Attachment;
 use App\Components\Icon;
 
@@ -6,6 +7,7 @@ use App\Components\Icon;
 /** @var array|null $payment */
 /** @var string $csrf_token */
 /** @var array $uploads */
+
 $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
 $UPLOAD_URL = '/uploads/teams/';
 $origDivision = $team['division'] ?? '';
@@ -13,7 +15,6 @@ $hasM2 = !empty($team['firstMemberName']);
 $hasM3 = !empty($team['secondMemberName']);
 ?>
 <div class="space-y-6">
-  <!-- Team -->
   <form action="/dashboard/team/update" method="POST" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Registrasi Tim</h3>
@@ -46,7 +47,6 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
   </form>
 
-  <!-- Anggota + Kartu Pelajar -->
   <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="division" value="<?= htmlspecialchars($team['division']) ?>">
@@ -82,24 +82,23 @@ $hasM3 = !empty($team['secondMemberName']);
             if ($existingCard):
             ?>
               <?= Attachment::make()
-                  ->state('done')
-                  ->mediaVariant('image')
-                  ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
-                  ->title(basename($existingCard))
-                  ->titleClass('text-red-500 italic')
-                  ->description('Sudah diupload')
-                  ->withPreview()
-                  ->fileInput('studentCard_' . $p, $cardAttrs)
-                  ->render() ?>
+                ->state('done')
+                ->mediaVariant('image')
+                ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
+                ->title(basename($existingCard))
+                ->description('Sudah diupload')
+                ->withPreview()
+                ->fileInput('studentCard_' . $p, $cardAttrs)
+                ->render() ?>
             <?php else: ?>
               <?= Attachment::make()
-                  ->state('idle')
-                  ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
-                  ->title('Upload Kartu Pelajar')
-                  ->description('Scan atau foto kartu pelajar/mahasiswa')
-                  ->withPreview()
-                  ->fileInput('studentCard_' . $p, $cardAttrs)
-                  ->render() ?>
+                ->state('idle')
+                ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
+                ->title('Upload Kartu Pelajar')
+                ->description('Scan atau foto kartu pelajar/mahasiswa')
+                ->withPreview()
+                ->fileInput('studentCard_' . $p, $cardAttrs)
+                ->render() ?>
             <?php endif; ?>
           </div>
         </div>
@@ -110,7 +109,6 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
   </form>
 
-  <!-- Media Sosial -->
   <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Media Sosial</h3>
@@ -137,24 +135,23 @@ $hasM3 = !empty($team['secondMemberName']);
               if ($ig):
               ?>
                 <?= Attachment::make()
-                    ->state('done')
-                    ->mediaVariant('image')
-                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($ig) . '" class="w-full h-full object-cover">')
-                    ->title(basename($ig))
-                    ->titleClass('text-red-500 italic')
-                    ->description('Sudah diupload')
-                    ->withPreview()
-                    ->fileInput('igFollow_' . $p, $igAttrs)
-                    ->render() ?>
+                  ->state('done')
+                  ->mediaVariant('image')
+                  ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($ig) . '" class="w-full h-full object-cover">')
+                  ->title(basename($ig))
+                  ->description('Sudah diupload')
+                  ->withPreview()
+                  ->fileInput('igFollow_' . $p, $igAttrs)
+                  ->render() ?>
               <?php else: ?>
                 <?= Attachment::make()
-                    ->state('idle')
-                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
-                    ->title('Screenshot Follow')
-                    ->description('Bukti follow Instagram @lombax')
-                    ->withPreview()
-                    ->fileInput('igFollow_' . $p, $igAttrs)
-                    ->render() ?>
+                  ->state('idle')
+                  ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                  ->title('Screenshot Follow')
+                  ->description('Bukti follow Instagram @lombax')
+                  ->withPreview()
+                  ->fileInput('igFollow_' . $p, $igAttrs)
+                  ->render() ?>
               <?php endif; ?>
             </div>
             <div>
@@ -164,24 +161,23 @@ $hasM3 = !empty($team['secondMemberName']);
               if ($twibbon):
               ?>
                 <?= Attachment::make()
-                    ->state('done')
-                    ->mediaVariant('image')
-                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($twibbon) . '" class="w-full h-full object-cover">')
-                    ->title(basename($twibbon))
-                    ->titleClass('text-red-500 italic')
-                    ->description('Sudah diupload')
-                    ->withPreview()
-                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
-                    ->render() ?>
+                  ->state('done')
+                  ->mediaVariant('image')
+                  ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($twibbon) . '" class="w-full h-full object-cover">')
+                  ->title(basename($twibbon))
+                  ->description('Sudah diupload')
+                  ->withPreview()
+                  ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                  ->render() ?>
               <?php else: ?>
                 <?= Attachment::make()
-                    ->state('idle')
-                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
-                    ->title('Upload Twibbon')
-                    ->description('Foto profil dengan twibbon')
-                    ->withPreview()
-                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
-                    ->render() ?>
+                  ->state('idle')
+                  ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                  ->title('Upload Twibbon')
+                  ->description('Foto profil dengan twibbon')
+                  ->withPreview()
+                  ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                  ->render() ?>
               <?php endif; ?>
             </div>
           </div>
@@ -193,30 +189,28 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
   </form>
 
-  <!-- Pembayaran -->
   <form action="/dashboard/payment" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-3">Bukti Pembayaran</h3>
     <?php if ($payment && !empty($payment['proofImage'])): ?>
       <?= Attachment::make()
-          ->state('done')
-          ->mediaVariant('image')
-          ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
-          ->title(basename($payment['proofImage']))
-          ->titleClass('text-red-500 italic')
-          ->description('Sudah diupload')
-          ->withPreview()
-          ->fileInput('proofImage', ['accept' => 'image/*'])
-          ->render() ?>
+        ->state('done')
+        ->mediaVariant('image')
+        ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
+        ->title(basename($payment['proofImage']))
+        ->description('Sudah diupload')
+        ->withPreview()
+        ->fileInput('proofImage', ['accept' => 'image/*'])
+        ->render() ?>
     <?php else: ?>
       <?= Attachment::make()
-          ->state('idle')
-          ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
-          ->title('Upload Bukti Transfer')
-          ->description('PNG, JPG, GIF, WebP — maks 2MB')
-          ->withPreview()
-          ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true])
-          ->render() ?>
+        ->state('idle')
+        ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
+        ->title('Upload Bukti Transfer')
+        ->description('PNG, JPG, GIF, WebP — maks 2MB')
+        ->withPreview()
+        ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true])
+        ->render() ?>
     <?php endif; ?>
     <div class="mt-4 flex justify-end">
       <button type="submit" class="review-btn text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">Simpan</button>
@@ -225,14 +219,14 @@ $hasM3 = !empty($team['secondMemberName']);
 </div>
 
 <script>
-document.getElementById('reviewDivision')?.addEventListener('change', function(e) {
-  if (e.target.name !== 'division') return;
-  this.querySelectorAll('.review-division').forEach(function(l) {
-    var rb = l.querySelector('input[name="division"]');
-    var changed = rb && rb.checked && l.dataset.orig !== '1';
-    l.classList.toggle('ring-2', changed);
-    l.classList.toggle('ring-brand', changed);
-    l.classList.toggle('ring-offset-1', changed);
+  document.getElementById('reviewDivision')?.addEventListener('change', function(e) {
+    if (e.target.name !== 'division') return;
+    this.querySelectorAll('.review-division').forEach(function(l) {
+      var rb = l.querySelector('input[name="division"]');
+      var changed = rb && rb.checked && l.dataset.orig !== '1';
+      l.classList.toggle('ring-2', changed);
+      l.classList.toggle('ring-brand', changed);
+      l.classList.toggle('ring-offset-1', changed);
+    });
   });
-});
 </script>

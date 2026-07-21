@@ -102,10 +102,10 @@
             </div>
 
             <p class="text-xs font-bold uppercase tracking-tighter md:tracking-wide text-white mb-3">Politeknik Perkapalan Negeri Surabaya</p>
-            <h1 class="text-3xl md:text-6xl font-black mb-6 leading-none font-poppins tracking-tight text-white">Automation <span class="text-white">Week 9</span></h1>
-            <p class="text-lg md:text-xl font-medium tracking-wide text-white mb-8 italic">"Fuel the Red Automation"</p>
+            <h1 class="text-3xl md:text-6xl font-black mb-6 leading-none tracking-tight text-white">Automation <span class="text-white">Week 9</span></h1>
+            <p class="text-lg md:text-xl font-medium tracking-wide text-white mb-8 italic">"Powering the Next Evolution"</p>
             <div class="flex flex-row w-full max-w-xs sm:max-w-none gap-3 sm:gap-4 justify-center mx-auto">
-                <a href="/dashboard/team/register" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg border border-whitetransition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
+                <a href="/dashboard" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg border border-white/40 transition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
                 <a href="#competitions" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm text-white font-bold text-foreground border border-border hover:text-black hover:bg-card transition-all no-underline text-center">Lihat Lomba</a>
             </div>
         </div>
@@ -338,7 +338,7 @@
     <footer class="py-16 px-4 bg-secondary/50 border-t border-border">
         <div class="max-w-6xl mx-auto flex flex-col items-center">
             <p class="font-black text-primary text-3xl md:text-5xl tracking-tight text-center max-w-xl leading-tight mb-8">
-                Fuel the Red Automation.
+                Powering the Next Evolution.
             </p>
             <div class="flex justify-center gap-4 mb-8">
                 <a href="https://www.youtube.com/channel/UCXepgfxFNcLQcMHgyTrykjw" target="_blank"

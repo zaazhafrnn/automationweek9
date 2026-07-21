@@ -19,34 +19,12 @@ class PaymentController extends Controller
         $this->paymentModel = new Payment();
     }
 
-    public function uploadForm()
-    {
-        $this->requireAuth();
-
-        $team = $this->teamModel->findByUserId(Session::get('user_id'));
-        if (!$team) {
-            $this->redirect('/dashboard/team/register');
-        }
-
-        $payment = $this->paymentModel->findByTeamId($team['id']);
-        if ($payment && $payment['status'] === 'verified') {
-            $this->redirect('/dashboard');
-        }
-
-        $this->view('dashboard/payment', [
-            'csrf_token' => Security::generateCsrfToken(),
-            'team' => $team,
-            'payment' => $payment,
-            'error' => null
-        ]);
-    }
-
     public function upload()
     {
         $this->requireAuth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/dashboard/payment');
+            $this->redirect('/dashboard');
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
@@ -57,7 +35,7 @@ class PaymentController extends Controller
 
         $team = $this->teamModel->findByUserId(Session::get('user_id'));
         if (!$team) {
-            $this->redirect('/dashboard/team/register');
+            $this->redirect('/dashboard');
         }
 
         $existingPayment = $this->paymentModel->findByTeamId($team['id']);

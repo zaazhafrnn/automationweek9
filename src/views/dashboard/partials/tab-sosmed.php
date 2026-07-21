@@ -1,10 +1,12 @@
 <?php
+
 use App\Components\Attachment;
 use App\Components\Icon;
 
 /** @var array|null $team */
 /** @var string $csrf_token */
 /** @var array $uploads */
+
 $members = [];
 if ($team) {
   $members[] = ['num' => 1, 'name' => $team['leaderName'] ?? 'Anggota 1', 'active' => true];
@@ -51,25 +53,25 @@ $UPLOAD_URL = '/uploads/teams/';
                 if ($existingIg):
                 ?>
                   <?= Attachment::make()
-                      ->state('done')
-                      ->mediaVariant('image')
-                      ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
-                      ->title(basename($existingIg))
-                      ->description('Sudah diupload')
-                      ->clearable()
-                      ->withPreview()
-                      ->fileInput('igFollow_' . $p, $igAttrs)
-                      ->render() ?>
+                    ->state('done')
+                    ->mediaVariant('image')
+                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
+                    ->title(basename($existingIg))
+                    ->description('Sudah diupload')
+                    ->clearable()
+                    ->withPreview()
+                    ->fileInput('igFollow_' . $p, $igAttrs)
+                    ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
-                      ->state('idle')
-                      ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
-                      ->title('Screenshot Follow')
-                      ->description('Bukti follow Instagram @lombax')
-                      ->clearable()
-                      ->withPreview()
-                      ->fileInput('igFollow_' . $p, $igAttrs)
-                      ->render() ?>
+                    ->state('idle')
+                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                    ->title('Screenshot Follow')
+                    ->description('Bukti follow Instagram @lombax')
+                    ->clearable()
+                    ->withPreview()
+                    ->fileInput('igFollow_' . $p, $igAttrs)
+                    ->render() ?>
                 <?php endif; ?>
                 <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
               </div>
@@ -82,25 +84,25 @@ $UPLOAD_URL = '/uploads/teams/';
                 if ($existingTwibbon):
                 ?>
                   <?= Attachment::make()
-                      ->state('done')
-                      ->mediaVariant('image')
-                      ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
-                      ->title(basename($existingTwibbon))
-                      ->description('Sudah diupload')
-                      ->clearable()
-                      ->withPreview()
-                      ->fileInput('twibbon_' . $p, $twibbonAttrs)
-                      ->render() ?>
+                    ->state('done')
+                    ->mediaVariant('image')
+                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
+                    ->title(basename($existingTwibbon))
+                    ->description('Sudah diupload')
+                    ->clearable()
+                    ->withPreview()
+                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                    ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
-                      ->state('idle')
-                      ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
-                      ->title('Upload Twibbon')
-                      ->description('Foto profil dengan twibbon')
-                      ->clearable()
-                      ->withPreview()
-                      ->fileInput('twibbon_' . $p, $twibbonAttrs)
-                      ->render() ?>
+                    ->state('idle')
+                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                    ->title('Upload Twibbon')
+                    ->description('Foto profil dengan twibbon')
+                    ->clearable()
+                    ->withPreview()
+                    ->fileInput('twibbon_' . $p, $twibbonAttrs)
+                    ->render() ?>
                 <?php endif; ?>
                 <p id="err-sosmed-<?= $p ?>-twibbon" class="text-xs text-red-500 mt-1 hidden">Twibbon wajib diupload</p>
               </div>
@@ -116,7 +118,8 @@ $UPLOAD_URL = '/uploads/teams/';
             </div>
           <?php endif; ?>
         </div>
-        <?php if ($i < count($members) - 1): ?><hr class="border-gray-100"><?php endif; ?>
+        <?php if ($i < count($members) - 1): ?>
+          <hr class="border-gray-100"><?php endif; ?>
       <?php endforeach; ?>
     </div>
   </form>

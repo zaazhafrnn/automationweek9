@@ -20,13 +20,6 @@ class Payment extends Model
         return $stmt->fetch();
     }
 
-    public function findByUserId(int $userId): array|false
-    {
-        $stmt = $this->db->prepare("SELECT p.* FROM payments p JOIN teams t ON p.teamId = t.id WHERE t.user_id = :userId ORDER BY p.submittedAt DESC LIMIT 1");
-        $stmt->execute([':userId' => $userId]);
-        return $stmt->fetch();
-    }
-
     public function updateStatus(int $id, string $status, ?string $note = null, ?int $verifiedBy = null, bool $clearVerification = false): bool
     {
         if ($clearVerification) {

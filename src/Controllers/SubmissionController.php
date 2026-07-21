@@ -21,7 +21,7 @@ class SubmissionController extends Controller
 
         $team = (new Team())->findByUserId(Session::get('user_id'));
         if (!$team) {
-            $this->redirect('/dashboard/team/register');
+            $this->redirect('/dashboard');
         }
 
         $payment = (new Payment())->findByTeamId($team['id']);

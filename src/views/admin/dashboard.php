@@ -1,7 +1,3 @@
-<?php
-
-/** @var string $user_name */
-/** @var string $page_title */ ?>
 <div class="rounded-xl border bg-card text-card-foreground shadow-sm">
     <div class="flex flex-col space-y-1.5 p-6">
         <h3 class="text-2xl font-semibold leading-none tracking-tight">Selamat Datang, Admin <?= htmlspecialchars($user_name ?? '') ?></h3>

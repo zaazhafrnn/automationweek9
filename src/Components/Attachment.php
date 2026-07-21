@@ -224,7 +224,6 @@ class Attachment extends Component
     public function render(): string
     {
         if ($this->state === 'idle' && !$this->trigger) {
-            // Auto-add file input with generic name if idle has no trigger
             $this->trigger = '<input type="file" class="absolute inset-0 opacity-0 cursor-pointer z-10">';
         }
 
@@ -239,14 +238,12 @@ class Attachment extends Component
         }
         $html .= $extra . '>';
 
-        // Media
         if ($this->media) {
             $html .= '<div data-slot="attachment-media" class="' . $this->mediaClasses() . '">';
             $html .= $this->media;
             $html .= '</div>';
         }
 
-        // Content
         if ($this->title || $this->description) {
             $html .= '<div data-slot="attachment-content" class="' . $this->contentClasses() . '">';
             if ($this->title) {
@@ -260,10 +257,8 @@ class Attachment extends Component
             $html .= '</div>';
         }
 
-        // Actions
         $html .= $this->renderActions();
 
-        // Clearable X button
         if ($this->clearable) {
             $html .= '<button type="button" aria-label="Hapus" data-clear-attachment'
                 . ' class="inline-flex items-center justify-center w-7 h-7 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors absolute top-2 right-2 z-20">'
@@ -271,7 +266,6 @@ class Attachment extends Component
                 . '</button>';
         }
 
-        // Trigger overlay (file input or button)
         if ($this->trigger) {
             $html .= $this->trigger;
         }

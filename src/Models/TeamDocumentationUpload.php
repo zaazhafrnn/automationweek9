@@ -34,13 +34,4 @@ class TeamDocumentationUpload extends Model
         $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET $column = :file WHERE team_id = :team_id AND member_number = :member");
         return $stmt->execute([':file' => $fileName, ':team_id' => $teamId, ':member' => $member]);
     }
-
-    public function deleteColumn(int $teamId, int $member, string $column): bool
-    {
-        $allowed = ['student_card', 'ig_follow', 'twibbon'];
-        if (!in_array($column, $allowed)) return false;
-
-        $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET $column = NULL WHERE team_id = :team_id AND member_number = :member");
-        return $stmt->execute([':team_id' => $teamId, ':member' => $member]);
-    }
 }

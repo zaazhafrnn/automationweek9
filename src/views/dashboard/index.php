@@ -184,8 +184,12 @@ foreach ($tabDone as $n => $done) {
           const checked = Array.from(group).some(r => r.checked);
           const errEl = document.getElementById(f.dataset.error);
           group.forEach(r => r.closest('.division-card')?.classList.toggle('border-red-500', !checked));
-          if (!checked) { if (errEl) errEl.classList.remove('hidden'); valid = false; }
-          else { if (errEl) errEl.classList.add('hidden'); }
+          if (!checked) {
+            if (errEl) errEl.classList.remove('hidden');
+            valid = false;
+          } else {
+            if (errEl) errEl.classList.add('hidden');
+          }
           return;
         }
         const errId = f.dataset.error;
@@ -195,7 +199,10 @@ foreach ($tabDone as $n => $done) {
           f.classList.add('border-red-500');
           var att = f.closest('[data-slot="attachment"]');
           if (att) att.dataset.state = 'error';
-          if (errEl) { errEl.textContent = errEl.dataset.msg || 'Field wajib diisi'; errEl.classList.remove('hidden'); }
+          if (errEl) {
+            errEl.textContent = errEl.dataset.msg || 'Field wajib diisi';
+            errEl.classList.remove('hidden');
+          }
           valid = false;
         } else {
           f.classList.remove('border-red-500');
@@ -228,7 +235,7 @@ foreach ($tabDone as $n => $done) {
       if (current < total) activateTab(current + 1);
     });
 
-    /* Attachment file preview */
+
     document.addEventListener('change', function(e) {
       if (!e.target.matches('[data-preview]')) return;
       var file = e.target.files && e.target.files[0];
@@ -244,7 +251,7 @@ foreach ($tabDone as $n => $done) {
       reader.readAsDataURL(file);
     });
 
-    /* Clear attachment file input */
+
     document.addEventListener('click', function(e) {
       var clearBtn = e.target.closest('[data-clear-attachment]');
       if (!clearBtn) return;
@@ -257,7 +264,7 @@ foreach ($tabDone as $n => $done) {
       if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
     });
 
-    /* Division card hints */
+
     const divCards = document.getElementById('divisionCards');
     const hint = document.getElementById('division_hint');
     if (divCards) {
