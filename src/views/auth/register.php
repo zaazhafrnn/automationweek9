@@ -14,10 +14,10 @@
 $body_class = 'bg-zinc-100 text-black font-sans antialiased min-h-screen';
 $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1000px]:max-w-[90rem]';
 ?>
-
 <div class="min-h-screen relative grid grid-cols-1 gap-4 xl:grid-cols-2">
-    <div class="flex-1 flex flex-col sm:px-12 lg:px-16 py-8">
-        <div class="flex-1 flex flex-col justify-center items-center">
+    <div class="relative flex-1 flex flex-col sm:px-12 lg:px-16 py-8 overflow-hidden">
+        <div class="absolute left-1/2 -top-10 -translate-x-1/2 w-full h-[70px] bg-primary rounded-b-4xl shadow-sm z-10"></div>
+        <div class="flex-1 flex flex-col justify-center items-center relative min-h-0">
             <div class="w-full max-w-md px-8 md:px-0 xl:px-0">
 
                 <div class="flex justify-center mb-6">
@@ -25,8 +25,8 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 </div>
 
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl sm:text-4xl font-serif leading-tight mb-4">
-                        AutomationWeek IX
+                    <h1 class="text-2xl sm:text-3xl leading-tighter font-display font-extrabold mb-4">
+                        AUTOMATION WEEK IX
                     </h1>
                     <p class="text-sm sm:text-base">
                         Buat akun untuk memulai pendaftaran,
@@ -34,12 +34,12 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                     </p>
                 </div>
 
-                <div class="flex justify-center bg-red-600/10 -mb-6 pb-6 rounded-t-4xl border border-red-500">
+                <div class="flex justify-center bg-red-600/30 -mb-6 pb-6 rounded-t-4xl border border-red-500">
                     <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 px-3 py-2 sm:py-4 text-xs">
                         <span class="text-brand font-semibold">
                             Pendaftaran lomba dibuka
                         </span>
-                        <span>20 Agustus - 20 Oktober 2026!</span>
+                        <span>20 Agustus - 20 Oktober 2026</span>
                     </div>
                 </div>
 
@@ -232,6 +232,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
 
             </div>
         </div>
+        <div class="absolute left-1/2 -bottom-10 -translate-x-1/2 w-full h-[70px] bg-primary rounded-t-4xl shadow-sm z-10"></div>
     </div>
 
     <div class="hidden xl:flex justify-self-start items-center w-full">
