@@ -1,6 +1,6 @@
 <?php
-$body_class = $body_class ?? 'text-gray-800 font-sans antialiased min-h-screen flex flex-col bg-white';
-$main_class = $main_class ?? 'flex-grow w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8';
+$body_class = $body_class ?? 'text-gray-800 font-sans antialiased min-h-screen flex flex-col bg-gray-50';
+$main_class = $main_class ?? 'flex-grow w-full';
 ?>
 <!DOCTYPE html>
 <html lang="en">
