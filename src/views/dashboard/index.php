@@ -32,30 +32,23 @@ $tabDone = [
 if (!isset($activeTab)) {
   $activeTab = 1;
   foreach ($tabDone as $n => $done) {
-    if (!$done) { $activeTab = $n; break; }
+    if (!$done) {
+      $activeTab = $n;
+      break;
+    }
     $activeTab = $n;
   }
 }
 ?>
 <div class="min-h-screen bg-gray-50">
   <div class="bg-brand border-b border-gray-200 text-white">
-      <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
+    <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
       <div>
         <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
         <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
       </div>
-      <div class="flex items-center gap-2">
-        <a href="/application/team-register"
-          class="px-3 py-2 text-sm font-medium rounded-xl transition-colors no-underline
-            <?= !str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/payments') ? 'bg-white/20 text-white' : 'text-white/70 hover:bg-white/10' ?>">
-          Pendaftaran
-        </a>
-        <a href="/payments"
-          class="px-3 py-2 text-sm font-medium rounded-xl transition-colors no-underline
-            <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/payments') ? 'bg-white/20 text-white' : 'text-white/70 hover:bg-white/10' ?>">
-          Pembayaran
-        </a>
-      </div>
+      <?php $current = 'application';
+      include __DIR__ . '/partials/nav-tabs.php'; ?>
       <form action="/logout" method="POST" class="m-0">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
         <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
@@ -205,7 +198,10 @@ if (!isset($activeTab)) {
         const form = panel?.querySelector('form');
         if (form) {
           const btn = form.querySelector('button[type="submit"]');
-          if (btn) { btn.click(); return; }
+          if (btn) {
+            btn.click();
+            return;
+          }
           form.submit();
           return;
         }

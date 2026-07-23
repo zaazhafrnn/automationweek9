@@ -17,16 +17,8 @@ $status = $payment['status'] ?? null;
         <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
         <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
       </div>
-      <div class="flex items-center gap-2">
-        <a href="/application/team-register"
-          class="px-3 py-2 text-sm font-medium rounded-xl transition-colors no-underline text-white/70 hover:bg-white/10">
-          Pendaftaran
-        </a>
-        <a href="/payments"
-          class="px-3 py-2 text-sm font-medium rounded-xl transition-colors no-underline bg-white/20 text-white">
-          Pembayaran
-        </a>
-      </div>
+      <?php $current = 'payment';
+      include __DIR__ . '/partials/nav-tabs.php'; ?>
       <form action="/logout" method="POST" class="m-0">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
         <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
@@ -60,12 +52,16 @@ $status = $payment['status'] ?? null;
             </div>
             <?php if ($status): ?>
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
-                <?= match($status) {
+                <?= match ($status) {
                   'verified' => 'bg-green-50 text-green-700 border border-green-200',
                   'rejected' => 'bg-red-50 text-red-700 border border-red-200',
                   default => 'bg-yellow-50 text-yellow-700 border border-yellow-200',
                 } ?>">
-                <?= Icon::make()->name(match($status) { 'verified' => 'check-circle', 'rejected' => 'x-circle', default => 'clock' })->class('w-3.5 h-3.5') ?>
+                <?= Icon::make()->name(match ($status) {
+                  'verified' => 'check-circle',
+                  'rejected' => 'x-circle',
+                  default => 'clock'
+                })->class('w-3.5 h-3.5') ?>
                 <?= ucfirst(htmlspecialchars($status)) ?>
               </span>
             <?php endif; ?>
@@ -178,32 +174,32 @@ $status = $payment['status'] ?? null;
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  document.addEventListener('change', function(e) {
-    if (!e.target.matches('[data-preview]')) return;
-    var file = e.target.files && e.target.files[0];
-    if (!file) return;
-    var att = e.target.closest('[data-slot="attachment"]');
-    if (!att) return;
-    var media = att.querySelector('[data-slot="attachment-media"]');
-    if (!media) return;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-      media.innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover">';
-    };
-    reader.readAsDataURL(file);
-  });
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('change', function(e) {
+      if (!e.target.matches('[data-preview]')) return;
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var att = e.target.closest('[data-slot="attachment"]');
+      if (!att) return;
+      var media = att.querySelector('[data-slot="attachment-media"]');
+      if (!media) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        media.innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover">';
+      };
+      reader.readAsDataURL(file);
+    });
 
-  document.addEventListener('click', function(e) {
-    var clearBtn = e.target.closest('[data-clear-attachment]');
-    if (!clearBtn) return;
-    var att = clearBtn.closest('[data-slot="attachment"]');
-    if (!att) return;
-    var input = att.querySelector('input[type="file"]');
-    if (input) input.value = '';
-    att.dataset.state = 'idle';
-    var media = att.querySelector('[data-slot="attachment-media"]');
-    if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
+    document.addEventListener('click', function(e) {
+      var clearBtn = e.target.closest('[data-clear-attachment]');
+      if (!clearBtn) return;
+      var att = clearBtn.closest('[data-slot="attachment"]');
+      if (!att) return;
+      var input = att.querySelector('input[type="file"]');
+      if (input) input.value = '';
+      att.dataset.state = 'idle';
+      var media = att.querySelector('[data-slot="attachment-media"]');
+      if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
+    });
   });
-});
 </script>
