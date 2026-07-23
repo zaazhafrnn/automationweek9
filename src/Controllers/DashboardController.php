@@ -16,16 +16,14 @@ class DashboardController extends Controller
         'team-register' => 1,
         'members' => 2,
         'social-media' => 3,
-        'payment' => 4,
-        'review' => 5,
+        'review' => 4,
     ];
 
     private const TAB_NUM_TO_SLUG = [
         1 => 'team-register',
         2 => 'members',
         3 => 'social-media',
-        4 => 'payment',
-        5 => 'review',
+        4 => 'review',
     ];
 
     public function index()
@@ -58,8 +56,7 @@ class DashboardController extends Controller
             1 => (bool) $team,
             2 => !empty($team['leaderName']),
             3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
-            4 => (bool) $payment,
-            5 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']) && (bool) $payment,
+            4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
         ];
 
         $activeTab = 1;
@@ -68,7 +65,7 @@ class DashboardController extends Controller
             $activeTab = $n;
         }
 
-        $this->redirect('/dashboard/' . self::TAB_NUM_TO_SLUG[$activeTab]);
+        $this->redirect('/application/' . self::TAB_NUM_TO_SLUG[$activeTab]);
     }
 
     public function tab()
@@ -107,6 +104,27 @@ class DashboardController extends Controller
             'submission' => $submission,
             'uploads' => $uploads,
             'activeTab' => $activeTab,
+        ]);
+    }
+
+    public function payment()
+    {
+        $this->requireAuth();
+        if (Session::get('role') === 'admin') {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $team = (new Team())->findByUserId(Session::get('user_id'));
+        $payment = null;
+        if ($team) {
+            $payment = (new Payment())->findByTeamId($team['id']);
+        }
+
+        $this->view('dashboard/payment', [
+            'user_name' => Session::get('user_name'),
+            'csrf_token' => Security::generateCsrfToken(),
+            'team' => $team,
+            'payment' => $payment,
         ]);
     }
 }
