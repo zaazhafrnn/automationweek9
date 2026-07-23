@@ -65,7 +65,7 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $division = $_GET['div'] ?? '';
-        $allowed = ['FFR', 'LF', 'PLC', 'LKTI'];
+        $allowed = ['FFR', 'LF', 'PLC', 'LKTI', 'PROG'];
         if (!in_array($division, $allowed)) {
             $division = 'FFR';
         }

@@ -114,10 +114,9 @@
                 <div class="marquee-track inline-flex text-white text-xs font-semibold tracking-wide" style="animation: marquee 45s linear infinite;">
                     <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
                     <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 4 kategori: LF · PLC · FFR · LKTI</span>
+                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 5 kategori: LF · PLC · FFR · LKTI · PROGRAM</span>
                     <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
                     <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 4 kategori: LF · PLC · FFR · LKTI</span>
                 </div>
             </div>
         </div>
@@ -127,10 +126,10 @@
     <section id="competitions" class="py-24 px-4 bg-background">
         <div class="max-w-6xl mx-auto">
             <div class="mb-16 text-center">
-                <p class="text-xs font-bold uppercase tracking-widest mb-3 text-accent">4 Kategori Lomba</p>
+                <p class="text-xs font-bold uppercase tracking-widest mb-3 text-accent">5 Kategori Lomba</p>
                 <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Kategori & Jadwal Lomba</h2>
                 <p class="text-muted max-w-2xl mx-auto text-base md:text-lg">
-                    Ikuti 4 kategori kompetisi nasional bergengsi tingkat SMA/SMK/MA sederajat di Automation Week. Unduh Guide Book untuk kriteria lengkap.
+                    Ikuti 5 kategori kompetisi nasional bergengsi tingkat SMA/SMK/MA sederajat di Automation Week. Unduh Guide Book untuk kriteria lengkap.
                 </p>
             </div>
 
@@ -246,6 +245,35 @@
                         </ul>
                         <a href="https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq" target="_blank"
                             class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-purple-600 hover:bg-purple-500 transition-all no-underline shadow">
+                            <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
+                    <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
+                    <div class="p-8 flex flex-col items-center flex-grow">
+                        <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
+                            <div class="w-16 h-16 flex items-center justify-center text-2xl font-black text-emerald-600">PRG</div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-emerald-600 tracking-tight">Program</h3>
+                        <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.</p>
+                        <ul class="w-full mb-8 text-sm">
+                            <li class="flex items-center justify-between py-3 border-b border-border">
+                                <span class="text-muted">Pendaftaran Dibuka</span>
+                                <span class="font-semibold">22 Sep 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-3 border-b border-border">
+                                <span class="text-muted">Deadline Pembayaran</span>
+                                <span class="font-semibold">27 Okt 2025</span>
+                            </li>
+                            <li class="flex items-center justify-between py-3">
+                                <span class="text-muted">Pelaksanaan Final</span>
+                                <span class="text-emerald-600 font-bold">28 Okt 2025</span>
+                            </li>
+                        </ul>
+                        <a href="#" target="_blank"
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
                         </a>
                     </div>

@@ -14,7 +14,7 @@ $sidebarItems[] = ['label' => 'Tim', 'icon' => 'trophy', 'route' => '/admin/team
 $sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
 $sidebarItems[] = ['label' => 'Upload karya', 'header' => true];
 
-foreach (['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' => 'file'] as $d => $icon) {
+foreach (['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' => 'file', 'PROG' => 'settings'] as $d => $icon) {
     $sidebarItems[] = [
         'label' => $d,
         'icon' => $icon,
