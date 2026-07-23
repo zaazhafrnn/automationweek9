@@ -12,7 +12,7 @@ $members = [
 ];
 if ($team) {
   $two = $team['division'] === 'LF' || $team['division'] === 'PLC';
-  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI';
+  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI' || $team['division'] === 'PROG';
   if ($two || $three) $members[] = ['num' => 2, 'label' => 'Anggota 2', 'role' => '', 'nameKey' => 'firstMemberName', 'phoneKey' => 'firstMemberPhoneNumber'];
   if ($three) $members[] = ['num' => 3, 'label' => 'Anggota 3', 'role' => '', 'nameKey' => 'secondMemberName', 'phoneKey' => 'secondMemberPhoneNumber'];
 }

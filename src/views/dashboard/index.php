@@ -11,7 +11,7 @@ use App\Components\Icon;
 
 $main_class = 'flex-grow w-full';
 
-$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
+$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Program'];
 
 $tabs = [
   1 => ['label' => 'Registrasi Tim'],
@@ -274,7 +274,7 @@ foreach ($tabDone as $n => $done) {
 
       function upd(val) {
         const two = val === 'LF' || val === 'PLC';
-        const three = val === 'FFR' || val === 'LKTI';
+        const three = val === 'FFR' || val === 'LKTI' || val === 'PROG';
         if (hint) {
           hint.textContent = two ? '* Maksimal 2 anggota (1 Ketua + 1 Anggota)' : (three ? '* Maksimal 3 anggota (1 Ketua + 2 Anggota)' : '');
           hint.classList.toggle('hidden', !val);

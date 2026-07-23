@@ -3,7 +3,7 @@
 /** @var array|null $team */
 /** @var string $csrf_token */
 
-$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
+$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Program'];
 ?>
 <div class="space-y-6">
   <form action="<?= $team ? '/dashboard/team/update' : '/dashboard/team/register' ?>" method="POST" enctype="multipart/form-data" novalidate>

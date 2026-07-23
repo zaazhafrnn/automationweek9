@@ -8,7 +8,7 @@ use App\Components\Icon;
 /** @var string $csrf_token */
 /** @var array $uploads */
 
-$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah'];
+$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Program'];
 $UPLOAD_URL = '/uploads/teams/';
 $origDivision = $team['division'] ?? '';
 $hasM2 = !empty($team['firstMemberName']);

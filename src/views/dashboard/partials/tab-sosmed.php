@@ -11,7 +11,7 @@ $members = [];
 if ($team) {
   $members[] = ['num' => 1, 'name' => $team['leaderName'] ?? 'Anggota 1', 'active' => true];
   $two = $team['division'] === 'LF' || $team['division'] === 'PLC';
-  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI';
+  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI' || $team['division'] === 'PROG';
   if ($two || $three) $members[] = ['num' => 2, 'name' => $team['firstMemberName'] ?? 'Anggota 2', 'active' => !empty($team['firstMemberName'])];
   if ($three) $members[] = ['num' => 3, 'name' => $team['secondMemberName'] ?? 'Anggota 3', 'active' => !empty($team['secondMemberName'])];
 }

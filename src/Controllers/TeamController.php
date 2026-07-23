@@ -53,7 +53,7 @@ class TeamController extends Controller
             return;
         }
 
-        $allowedDivisions = ['LF', 'PLC', 'FFR', 'LKTI'];
+        $allowedDivisions = ['LF', 'PLC', 'FFR', 'LKTI', 'PROG'];
         if (!in_array($division, $allowedDivisions)) {
             Session::flash('team_register_error', 'Divisi yang dipilih tidak valid.');
             $this->redirect('/dashboard');
