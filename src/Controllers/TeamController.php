@@ -77,8 +77,7 @@ class TeamController extends Controller
                 'secondMemberName' => $secondMemberName,
                 'secondMemberPhoneNumber' => $secondMemberPhoneNumber,
             ]);
-            $nextTab = $_POST['next_tab'] ?? 'members';
-            $this->redirect($nextTab === 'payment' ? '/payments' : '/application/' . $nextTab);
+            $this->redirect('/application/' . ($_POST['next_tab'] ?? 'members'));
         } catch (\Exception $e) {
             Session::flash('team_register_error', 'Registrasi gagal: ' . $e->getMessage());
             $this->redirect('/application/team-register');
@@ -160,7 +159,6 @@ class TeamController extends Controller
         } catch (\Exception $e) {
             Session::flash('team_update_error', 'Gagal memperbarui: ' . $e->getMessage());
         }
-        $nextTab = $_POST['next_tab'] ?? 'members';
-        $this->redirect($nextTab === 'payment' ? '/payments' : '/application/' . $nextTab);
+        $this->redirect('/application/' . ($_POST['next_tab'] ?? 'members'));
     }
 }

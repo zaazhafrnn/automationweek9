@@ -25,7 +25,7 @@ $UPLOAD_URL = '/uploads/teams/';
 <?php else: ?>
   <form action="/application/team/update" method="POST" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-    <input type="hidden" name="next_tab" value="payment">
+    <input type="hidden" name="next_tab" value="review">
     <input type="hidden" name="current_tab" value="social-media">
 
     <div class="space-y-8">

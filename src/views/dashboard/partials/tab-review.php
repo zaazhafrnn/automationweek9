@@ -4,7 +4,6 @@ use App\Components\Attachment;
 use App\Components\Icon;
 
 /** @var array|null $team */
-/** @var array|null $payment */
 /** @var string $csrf_token */
 /** @var array $uploads */
 
@@ -184,34 +183,6 @@ $hasM3 = !empty($team['secondMemberName']);
         </div>
       <?php endforeach; ?>
     </div>
-    <div class="mt-4 flex justify-end">
-      <button type="submit" class="review-btn text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">Simpan</button>
-    </div>
-  </form>
-
-  <form action="/payments" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-    <h3 class="text-sm font-semibold text-gray-900 mb-3">Bukti Pembayaran</h3>
-    <?php if ($payment && !empty($payment['proofImage'])): ?>
-      <?= Attachment::make()
-        ->state('done')
-        ->mediaVariant('image')
-        ->media('<img src="/uploads/payments/' . htmlspecialchars($payment['proofImage']) . '" class="w-full h-full object-cover">')
-        ->title(basename($payment['proofImage']))
-        ->description('Sudah diupload')
-        ->withPreview()
-        ->fileInput('proofImage', ['accept' => 'image/*'])
-        ->render() ?>
-    <?php else: ?>
-      <?= Attachment::make()
-        ->state('idle')
-        ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
-        ->title('Upload Bukti Transfer')
-        ->description('PNG, JPG, GIF, WebP — maks 2MB')
-        ->withPreview()
-        ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true])
-        ->render() ?>
-    <?php endif; ?>
     <div class="mt-4 flex justify-end">
       <button type="submit" class="review-btn text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">Simpan</button>
     </div>
