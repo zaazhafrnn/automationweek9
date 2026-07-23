@@ -18,8 +18,7 @@ $tabs = [
   1 => ['label' => 'Registrasi Tim', 'slug' => 'team-register'],
   2 => ['label' => 'Data Anggota', 'slug' => 'members'],
   3 => ['label' => 'Media Sosial', 'slug' => 'social-media'],
-  4 => ['label' => 'Pembayaran', 'slug' => 'payment'],
-  5 => ['label' => 'Review & Submit', 'slug' => 'review'],
+  4 => ['label' => 'Review & Submit', 'slug' => 'review'],
 ];
 
 $upload1 = $uploads[1] ?? [];
@@ -27,8 +26,7 @@ $tabDone = [
   1 => (bool) $team,
   2 => !empty($team['leaderName']),
   3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
-  4 => (bool) $payment,
-  5 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']) && (bool) $payment,
+  4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
 ];
 
 if (!isset($activeTab)) {
@@ -41,10 +39,22 @@ if (!isset($activeTab)) {
 ?>
 <div class="min-h-screen bg-gray-50">
   <div class="bg-brand border-b border-gray-200 text-white">
-    <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
+      <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
       <div>
         <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
         <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="/application/team-register"
+          class="px-3 py-2 text-sm font-medium rounded-xl transition-colors no-underline
+            <?= !str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/payments') ? 'bg-white/20 text-white' : 'text-white/70 hover:bg-white/10' ?>">
+          Pendaftaran
+        </a>
+        <a href="/payments"
+          class="px-3 py-2 text-sm font-medium rounded-xl transition-colors no-underline
+            <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/payments') ? 'bg-white/20 text-white' : 'text-white/70 hover:bg-white/10' ?>">
+          Pembayaran
+        </a>
       </div>
       <form action="/logout" method="POST" class="m-0">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
@@ -64,7 +74,7 @@ if (!isset($activeTab)) {
             <?php foreach ($tabs as $num => $tab): ?>
               <?php
               $isActive = $activeTab === $num;
-              $locked = ($num === 2 && !$team) || ($num === 3 && (!$team || empty($team['leaderName']))) || ($num === 4 && (!$team || empty($team['leaderName']) || empty($upload1['ig_follow']) || empty($upload1['twibbon']))) || ($num === 5 && !$tabDone[5]);
+              $locked = ($num === 2 && !$team) || ($num === 3 && (!$team || empty($team['leaderName']))) || ($num === 4 && !$tabDone[4]);
               ?>
               <?php if ($locked): ?>
                 <span role="tab" aria-disabled="true"
@@ -77,7 +87,7 @@ if (!isset($activeTab)) {
                   <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
                 </span>
               <?php else: ?>
-                <a href="/dashboard/<?= $tab['slug'] ?>" role="tab" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
+                <a href="/application/<?= $tab['slug'] ?>" role="tab" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
                   class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors no-underline
                     <?= $isActive ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>">
                   <?php if ($tabDone[$num]): ?>
@@ -103,22 +113,21 @@ if (!isset($activeTab)) {
               1 => 'team-register',
               2 => 'members',
               3 => 'social-media',
-              4 => 'payment',
-              5 => 'review'
+              4 => 'review'
             } . ".php"; ?>
           </div>
         <?php endforeach; ?>
       </div>
 
       <div class="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-gray-100" id="tabNav">
-        <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $activeTab ?> dari 5</span>
-        <a href="/dashboard/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>"
+        <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $activeTab ?> dari 4</span>
+        <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all no-underline <?= $activeTab <= 1 ? 'pointer-events-none opacity-30' : '' ?>"
           id="prevTab">
           <?= Icon::make()->name('chevron-left')->class('w-4 h-4') ?>
           Kembali
         </a>
-        <?php if ($activeTab < 5): ?>
+        <?php if ($activeTab < 4): ?>
           <button type="button" id="nextTab" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none">
             Simpan & Lanjut
             <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
@@ -138,11 +147,11 @@ if (!isset($activeTab)) {
   document.addEventListener('DOMContentLoaded', function() {
     const nextBtn = document.getElementById('nextTab');
     const current = <?= $activeTab ?>;
-    const total = 5;
+    const total = 4;
     const slugs = <?= json_encode(array_values(array_map(fn($t) => $t['slug'], $tabs))) ?>;
 
     function goTo(num) {
-      if (num >= 1 && num <= total) window.location.href = '/dashboard/' + slugs[num - 1];
+      if (num >= 1 && num <= total) window.location.href = '/application/' + slugs[num - 1];
     }
 
     function validateTab(num) {

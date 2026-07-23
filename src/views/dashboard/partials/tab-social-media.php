@@ -23,7 +23,7 @@ $UPLOAD_URL = '/uploads/teams/';
     <p class="text-sm text-gray-500">Daftarkan tim terlebih dahulu.</p>
   </div>
 <?php else: ?>
-  <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" novalidate>
+  <form action="/application/team/update" method="POST" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="next_tab" value="payment">
     <input type="hidden" name="current_tab" value="social-media">

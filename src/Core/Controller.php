@@ -45,14 +45,14 @@ class Controller
     {
         $this->requireAuth();
         if (Session::get('role') !== 'admin') {
-            $this->redirect('/dashboard');
+            $this->redirect('/application/team-register');
         }
     }
 
     protected function requireGuest(): void
     {
         if (Session::get('user_id')) {
-            $this->redirect(Session::get('role') === 'admin' ? '/admin/dashboard' : '/dashboard');
+            $this->redirect(Session::get('role') === 'admin' ? '/admin/dashboard' : '/application/team-register');
         }
     }
 }

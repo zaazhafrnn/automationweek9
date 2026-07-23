@@ -15,7 +15,7 @@ $hasM2 = !empty($team['firstMemberName']);
 $hasM3 = !empty($team['secondMemberName']);
 ?>
 <div class="space-y-6">
-  <form action="/dashboard/team/update" method="POST" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+  <form action="/application/team/update" method="POST" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Registrasi Tim</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -47,7 +47,7 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
   </form>
 
-  <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+  <form action="/application/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="division" value="<?= htmlspecialchars($team['division']) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Data Anggota</h3>
@@ -109,7 +109,7 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
   </form>
 
-  <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+  <form action="/application/team/update" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Media Sosial</h3>
     <?php
@@ -189,7 +189,7 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
   </form>
 
-  <form action="/dashboard/payment" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+  <form action="/payments" method="POST" enctype="multipart/form-data" class="review-form bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <h3 class="text-sm font-semibold text-gray-900 mb-3">Bukti Pembayaran</h3>
     <?php if ($payment && !empty($payment['proofImage'])): ?>
