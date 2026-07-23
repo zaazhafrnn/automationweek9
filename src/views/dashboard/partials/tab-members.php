@@ -11,8 +11,8 @@ $members = [
   ['num' => 1, 'label' => 'Anggota 1', 'role' => 'Ketua Tim', 'nameKey' => 'leaderName', 'phoneKey' => 'leaderPhoneNumber'],
 ];
 if ($team) {
-  $two = $team['division'] === 'LF' || $team['division'] === 'PLC';
-  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI' || $team['division'] === 'PROG';
+  $two = $team['division'] === 'LF' || $team['division'] === 'PLC' || $team['division'] === 'PROG';
+  $three = $team['division'] === 'FFR' || $team['division'] === 'LKTI';
   if ($two || $three) $members[] = ['num' => 2, 'label' => 'Anggota 2', 'role' => '', 'nameKey' => 'firstMemberName', 'phoneKey' => 'firstMemberPhoneNumber'];
   if ($three) $members[] = ['num' => 3, 'label' => 'Anggota 3', 'role' => '', 'nameKey' => 'secondMemberName', 'phoneKey' => 'secondMemberPhoneNumber'];
 }

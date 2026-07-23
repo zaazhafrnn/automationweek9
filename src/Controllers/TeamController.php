@@ -60,7 +60,7 @@ class TeamController extends Controller
             return;
         }
 
-        if (in_array($division, ['LF', 'PLC'])) {
+        if (in_array($division, ['LF', 'PLC', 'PROG'])) {
             $secondMemberName = null;
             $secondMemberPhoneNumber = null;
         }

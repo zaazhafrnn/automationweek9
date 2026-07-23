@@ -238,8 +238,8 @@ if (!isset($activeTab)) {
       const hints = divCards.querySelectorAll('[data-division-hint]');
 
       function upd(val) {
-        const two = val === 'LF' || val === 'PLC';
-        const three = val === 'FFR' || val === 'LKTI' || val === 'PROG';
+        const two = val === 'LF' || val === 'PLC' || val === 'PROG';
+        const three = val === 'FFR' || val === 'LKTI';
         if (hint) {
           hint.textContent = two ? '* Maksimal 2 anggota (1 Ketua + 1 Anggota)' : (three ? '* Maksimal 3 anggota (1 Ketua + 2 Anggota)' : '');
           hint.classList.toggle('hidden', !val);
@@ -248,7 +248,7 @@ if (!isset($activeTab)) {
           const p = el.closest('.division-card');
           const rb = p?.querySelector('input[type="radio"]');
           if (!rb) return;
-          el.textContent = rb.value === 'LF' || rb.value === 'PLC' ? 'max 2 org' : 'max 3 org';
+          el.textContent = rb.value === 'FFR' || rb.value === 'LKTI' ? 'max 3 org' : 'max 2 org';
         });
       }
       radios.forEach(r => r.addEventListener('change', () => upd(r.value)));
