@@ -9,7 +9,7 @@ $div = $_GET['div'] ?? '';
 
 $sidebarItems = [];
 $sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];
-$sidebarItems[] = ['label' => 'Akun', 'icon' => 'users', 'route' => '/admin/members', 'active' => $uri === '/admin/members'];
+$sidebarItems[] = ['label' => 'Akun', 'icon' => 'users', 'route' => '/admin/accounts', 'active' => $uri === '/admin/accounts'];
 $sidebarItems[] = ['label' => 'Tim', 'icon' => 'trophy', 'route' => '/admin/teams', 'active' => $uri === '/admin/teams'];
 $sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
 $sidebarItems[] = ['label' => 'Upload karya', 'header' => true];

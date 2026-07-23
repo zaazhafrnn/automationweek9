@@ -30,7 +30,7 @@ class Submission extends Model
             SELECT s.*, t.name as team_name, t.division, u.email, t.leaderName
             FROM submissions s
             JOIN teams t ON s.team_id = t.id
-            JOIN users u ON t.user_id = u.id
+            JOIN accounts u ON t.user_id = u.id
             WHERE t.division = :division
             ORDER BY s.updated_at DESC
         ");

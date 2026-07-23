@@ -44,7 +44,7 @@ $router->get('/dashboard/social-media', 'DashboardController@tab');
 $router->get('/dashboard/payment', 'DashboardController@tab');
 $router->get('/dashboard/review', 'DashboardController@tab');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
-$router->get('/admin/members', 'AdminController@members');
+$router->get('/admin/accounts', 'AdminController@accounts');
 $router->get('/admin/teams', 'AdminController@teams');
 $router->get('/admin/payments', 'AdminController@payments');
 $router->post('/admin/payments/process', 'AdminController@processPayment');

@@ -20,14 +20,14 @@ class AdminController extends Controller
         ], 'admin');
     }
 
-    public function members()
+    public function accounts()
     {
         $this->requireAdmin();
 
         $userModel = new \App\Models\User();
         $members = $userModel->getAllMembers();
 
-        $this->view('admin/members', [
+        $this->view('admin/accounts', [
             'members' => $members,
             'page_title' => 'Akun'
         ], 'admin');

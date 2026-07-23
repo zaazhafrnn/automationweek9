@@ -11,7 +11,7 @@ class User extends Model
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $this->db->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+        $stmt = $this->db->prepare("INSERT INTO accounts (name, email, password) VALUES (:name, :email, :password)");
 
         return $stmt->execute([
             ':name' => $name,
@@ -22,7 +22,7 @@ class User extends Model
 
     public function findByEmail(string $email): array|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
+        $stmt = $this->db->prepare("SELECT * FROM accounts WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
 
         return $stmt->fetch();
@@ -30,7 +30,7 @@ class User extends Model
 
     public function getAllMembers(): array
     {
-        $stmt = $this->db->prepare("SELECT id, name, email, role, created_at FROM users WHERE role = 'member' ORDER BY created_at DESC");
+        $stmt = $this->db->prepare("SELECT id, name, email, role, created_at FROM accounts WHERE role = 'member' ORDER BY created_at DESC");
         $stmt->execute();
 
         return $stmt->fetchAll();
