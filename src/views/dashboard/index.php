@@ -100,7 +100,7 @@ if (!isset($activeTab)) {
             data-tab="<?= $num ?>"
             class="tab-panel p-4 sm:p-6 <?= $activeTab === $num ? '' : 'hidden' ?>">
             <?php include __DIR__ . "/partials/tab-" . match ($num) {
-              1 => 'tim',
+              1 => 'team-register',
               2 => 'members',
               3 => 'social-media',
               4 => 'payment',
