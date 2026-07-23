@@ -38,6 +38,11 @@ $router->get('/register', 'AuthController@registerForm');
 $router->post('/register', 'AuthController@register');
 
 $router->get('/dashboard', 'DashboardController@index');
+$router->get('/dashboard/team-register', 'DashboardController@tab');
+$router->get('/dashboard/members', 'DashboardController@tab');
+$router->get('/dashboard/social-media', 'DashboardController@tab');
+$router->get('/dashboard/payment', 'DashboardController@tab');
+$router->get('/dashboard/review', 'DashboardController@tab');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
 $router->get('/admin/members', 'AdminController@members');
 $router->get('/admin/teams', 'AdminController@teams');

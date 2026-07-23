@@ -30,7 +30,7 @@ $hasM3 = !empty($team['secondMemberName']);
     </div>
     <div class="mt-4">
       <label class="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="reviewDivision">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2" id="reviewDivision">
         <?php foreach ($DIVISION_LABELS as $k => $v):
           $isOrig = $origDivision === $k;
         ?>

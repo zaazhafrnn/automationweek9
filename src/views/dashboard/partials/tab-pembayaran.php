@@ -16,6 +16,8 @@ use App\Components\Icon;
   <?php if ($payment && $payment['status'] === 'rejected'): ?>
     <form action="/dashboard/payment" method="POST" enctype="multipart/form-data" novalidate>
       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+      <input type="hidden" name="next_tab" value="review">
+      <input type="hidden" name="current_tab" value="payment">
       <div class="mb-5">
         <label class="block text-sm font-medium text-gray-700 mb-2">Upload Ulang Bukti Transfer</label>
         <?= Attachment::make()
@@ -43,6 +45,8 @@ use App\Components\Icon;
   <?php if (!$payment || $payment['status'] === 'rejected'): ?>
     <form action="/dashboard/payment" method="POST" enctype="multipart/form-data" novalidate>
       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+      <input type="hidden" name="next_tab" value="review">
+      <input type="hidden" name="current_tab" value="payment">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Upload Bukti Transfer <span class="text-red-500">*</span></label>
         <?= Attachment::make()

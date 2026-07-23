@@ -27,6 +27,8 @@ $UPLOAD_URL = '/uploads/teams/';
   <form action="/dashboard/team/update" method="POST" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="division" value="<?= htmlspecialchars($team['division']) ?>">
+    <input type="hidden" name="next_tab" value="social-media">
+    <input type="hidden" name="current_tab" value="members">
 
     <div class="space-y-8">
       <?php foreach ($members as $i => $m):

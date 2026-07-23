@@ -29,7 +29,7 @@ class PaymentController extends Controller
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
             Session::flash('payment_error', 'Invalid session. Silakan coba lagi.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'payment'));
             return;
         }
 
@@ -40,12 +40,12 @@ class PaymentController extends Controller
 
         $existingPayment = $this->paymentModel->findByTeamId($team['id']);
         if ($existingPayment && $existingPayment['status'] === 'verified') {
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/review');
         }
 
         if (!isset($_FILES['proofImage']) || $_FILES['proofImage']['error'] !== UPLOAD_ERR_OK) {
             Session::flash('payment_error', 'Pilih file untuk diupload.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'payment'));
             return;
         }
 
@@ -55,7 +55,7 @@ class PaymentController extends Controller
 
         if ($file['size'] > $maxSize) {
             Session::flash('payment_error', 'File terlalu besar. Maksimal 2MB.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'payment'));
             return;
         }
 
@@ -64,7 +64,7 @@ class PaymentController extends Controller
 
         if (!in_array($mime, $allowedTypes)) {
             Session::flash('payment_error', 'Hanya gambar (JPEG, PNG, GIF, WebP) yang diizinkan.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'payment'));
             return;
         }
 
@@ -80,7 +80,7 @@ class PaymentController extends Controller
 
         if (!move_uploaded_file($file['tmp_name'], $dest)) {
             Session::flash('payment_error', 'Gagal menyimpan file.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'payment'));
             return;
         }
 
@@ -95,6 +95,6 @@ class PaymentController extends Controller
             $this->paymentModel->create($team['id'], $filename);
         }
 
-        $this->redirect('/dashboard');
+        $this->redirect('/dashboard/' . ($_POST['next_tab'] ?? 'review'));
     }
 }

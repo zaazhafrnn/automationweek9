@@ -29,7 +29,7 @@ class TeamController extends Controller
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
             Session::flash('team_register_error', 'Invalid session. Silakan coba lagi.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/team-register');
             return;
         }
 
@@ -49,14 +49,14 @@ class TeamController extends Controller
 
         if (empty($teamName) || empty($division)) {
             Session::flash('team_register_error', 'Harap isi nama tim dan pilih divisi.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/team-register');
             return;
         }
 
         $allowedDivisions = ['LF', 'PLC', 'FFR', 'LKTI', 'PROG'];
         if (!in_array($division, $allowedDivisions)) {
             Session::flash('team_register_error', 'Divisi yang dipilih tidak valid.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/team-register');
             return;
         }
 
@@ -77,10 +77,10 @@ class TeamController extends Controller
                 'secondMemberName' => $secondMemberName,
                 'secondMemberPhoneNumber' => $secondMemberPhoneNumber,
             ]);
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['next_tab'] ?? 'members'));
         } catch (\Exception $e) {
             Session::flash('team_register_error', 'Registrasi gagal: ' . $e->getMessage());
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/team-register');
         }
     }
 
@@ -94,7 +94,7 @@ class TeamController extends Controller
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
             Session::flash('team_update_error', 'Invalid session. Silakan coba lagi.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'members'));
             return;
         }
 
@@ -117,7 +117,7 @@ class TeamController extends Controller
 
         if (empty($data['name']) || empty($data['leaderName'])) {
             Session::flash('team_update_error', 'Nama tim dan ketua harus diisi.');
-            $this->redirect('/dashboard');
+            $this->redirect('/dashboard/' . ($_POST['current_tab'] ?? 'members'));
             return;
         }
 
@@ -159,6 +159,6 @@ class TeamController extends Controller
         } catch (\Exception $e) {
             Session::flash('team_update_error', 'Gagal memperbarui: ' . $e->getMessage());
         }
-        $this->redirect('/dashboard');
+        $this->redirect('/dashboard/' . ($_POST['next_tab'] ?? 'members'));
     }
 }
