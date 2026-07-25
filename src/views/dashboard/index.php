@@ -80,7 +80,7 @@ if (!isset($activeTab)) {
                   <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
                 </span>
               <?php else: ?>
-                <a href="/application/<?= $tab['slug'] ?>" role="tab" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
+                <a href="#" role="tab" data-tab-num="<?= $num ?>" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
                   class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors no-underline
                     <?= $isActive ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>">
                   <?php if ($tabDone[$num]): ?>
@@ -114,23 +114,20 @@ if (!isset($activeTab)) {
 
       <div class="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-gray-100" id="tabNav">
         <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $activeTab ?> dari 4</span>
-        <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>"
+        <a href="#" role="button" data-goto="<?= $activeTab - 1 ?>"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all no-underline <?= $activeTab <= 1 ? 'pointer-events-none opacity-30' : '' ?>"
           id="prevTab">
           <?= Icon::make()->name('chevron-left')->class('w-4 h-4') ?>
           Kembali
         </a>
-        <?php if ($activeTab < 4): ?>
-          <button type="button" id="nextTab" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none">
-            Simpan & Lanjut
-            <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
-          </button>
-        <?php else: ?>
-          <button type="button" id="nextTab" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none">
-            Submit
-            <?= Icon::make()->name('check')->class('w-4 h-4') ?>
-          </button>
-        <?php endif; ?>
+        <button type="button" id="nextTabSave" class="<?= $activeTab < 4 ? '' : 'hidden' ?> inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none">
+          Simpan & Lanjut
+          <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
+        </button>
+        <button type="button" id="nextTabSubmit" class="<?= $activeTab >= 4 ? '' : 'hidden' ?> inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none">
+          Submit
+          <?= Icon::make()->name('check')->class('w-4 h-4') ?>
+        </button>
       </div>
     </div>
   </div>
@@ -138,13 +135,41 @@ if (!isset($activeTab)) {
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const nextBtn = document.getElementById('nextTab');
-    const current = <?= $activeTab ?>;
+    let current = <?= $activeTab ?>;
     const total = 4;
     const slugs = <?= json_encode(array_values(array_map(fn($t) => $t['slug'], $tabs))) ?>;
+    const slugToNum = {};
+    slugs.forEach(function(s, i) { slugToNum[s] = i + 1; });
 
     function goTo(num) {
-      if (num >= 1 && num <= total) window.location.href = '/application/' + slugs[num - 1];
+      if (num < 1 || num > total) return;
+      document.querySelectorAll('.tab-panel').forEach(function(p) {
+        p.classList.toggle('hidden', parseInt(p.dataset.tab) !== num);
+      });
+      document.querySelectorAll('#tabList a[role="tab"]').forEach(function(a) {
+        var isActive = parseInt(a.dataset.tabNum) === num;
+        a.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        a.classList.toggle('bg-brand', isActive);
+        a.classList.toggle('text-white', isActive);
+        a.classList.toggle('hover:bg-red-800', isActive);
+        a.classList.toggle('text-gray-500', !isActive);
+        a.classList.toggle('hover:bg-black/5', !isActive);
+      });
+      var indicator = document.getElementById('tabIndicator');
+      if (indicator) indicator.textContent = 'Tab ' + num + ' dari 4';
+      var prevBtn = document.getElementById('prevTab');
+      if (prevBtn) {
+        prevBtn.classList.toggle('pointer-events-none', num <= 1);
+        prevBtn.classList.toggle('opacity-30', num <= 1);
+      }
+      var saveBtn = document.getElementById('nextTabSave');
+      var submitBtn = document.getElementById('nextTabSubmit');
+      if (saveBtn) saveBtn.classList.toggle('hidden', num >= 4);
+      if (submitBtn) submitBtn.classList.toggle('hidden', num < 4);
+      history.pushState({ tab: num }, '', '/application/' + slugs[num - 1]);
+      var activeLink = document.querySelector('#tabList a[data-tab-num="' + num + '"]');
+      if (activeLink) activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      current = num;
     }
 
     function validateTab(num) {
@@ -191,23 +216,33 @@ if (!isset($activeTab)) {
       return valid;
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function() {
+    document.getElementById('tabList').addEventListener('click', function(e) {
+      var link = e.target.closest('a[data-tab-num]');
+      if (link) { e.preventDefault(); goTo(parseInt(link.dataset.tabNum)); }
+    });
+
+    document.getElementById('tabNav').addEventListener('click', function(e) {
+      var prev = e.target.closest('[data-goto]');
+      if (prev) { e.preventDefault(); goTo(parseInt(prev.dataset.goto)); return; }
+      var next = e.target.closest('#nextTabSave, #nextTabSubmit');
+      if (next) {
         if (!validateTab(current)) return;
-        const panel = document.querySelector(`.tab-panel[data-tab="${current}"]`);
-        const form = panel?.querySelector('form');
+        var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
+        var form = panel && panel.querySelector('form');
         if (form) {
-          const btn = form.querySelector('button[type="submit"]');
-          if (btn) {
-            btn.click();
-            return;
-          }
+          var btn = form.querySelector('button[type="submit"]');
+          if (btn) { btn.click(); return; }
           form.submit();
           return;
         }
         if (current < total) goTo(current + 1);
-      });
-    }
+      }
+    });
+
+    window.addEventListener('popstate', function() {
+      var slug = window.location.pathname.split('/').pop();
+      if (slugToNum[slug]) goTo(slugToNum[slug]);
+    });
 
     document.addEventListener('change', function(e) {
       if (!e.target.matches('[data-preview]')) return;
