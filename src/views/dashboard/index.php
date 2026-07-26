@@ -66,7 +66,7 @@ if (!isset($activeTab)) {
           <div role="tablist" class="flex overflow-x-auto gap-1 p-1" id="tabList">
             <?php foreach ($tabs as $num => $tab): ?>
               <?php $isActive = $activeTab === $num; ?>
-              <a href="#" role="tab" data-tab-num="<?= $num ?>" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
+              <a href="/application/<?= $tab['slug'] ?>" role="tab" data-tab-num="<?= $num ?>" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
                 class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors no-underline
                   <?= $isActive ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>">
                 <span class="tab-num w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[10px] font-bold shrink-0 <?= $tabDone[$num] ? 'hidden' : '' ?>"><?= $num ?></span>
@@ -95,7 +95,7 @@ if (!isset($activeTab)) {
 
       <div class="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-gray-100" id="tabNav">
         <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $activeTab ?> dari 4</span>
-        <a href="#" role="button" data-goto="<?= $activeTab - 1 ?>"
+        <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>" role="button" data-goto="<?= $activeTab - 1 ?>"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
           id="prevTab" <?= $activeTab <= 1 ? 'style="display:none"' : '' ?>>
           <?= Icon::make()->name('chevron-left')->class('w-4 h-4') ?>
@@ -214,7 +214,10 @@ if (!isset($activeTab)) {
       var indicator = document.getElementById('tabIndicator');
       if (indicator) indicator.textContent = 'Tab ' + num + ' dari 4';
       var prevBtn = document.getElementById('prevTab');
-      if (prevBtn) prevBtn.style.display = num <= 1 ? 'none' : '';
+      if (prevBtn) {
+        prevBtn.style.display = num <= 1 ? 'none' : '';
+        prevBtn.href = num > 1 ? '/application/' + slugs[num - 2] : '#';
+      }
       var saveBtn = document.getElementById('nextTabSave');
       var submitBtn = document.getElementById('nextTabSubmit');
       if (saveBtn) saveBtn.style.display = num >= 4 ? 'none' : '';
