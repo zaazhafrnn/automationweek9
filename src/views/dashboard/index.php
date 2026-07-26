@@ -65,34 +65,15 @@ if (!isset($activeTab)) {
         <div class="px-4 sm:px-6">
           <div role="tablist" class="flex overflow-x-auto gap-1 p-1" id="tabList">
             <?php foreach ($tabs as $num => $tab): ?>
-              <?php
-              $isActive = $activeTab === $num;
-              $locked = ($num === 2 && !$team) || ($num === 3 && (!$team || empty($team['leaderName']))) || ($num === 4 && !$tabDone[4]);
-              ?>
-              <?php if ($locked): ?>
-                <span role="tab" aria-disabled="true"
-                  class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors text-gray-400 opacity-40 pointer-events-none cursor-not-allowed">
-                  <?php if ($tabDone[$num]): ?>
-                    <?= Icon::make()->name('check')->class('w-4 h-4 text-green-500 shrink-0') ?>
-                  <?php else: ?>
-                    <span class="w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[10px] font-bold shrink-0"><?= $num ?></span>
-                  <?php endif; ?>
-                  <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
-                </span>
-              <?php else: ?>
-                <a href="#" role="tab" data-tab-num="<?= $num ?>" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
-                  class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors no-underline
-                    <?= $isActive ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>">
-                  <?php if ($tabDone[$num]): ?>
-                    <?= Icon::make()->name('check')->class('w-4 h-4 text-green-500 shrink-0') ?>
-                  <?php else: ?>
-                    <span class="w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[10px] font-bold shrink-0"><?= $num ?></span>
-                  <?php endif; ?>
-                  <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
-                </a>
-              <?php endif; ?>
+              <?php $isActive = $activeTab === $num; ?>
+              <a href="#" role="tab" data-tab-num="<?= $num ?>" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
+                class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors no-underline
+                  <?= $isActive ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>">
+                <span class="tab-num w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[10px] font-bold shrink-0 <?= $tabDone[$num] ? 'hidden' : '' ?>"><?= $num ?></span>
+                <span class="tab-check shrink-0 <?= $tabDone[$num] ? '' : 'hidden' ?>"><?= Icon::make()->name('check')->class('w-4 h-4 text-green-500') ?></span>
+                <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
+              </a>
             <?php endforeach; ?>
-
           </div>
         </div>
       </div>
@@ -115,16 +96,16 @@ if (!isset($activeTab)) {
       <div class="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-gray-100" id="tabNav">
         <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $activeTab ?> dari 4</span>
         <a href="#" role="button" data-goto="<?= $activeTab - 1 ?>"
-          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all no-underline <?= $activeTab <= 1 ? 'pointer-events-none opacity-30' : '' ?>"
-          id="prevTab">
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
+          id="prevTab" <?= $activeTab <= 1 ? 'style="display:none"' : '' ?>>
           <?= Icon::make()->name('chevron-left')->class('w-4 h-4') ?>
           Kembali
         </a>
-        <button type="button" id="nextTabSave" class="<?= $activeTab < 4 ? '' : 'hidden' ?> inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none">
+        <button type="button" id="nextTabSave" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? 'style="display:none"' : '' ?>>
           Simpan & Lanjut
           <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
         </button>
-        <button type="button" id="nextTabSubmit" class="<?= $activeTab >= 4 ? '' : 'hidden' ?> inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none">
+        <button type="button" id="nextTabSubmit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? '' : 'style="display:none"' ?>>
           Submit
           <?= Icon::make()->name('check')->class('w-4 h-4') ?>
         </button>
@@ -140,6 +121,81 @@ if (!isset($activeTab)) {
     const slugs = <?= json_encode(array_values(array_map(fn($t) => $t['slug'], $tabs))) ?>;
     const slugToNum = {};
     slugs.forEach(function(s, i) { slugToNum[s] = i + 1; });
+
+    const state = <?= json_encode([
+      'division' => $team['division'] ?? null,
+      'name' => $team['name'] ?? null,
+      'teamSchool' => $team['teamSchool'] ?? null,
+      'leaderName' => $team['leaderName'] ?? null,
+      'leaderPhoneNumber' => $team['leaderPhoneNumber'] ?? null,
+      'firstMemberName' => $team['firstMemberName'] ?? null,
+      'firstMemberPhoneNumber' => $team['firstMemberPhoneNumber'] ?? null,
+      'secondMemberName' => $team['secondMemberName'] ?? null,
+      'secondMemberPhoneNumber' => $team['secondMemberPhoneNumber'] ?? null,
+      'studentCard_1' => $uploads[1]['student_card'] ?? null,
+      'studentCard_2' => $uploads[2]['student_card'] ?? null,
+      'studentCard_3' => $uploads[3]['student_card'] ?? null,
+      'igFollow_1' => $uploads[1]['ig_follow'] ?? null,
+      'igFollow_2' => $uploads[2]['ig_follow'] ?? null,
+      'igFollow_3' => $uploads[3]['ig_follow'] ?? null,
+      'twibbon_1' => $uploads[1]['twibbon'] ?? null,
+      'twibbon_2' => $uploads[2]['twibbon'] ?? null,
+      'twibbon_3' => $uploads[3]['twibbon'] ?? null,
+    ]) ?>;
+
+    function filled(k) {
+      var v = state[k];
+      if (v == null) return false;
+      return v instanceof File ? true : String(v).trim() !== '';
+    }
+
+    function tabDone(n) {
+      if (n === 1) return filled('division') && filled('name') && filled('teamSchool');
+      if (n === 2) {
+        if (!filled('leaderName')) return false;
+        var ok = true;
+        document.querySelectorAll('.member-group[data-member][data-activated="true"]').forEach(function(g) {
+          var m = parseInt(g.dataset.member);
+          if (m === 1) return;
+          var nameKey = m === 2 ? 'firstMemberName' : 'secondMemberName';
+          if (!filled(nameKey)) ok = false;
+        });
+        return ok;
+      }
+      if (n === 3) {
+        if (!filled('igFollow_1') || !filled('twibbon_1')) return false;
+        if (filled('firstMemberName') && (!filled('igFollow_2') || !filled('twibbon_2'))) return false;
+        if (filled('secondMemberName') && (!filled('igFollow_3') || !filled('twibbon_3'))) return false;
+        return true;
+      }
+      if (n === 4) return tabDone(1) && tabDone(2) && tabDone(3);
+      return false;
+    }
+
+    function isTabLocked(num) {
+      if (num <= 1) return false;
+      for (var i = 1; i < num; i++) {
+        if (!tabDone(i)) return true;
+      }
+      return false;
+    }
+
+    function updateTabs() {
+      for (var n = 1; n <= total; n++) {
+        var link = document.querySelector('#tabList a[data-tab-num="' + n + '"]');
+        if (!link) continue;
+        var locked = isTabLocked(n);
+        var done = tabDone(n);
+        link.classList.toggle('pointer-events-none', locked);
+        link.classList.toggle('opacity-40', locked);
+        link.classList.toggle('cursor-not-allowed', locked);
+        link.setAttribute('aria-disabled', locked ? 'true' : 'false');
+        var numEl = link.querySelector('.tab-num');
+        var checkEl = link.querySelector('.tab-check');
+        if (numEl) numEl.classList.toggle('hidden', done);
+        if (checkEl) checkEl.classList.toggle('hidden', !done);
+      }
+    }
 
     function goTo(num) {
       if (num < 1 || num > total) return;
@@ -158,14 +214,11 @@ if (!isset($activeTab)) {
       var indicator = document.getElementById('tabIndicator');
       if (indicator) indicator.textContent = 'Tab ' + num + ' dari 4';
       var prevBtn = document.getElementById('prevTab');
-      if (prevBtn) {
-        prevBtn.classList.toggle('pointer-events-none', num <= 1);
-        prevBtn.classList.toggle('opacity-30', num <= 1);
-      }
+      if (prevBtn) prevBtn.style.display = num <= 1 ? 'none' : '';
       var saveBtn = document.getElementById('nextTabSave');
       var submitBtn = document.getElementById('nextTabSubmit');
-      if (saveBtn) saveBtn.classList.toggle('hidden', num >= 4);
-      if (submitBtn) submitBtn.classList.toggle('hidden', num < 4);
+      if (saveBtn) saveBtn.style.display = num >= 4 ? 'none' : '';
+      if (submitBtn) submitBtn.style.display = num < 4 ? 'none' : '';
       history.pushState({ tab: num }, '', '/application/' + slugs[num - 1]);
       var activeLink = document.querySelector('#tabList a[data-tab-num="' + num + '"]');
       if (activeLink) activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -218,7 +271,10 @@ if (!isset($activeTab)) {
 
     document.getElementById('tabList').addEventListener('click', function(e) {
       var link = e.target.closest('a[data-tab-num]');
-      if (link) { e.preventDefault(); goTo(parseInt(link.dataset.tabNum)); }
+      if (link && link.getAttribute('aria-disabled') !== 'true') {
+        e.preventDefault();
+        goTo(parseInt(link.dataset.tabNum));
+      }
     });
 
     document.getElementById('tabNav').addEventListener('click', function(e) {
@@ -243,6 +299,39 @@ if (!isset($activeTab)) {
       var slug = window.location.pathname.split('/').pop();
       if (slugToNum[slug]) goTo(slugToNum[slug]);
     });
+
+    document.addEventListener('input', function(e) {
+      if (e.target.name) {
+        state[e.target.name] = e.target.value;
+        updateTabs();
+      }
+    });
+
+    document.addEventListener('change', function(e) {
+      if (e.target.name) {
+        if (e.target.type === 'file') {
+          state[e.target.name] = e.target.files[0] || null;
+        } else if (e.target.type === 'radio') {
+          state[e.target.name] = e.target.value;
+        }
+        updateTabs();
+      }
+    });
+
+    updateTabs();
+
+    function autoRedirect() {
+      for (var n = 1; n <= total; n++) {
+        if (!tabDone(n)) {
+          if (current !== n) goTo(n);
+          return;
+        }
+      }
+    }
+
+    if (window.location.pathname.replace(/\/+$/, '') === '/application') {
+      autoRedirect();
+    }
 
     document.addEventListener('change', function(e) {
       if (!e.target.matches('[data-preview]')) return;

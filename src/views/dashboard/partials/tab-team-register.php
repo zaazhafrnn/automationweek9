@@ -30,14 +30,14 @@ $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Contro
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Tim <span class="text-red-500">*</span></label>
-        <input type="text" name="name" required value="<?= htmlspecialchars($team['name'] ?? '') ?>" data-error="err-nama-tim"
+        <input type="text" name="name" required value="<?= htmlspecialchars($team['name'] ?? '') ?>" data-error="err-nama-tim" placeholder="Masukkan nama tim"
           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
           oninput="this.classList.remove('border-red-500'); document.getElementById('err-nama-tim')?.classList.add('hidden')">
         <p id="err-nama-tim" class="text-xs text-red-500 mt-1 hidden">Nama tim wajib diisi</p>
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1.5">Asal Sekolah <span class="text-red-500">*</span></label>
-        <input type="text" name="teamSchool" required value="<?= htmlspecialchars($team['teamSchool'] ?? '') ?>" data-error="err-sekolah"
+        <input type="text" name="teamSchool" required value="<?= htmlspecialchars($team['teamSchool'] ?? '') ?>" data-error="err-sekolah" placeholder="Masukkan nama sekolah"
           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
           oninput="this.classList.remove('border-red-500'); document.getElementById('err-sekolah')?.classList.add('hidden')">
         <p id="err-sekolah" class="text-xs text-red-500 mt-1 hidden">Asal sekolah wajib diisi</p>
