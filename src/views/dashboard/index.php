@@ -211,7 +211,7 @@ if (!isset($activeTab)) {
         var link = document.querySelector('#tabList a[data-tab-num="' + n + '"]');
         if (!link) continue;
         var locked = isTabLocked(n);
-        var done = tabDone(n);
+        var done = savedTabDone(n);
         link.classList.toggle('pointer-events-none', locked);
         link.classList.toggle('opacity-40', locked);
         link.classList.toggle('cursor-not-allowed', locked);
