@@ -150,7 +150,7 @@ class TeamController extends Controller
                         if ($oldFile && file_exists($uploadDir . $oldFile)) {
                             unlink($uploadDir . $oldFile);
                         }
-                        $this->uploadModel->upsertColumn($team['id'], $m, $column, $fileName);
+                        $this->uploadModel->upsertColumn($team['id'], $m, $column, $fileName, $file['name']);
                     }
                 }
             }

@@ -35,6 +35,8 @@ $UPLOAD_URL = '/uploads/teams/';
         $disabled = !$m['active'];
         $existingIg = $uploads[$p]['ig_follow'] ?? null;
         $existingTwibbon = $uploads[$p]['twibbon'] ?? null;
+        $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
+        $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
       ?>
         <div class="member-group relative" data-member="<?= $p ?>">
           <div class="flex items-center gap-3 mb-4">
@@ -58,7 +60,7 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->state('done')
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
-                    ->title(basename($existingIg))
+                    ->title($originalIg ?: basename($existingIg))
                     ->description('Sudah diupload')
                     ->clearable()
                     ->withPreview()
@@ -89,7 +91,7 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->state('done')
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
-                    ->title(basename($existingTwibbon))
+                    ->title($originalTwibbon ?: basename($existingTwibbon))
                     ->description('Sudah diupload')
                     ->clearable()
                     ->withPreview()

@@ -7,10 +7,10 @@ use App\Core\Model;
 class Payment extends Model
 {
 
-    public function create(int $teamId, string $proofImage): bool
+    public function create(int $teamId, string $proofImage, string $originalName = ''): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO payments (teamId, proofImage, status) VALUES (:teamId, :proofImage, 'pending')");
-        return $stmt->execute([':teamId' => $teamId, ':proofImage' => $proofImage]);
+        $stmt = $this->db->prepare("INSERT INTO payments (teamId, proofImage, original_name, status) VALUES (:teamId, :proofImage, :originalName, 'pending')");
+        return $stmt->execute([':teamId' => $teamId, ':proofImage' => $proofImage, ':originalName' => $originalName]);
     }
 
     public function findByTeamId(int $teamId): array|false

@@ -89,10 +89,10 @@ class PaymentController extends Controller
             if (file_exists($oldFile)) {
                 unlink($oldFile);
             }
-            $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("UPDATE payments SET proofImage = :proofImage, status = 'pending', note = NULL, submittedAt = NOW() WHERE id = :id");
-            $stmt->execute([':proofImage' => $filename, ':id' => $existingPayment['id']]);
+            $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("UPDATE payments SET proofImage = :proofImage, original_name = :originalName, status = 'pending', note = NULL, submittedAt = NOW() WHERE id = :id");
+            $stmt->execute([':proofImage' => $filename, ':originalName' => $file['name'], ':id' => $existingPayment['id']]);
         } else {
-            $this->paymentModel->create($team['id'], $filename);
+            $this->paymentModel->create($team['id'], $filename, $file['name']);
         }
 
         $this->redirect('/payments');

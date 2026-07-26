@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS payments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     teamId INT NOT NULL,
     proofImage VARCHAR(255) NOT NULL,
+    original_name VARCHAR(255) NULL,
     status VARCHAR(50) DEFAULT 'pending',
     submittedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     verifiedAt TIMESTAMP NULL DEFAULT NULL,
@@ -57,6 +58,12 @@ CREATE TABLE IF NOT EXISTS team_documentation_uploads (
     member_number INT NOT NULL,
     upload_type VARCHAR(100) NOT NULL,
     file_name VARCHAR(255) NOT NULL,
+    student_card VARCHAR(255) NULL,
+    ig_follow VARCHAR(255) NULL,
+    twibbon VARCHAR(255) NULL,
+    original_student_card VARCHAR(255) NULL,
+    original_ig_follow VARCHAR(255) NULL,
+    original_twibbon VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

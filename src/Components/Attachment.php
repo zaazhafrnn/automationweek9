@@ -169,7 +169,7 @@ class Attachment extends Component
 
     private function titleClasses(): string
     {
-        $base = 'text-sm font-medium text-red-500 italic truncate';
+        $base = 'text-sm font-medium text-gray-700 truncate';
         if ($this->size === 'sm') $base .= ' text-xs';
         if ($this->state === 'uploading' || $this->state === 'processing') {
             $base .= ' animate-pulse bg-gray-200 text-transparent rounded inline-block';
@@ -230,6 +230,7 @@ class Attachment extends Component
         $html = '<div data-slot="attachment" data-state="' . htmlspecialchars($this->state) . '"'
             . ' data-size="' . htmlspecialchars($this->size) . '"'
             . ' data-orientation="' . htmlspecialchars($this->orientation) . '"'
+            . ' data-original-title="' . htmlspecialchars($this->title) . '"'
             . ' class="' . $this->rootClasses() . '"';
 
         $extra = '';

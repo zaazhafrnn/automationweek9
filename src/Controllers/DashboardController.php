@@ -47,6 +47,9 @@ class DashboardController extends Controller
                     'student_card' => $r['student_card'],
                     'ig_follow' => $r['ig_follow'],
                     'twibbon' => $r['twibbon'],
+                    'original_student_card' => $r['original_student_card'] ?? null,
+                    'original_ig_follow' => $r['original_ig_follow'] ?? null,
+                    'original_twibbon' => $r['original_twibbon'] ?? null,
                 ];
             }
         }
@@ -95,6 +98,9 @@ class DashboardController extends Controller
                     'student_card' => $r['student_card'],
                     'ig_follow' => $r['ig_follow'],
                     'twibbon' => $r['twibbon'],
+                    'original_student_card' => $r['original_student_card'] ?? null,
+                    'original_ig_follow' => $r['original_ig_follow'] ?? null,
+                    'original_twibbon' => $r['original_twibbon'] ?? null,
                 ];
             }
         }

@@ -111,3 +111,8 @@
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+[data-slot="attachment"]:not([data-state="idle"]) [data-slot="attachment-title"] {
+    color: rgb(239 68 68);
+    font-style: italic;
+}

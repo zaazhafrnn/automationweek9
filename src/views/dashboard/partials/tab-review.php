@@ -61,6 +61,7 @@ $hasM3 = !empty($team['secondMemberName']);
       <?php foreach ($reviewMembers as $m):
         $p = $m['num'];
         $existingCard = $uploads[$p]['student_card'] ?? null;
+        $originalCard = $uploads[$p]['original_student_card'] ?? null;
       ?>
         <div>
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['label']) ?></p>
@@ -84,7 +85,7 @@ $hasM3 = !empty($team['secondMemberName']);
                 ->state('done')
                 ->mediaVariant('image')
                 ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
-                ->title(basename($existingCard))
+                ->title($originalCard ?: basename($existingCard))
                 ->description('Sudah diupload')
                 ->withPreview()
                 ->fileInput('studentCard_' . $p, $cardAttrs)
@@ -123,6 +124,8 @@ $hasM3 = !empty($team['secondMemberName']);
         $p = $m['num'];
         $ig = $uploads[$p]['ig_follow'] ?? null;
         $twibbon = $uploads[$p]['twibbon'] ?? null;
+        $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
+        $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
       ?>
         <div>
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['name']) ?></p>
@@ -137,7 +140,7 @@ $hasM3 = !empty($team['secondMemberName']);
                   ->state('done')
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($ig) . '" class="w-full h-full object-cover">')
-                  ->title(basename($ig))
+                  ->title($originalIg ?: basename($ig))
                   ->description('Sudah diupload')
                   ->withPreview()
                   ->fileInput('igFollow_' . $p, $igAttrs)
@@ -163,7 +166,7 @@ $hasM3 = !empty($team['secondMemberName']);
                   ->state('done')
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($twibbon) . '" class="w-full h-full object-cover">')
-                  ->title(basename($twibbon))
+                  ->title($originalTwibbon ?: basename($twibbon))
                   ->description('Sudah diupload')
                   ->withPreview()
                   ->fileInput('twibbon_' . $p, $twibbonAttrs)

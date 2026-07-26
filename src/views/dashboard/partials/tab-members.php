@@ -37,6 +37,7 @@ $UPLOAD_URL = '/uploads/teams/';
         $isOptional = $m['num'] > 1;
         $p = $m['num'];
         $existingCard = $uploads[$p]['student_card'] ?? null;
+        $originalCard = $uploads[$p]['original_student_card'] ?? null;
         $hasData = $name !== '' || $phone !== '' || $existingCard;
         $disabled = $isOptional && !$hasData;
         $cardRequired = $hasData && !$existingCard;
@@ -78,7 +79,7 @@ $UPLOAD_URL = '/uploads/teams/';
                   ->state('done')
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
-                  ->title(basename($existingCard))
+                  ->title($originalCard ?: basename($existingCard))
                   ->description('Sudah diupload')
                   ->clearable()
                   ->withPreview()

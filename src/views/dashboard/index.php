@@ -411,6 +411,9 @@ if (!isset($activeTab)) {
       if (!file) return;
       var att = e.target.closest('[data-slot="attachment"]');
       if (!att) return;
+      att.dataset.state = 'done';
+      var title = att.querySelector('[data-slot="attachment-title"]');
+      if (title) title.textContent = file.name;
       var media = att.querySelector('[data-slot="attachment-media"]');
       if (!media) return;
       var reader = new FileReader();
@@ -428,6 +431,8 @@ if (!isset($activeTab)) {
       var input = att.querySelector('input[type="file"]');
       if (input) input.value = '';
       att.dataset.state = 'idle';
+      var title = att.querySelector('[data-slot="attachment-title"]');
+      if (title) title.textContent = att.dataset.originalTitle || '';
       var media = att.querySelector('[data-slot="attachment-media"]');
       if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
     });

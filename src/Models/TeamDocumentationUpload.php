@@ -20,7 +20,7 @@ class TeamDocumentationUpload extends Model
         return $stmt->fetch();
     }
 
-    public function upsertColumn(int $teamId, int $member, string $column, string $fileName): bool
+    public function upsertColumn(int $teamId, int $member, string $column, string $fileName, string $originalName = ''): bool
     {
         $allowed = ['student_card', 'ig_follow', 'twibbon'];
         if (!in_array($column, $allowed)) return false;
@@ -31,7 +31,8 @@ class TeamDocumentationUpload extends Model
             $stmt->execute([':team_id' => $teamId, ':member' => $member]);
         }
 
-        $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET $column = :file WHERE team_id = :team_id AND member_number = :member");
-        return $stmt->execute([':file' => $fileName, ':team_id' => $teamId, ':member' => $member]);
+        $origColumn = 'original_' . $column;
+        $stmt = $this->db->prepare("UPDATE team_documentation_uploads SET $column = :file, $origColumn = :original WHERE team_id = :team_id AND member_number = :member");
+        return $stmt->execute([':file' => $fileName, ':original' => $originalName, ':team_id' => $teamId, ':member' => $member]);
     }
 }
