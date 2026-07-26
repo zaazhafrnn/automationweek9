@@ -1,4 +1,5 @@
 <?php
+
 /** @var string $current */
 ?>
 <div class="flex items-end gap-0.25 tracking-wide -mb-4.75">

@@ -120,28 +120,30 @@ if (!isset($activeTab)) {
     const total = 4;
     const slugs = <?= json_encode(array_values(array_map(fn($t) => $t['slug'], $tabs))) ?>;
     const slugToNum = {};
-    slugs.forEach(function(s, i) { slugToNum[s] = i + 1; });
+    slugs.forEach(function(s, i) {
+      slugToNum[s] = i + 1;
+    });
 
     const state = <?= json_encode([
-      'division' => $team['division'] ?? null,
-      'name' => $team['name'] ?? null,
-      'teamSchool' => $team['teamSchool'] ?? null,
-      'leaderName' => $team['leaderName'] ?? null,
-      'leaderPhoneNumber' => $team['leaderPhoneNumber'] ?? null,
-      'firstMemberName' => $team['firstMemberName'] ?? null,
-      'firstMemberPhoneNumber' => $team['firstMemberPhoneNumber'] ?? null,
-      'secondMemberName' => $team['secondMemberName'] ?? null,
-      'secondMemberPhoneNumber' => $team['secondMemberPhoneNumber'] ?? null,
-      'studentCard_1' => $uploads[1]['student_card'] ?? null,
-      'studentCard_2' => $uploads[2]['student_card'] ?? null,
-      'studentCard_3' => $uploads[3]['student_card'] ?? null,
-      'igFollow_1' => $uploads[1]['ig_follow'] ?? null,
-      'igFollow_2' => $uploads[2]['ig_follow'] ?? null,
-      'igFollow_3' => $uploads[3]['ig_follow'] ?? null,
-      'twibbon_1' => $uploads[1]['twibbon'] ?? null,
-      'twibbon_2' => $uploads[2]['twibbon'] ?? null,
-      'twibbon_3' => $uploads[3]['twibbon'] ?? null,
-    ]) ?>;
+                    'division' => $team['division'] ?? null,
+                    'name' => $team['name'] ?? null,
+                    'teamSchool' => $team['teamSchool'] ?? null,
+                    'leaderName' => $team['leaderName'] ?? null,
+                    'leaderPhoneNumber' => $team['leaderPhoneNumber'] ?? null,
+                    'firstMemberName' => $team['firstMemberName'] ?? null,
+                    'firstMemberPhoneNumber' => $team['firstMemberPhoneNumber'] ?? null,
+                    'secondMemberName' => $team['secondMemberName'] ?? null,
+                    'secondMemberPhoneNumber' => $team['secondMemberPhoneNumber'] ?? null,
+                    'studentCard_1' => $uploads[1]['student_card'] ?? null,
+                    'studentCard_2' => $uploads[2]['student_card'] ?? null,
+                    'studentCard_3' => $uploads[3]['student_card'] ?? null,
+                    'igFollow_1' => $uploads[1]['ig_follow'] ?? null,
+                    'igFollow_2' => $uploads[2]['ig_follow'] ?? null,
+                    'igFollow_3' => $uploads[3]['ig_follow'] ?? null,
+                    'twibbon_1' => $uploads[1]['twibbon'] ?? null,
+                    'twibbon_2' => $uploads[2]['twibbon'] ?? null,
+                    'twibbon_3' => $uploads[3]['twibbon'] ?? null,
+                  ]) ?>;
 
     const savedState = JSON.parse(JSON.stringify(state));
 
@@ -268,9 +270,15 @@ if (!isset($activeTab)) {
       var submitBtn = document.getElementById('nextTabSubmit');
       if (saveBtn) saveBtn.style.display = num >= 4 ? 'none' : '';
       if (submitBtn) submitBtn.style.display = num < 4 ? 'none' : '';
-      history.pushState({ tab: num }, '', '/application/' + slugs[num - 1]);
+      history.pushState({
+        tab: num
+      }, '', '/application/' + slugs[num - 1]);
       var activeLink = document.querySelector('#tabList a[data-tab-num="' + num + '"]');
-      if (activeLink) activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      if (activeLink) activeLink.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
       current = num;
     }
 
@@ -348,7 +356,10 @@ if (!isset($activeTab)) {
         var form = panel && panel.querySelector('form');
         if (form) {
           var btn = form.querySelector('button[type="submit"]');
-          if (btn) { btn.click(); return; }
+          if (btn) {
+            btn.click();
+            return;
+          }
           form.submit();
           return;
         }
