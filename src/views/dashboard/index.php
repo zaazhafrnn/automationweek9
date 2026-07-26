@@ -143,6 +143,18 @@ if (!isset($activeTab)) {
       'twibbon_3' => $uploads[3]['twibbon'] ?? null,
     ]) ?>;
 
+    const savedState = JSON.parse(JSON.stringify(state));
+
+    function hasChanges() {
+      for (var k in state) {
+        if (state[k] instanceof File) return true;
+        var cur = state[k] == null ? '' : String(state[k]).trim();
+        var orig = savedState[k] == null ? '' : String(savedState[k]).trim();
+        if (cur !== orig) return true;
+      }
+      return false;
+    }
+
     function filled(k) {
       var v = state[k];
       if (v == null) return false;
@@ -287,6 +299,10 @@ if (!isset($activeTab)) {
       var next = e.target.closest('#nextTabSave, #nextTabSubmit');
       if (next) {
         if (!validateTab(current)) return;
+        if (!hasChanges()) {
+          if (current < total) goTo(current + 1);
+          return;
+        }
         var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
         var form = panel && panel.querySelector('form');
         if (form) {
