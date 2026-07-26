@@ -184,29 +184,35 @@ if (!isset($activeTab)) {
       return false;
     }
 
-    function isTabLocked(num) {
-      if (num <= 1) return false;
-      for (var i = 1; i < num; i++) {
-        if (!tabDone(i)) return true;
-      }
-      return false;
-    }
-
     function updateTabs() {
       for (var n = 1; n <= total; n++) {
         var link = document.querySelector('#tabList a[data-tab-num="' + n + '"]');
         if (!link) continue;
-        var locked = isTabLocked(n);
         var done = tabDone(n);
-        link.classList.toggle('pointer-events-none', locked);
-        link.classList.toggle('opacity-40', locked);
-        link.classList.toggle('cursor-not-allowed', locked);
-        link.setAttribute('aria-disabled', locked ? 'true' : 'false');
         var numEl = link.querySelector('.tab-num');
         var checkEl = link.querySelector('.tab-check');
         if (numEl) numEl.classList.toggle('hidden', done);
         if (checkEl) checkEl.classList.toggle('hidden', !done);
       }
+    }
+
+    function resetTab() {
+      var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
+      if (!panel) return;
+      panel.querySelectorAll('input, textarea, select').forEach(function(el) {
+        if (!el.name || !state.hasOwnProperty(el.name)) return;
+        var orig = savedState[el.name];
+        if (el.type === 'file') {
+          el.value = '';
+          state[el.name] = orig;
+        } else if (el.type === 'radio') {
+          el.checked = el.value === (orig || '');
+          state[el.name] = el.checked ? el.value : state[el.name];
+        } else {
+          el.value = orig || '';
+          state[el.name] = orig;
+        }
+      });
     }
 
     function goTo(num) {
@@ -287,15 +293,23 @@ if (!isset($activeTab)) {
 
     document.getElementById('tabList').addEventListener('click', function(e) {
       var link = e.target.closest('a[data-tab-num]');
-      if (link && link.getAttribute('aria-disabled') !== 'true') {
+      if (link) {
         e.preventDefault();
-        goTo(parseInt(link.dataset.tabNum));
+        var target = parseInt(link.dataset.tabNum);
+        if (target !== current) resetTab();
+        goTo(target);
       }
     });
 
     document.getElementById('tabNav').addEventListener('click', function(e) {
       var prev = e.target.closest('[data-goto]');
-      if (prev) { e.preventDefault(); goTo(parseInt(prev.dataset.goto)); return; }
+      if (prev) {
+        e.preventDefault();
+        var target = parseInt(prev.dataset.goto);
+        if (target !== current) resetTab();
+        goTo(target);
+        return;
+      }
       var next = e.target.closest('#nextTabSave, #nextTabSubmit');
       if (next) {
         if (!validateTab(current)) return;
