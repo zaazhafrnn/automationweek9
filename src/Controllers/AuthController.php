@@ -103,7 +103,7 @@ class AuthController extends Controller
         Session::set('user_name', $user['name']);
         Session::set('role', $user['role'] ?? 'member');
 
-        $redirectUrl = Session::get('role') === 'admin' ? '/admin/dashboard' : '/application/team-register';
+        $redirectUrl = Session::get('role') === 'admin' ? '/admin/dashboard' : '/application';
 
         if ($this->wantsJson()) {
             $this->jsonExit(['success' => true, 'redirect' => $redirectUrl]);

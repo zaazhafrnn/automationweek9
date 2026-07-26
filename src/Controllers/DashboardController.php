@@ -61,7 +61,10 @@ class DashboardController extends Controller
 
         $activeTab = 1;
         foreach ($tabDone as $n => $done) {
-            if (!$done) break;
+            if (!$done) {
+                $activeTab = $n;
+                break;
+            }
             $activeTab = $n;
         }
 
