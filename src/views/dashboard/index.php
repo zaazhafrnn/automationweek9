@@ -184,11 +184,38 @@ if (!isset($activeTab)) {
       return false;
     }
 
+    function savedTabDone(n) {
+      if (n === 1) return filledSaved('division') && filledSaved('name') && filledSaved('teamSchool');
+      if (n === 2) return filledSaved('leaderName');
+      if (n === 3) return filledSaved('igFollow_1') && filledSaved('twibbon_1');
+      if (n === 4) return savedTabDone(1) && savedTabDone(2) && savedTabDone(3);
+      return false;
+    }
+
+    function filledSaved(k) {
+      var v = savedState[k];
+      if (v == null) return false;
+      return String(v).trim() !== '';
+    }
+
+    function isTabLocked(num) {
+      if (num <= 2) return false;
+      for (var i = 1; i < num; i++) {
+        if (!savedTabDone(i)) return true;
+      }
+      return false;
+    }
+
     function updateTabs() {
       for (var n = 1; n <= total; n++) {
         var link = document.querySelector('#tabList a[data-tab-num="' + n + '"]');
         if (!link) continue;
+        var locked = isTabLocked(n);
         var done = tabDone(n);
+        link.classList.toggle('pointer-events-none', locked);
+        link.classList.toggle('opacity-40', locked);
+        link.classList.toggle('cursor-not-allowed', locked);
+        link.setAttribute('aria-disabled', locked ? 'true' : 'false');
         var numEl = link.querySelector('.tab-num');
         var checkEl = link.querySelector('.tab-check');
         if (numEl) numEl.classList.toggle('hidden', done);
@@ -293,7 +320,7 @@ if (!isset($activeTab)) {
 
     document.getElementById('tabList').addEventListener('click', function(e) {
       var link = e.target.closest('a[data-tab-num]');
-      if (link) {
+      if (link && link.getAttribute('aria-disabled') !== 'true') {
         e.preventDefault();
         var target = parseInt(link.dataset.tabNum);
         if (target !== current) resetTab();
