@@ -217,6 +217,7 @@ if (!isset($activeTab)) {
       if (prevBtn) {
         prevBtn.style.display = num <= 1 ? 'none' : '';
         prevBtn.href = num > 1 ? '/application/' + slugs[num - 2] : '#';
+        prevBtn.dataset.goto = num > 1 ? num - 1 : '';
       }
       var saveBtn = document.getElementById('nextTabSave');
       var submitBtn = document.getElementById('nextTabSubmit');
