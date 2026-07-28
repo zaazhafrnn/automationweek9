@@ -72,7 +72,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-anggota-<?= $p ?>-phone" class="text-xs text-red-500 mt-1 hidden">No. telepon wajib diisi</p>
               </div>
             </div>
-            <div class="mt-4">
+            <div class="mt-4 xl:w-1/2 md:pr-2">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar</label>
               <?php if ($existingCard): ?>
                 <?= Attachment::make()

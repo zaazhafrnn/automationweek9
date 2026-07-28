@@ -251,10 +251,11 @@ class Attachment extends Component
         }
 
         if ($this->clearable) {
+            $trashIcon = (new Icon)->name('trash-2')->class('w-5 h-5 text-red-500')->render();
             $html .= '<button type="button" aria-label="Hapus" data-clear-attachment'
                 . ' onclick="event.preventDefault();"'
                 . ' class="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200 hover:bg-red-50 hover:border-red-300 transition-colors">'
-                . '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>'
+                . $trashIcon
                 . '</button>';
         }
 

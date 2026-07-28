@@ -112,7 +112,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* ponytail: attachment state styling */
 [data-slot="attachment"]:not([data-state="done"]) [data-clear-attachment] {
     display: none;
 }
