@@ -134,6 +134,16 @@ class TeamController extends Controller
             foreach ($members as $m) {
                 foreach ($columnMap as $inputName => $column) {
                     $key = $inputName . '_' . $m;
+
+                    if (!empty($_POST['delete_' . $key])) {
+                        $existing = $this->uploadModel->findOne($team['id'], $m);
+                        if ($existing && $existing[$column]) {
+                            $oldFile = $existing[$column];
+                            if (file_exists($uploadDir . $oldFile)) unlink($uploadDir . $oldFile);
+                            $this->uploadModel->upsertColumn($team['id'], $m, $column, null, null);
+                        }
+                    }
+
                     if (empty($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) continue;
 
                     $file = $_FILES[$key];

@@ -20,7 +20,7 @@ class TeamDocumentationUpload extends Model
         return $stmt->fetch();
     }
 
-    public function upsertColumn(int $teamId, int $member, string $column, string $fileName, string $originalName = ''): bool
+    public function upsertColumn(int $teamId, int $member, string $column, ?string $fileName, ?string $originalName = ''): bool
     {
         $allowed = ['student_card', 'ig_follow', 'twibbon'];
         if (!in_array($column, $allowed)) return false;

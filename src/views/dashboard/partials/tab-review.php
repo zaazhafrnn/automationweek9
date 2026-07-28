@@ -62,6 +62,7 @@ $hasM3 = !empty($team['secondMemberName']);
         $p = $m['num'];
         $existingCard = $uploads[$p]['student_card'] ?? null;
         $originalCard = $uploads[$p]['original_student_card'] ?? null;
+        $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-gray-400');
       ?>
         <div>
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['label']) ?></p>
@@ -86,17 +87,21 @@ $hasM3 = !empty($team['secondMemberName']);
                 ->mediaVariant('image')
                 ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
                 ->title($originalCard ?: basename($existingCard))
-                ->description('Sudah diupload')
                 ->withPreview()
+                ->fileUrl($UPLOAD_URL . htmlspecialchars($existingCard))
+                ->originalMedia($cardIcon)
+                ->originalSrc($UPLOAD_URL . htmlspecialchars($existingCard))
+                ->idleTitle('Upload Kartu Pelajar')
                 ->fileInput('studentCard_' . $p, $cardAttrs)
                 ->render() ?>
             <?php else: ?>
               <?= Attachment::make()
                 ->state('idle')
-                ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
+                ->media($cardIcon)
                 ->title('Upload Kartu Pelajar')
                 ->description('Scan atau foto kartu pelajar/mahasiswa')
                 ->withPreview()
+                ->originalMedia($cardIcon)
                 ->fileInput('studentCard_' . $p, $cardAttrs)
                 ->render() ?>
             <?php endif; ?>
@@ -126,6 +131,8 @@ $hasM3 = !empty($team['secondMemberName']);
         $twibbon = $uploads[$p]['twibbon'] ?? null;
         $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
         $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
+        $igIcon = Icon::make()->name('image')->class('size-5 text-gray-400');
+        $twibbonIcon = Icon::make()->name('image')->class('size-5 text-gray-400');
       ?>
         <div>
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['name']) ?></p>
@@ -141,17 +148,21 @@ $hasM3 = !empty($team['secondMemberName']);
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($ig) . '" class="w-full h-full object-cover">')
                   ->title($originalIg ?: basename($ig))
-                  ->description('Sudah diupload')
                   ->withPreview()
+                  ->fileUrl($UPLOAD_URL . htmlspecialchars($ig))
+                  ->originalMedia($igIcon)
+                  ->originalSrc($UPLOAD_URL . htmlspecialchars($ig))
+                  ->idleTitle('Screenshot Follow')
                   ->fileInput('igFollow_' . $p, $igAttrs)
                   ->render() ?>
               <?php else: ?>
                 <?= Attachment::make()
                   ->state('idle')
-                  ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                  ->media($igIcon)
                   ->title('Screenshot Follow')
                   ->description('Bukti follow Instagram @lombax')
                   ->withPreview()
+                  ->originalMedia($igIcon)
                   ->fileInput('igFollow_' . $p, $igAttrs)
                   ->render() ?>
               <?php endif; ?>
@@ -167,17 +178,21 @@ $hasM3 = !empty($team['secondMemberName']);
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($twibbon) . '" class="w-full h-full object-cover">')
                   ->title($originalTwibbon ?: basename($twibbon))
-                  ->description('Sudah diupload')
                   ->withPreview()
+                  ->fileUrl($UPLOAD_URL . htmlspecialchars($twibbon))
+                  ->originalMedia($twibbonIcon)
+                  ->originalSrc($UPLOAD_URL . htmlspecialchars($twibbon))
+                  ->idleTitle('Upload Twibbon')
                   ->fileInput('twibbon_' . $p, $twibbonAttrs)
                   ->render() ?>
               <?php else: ?>
                 <?= Attachment::make()
                   ->state('idle')
-                  ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                  ->media($twibbonIcon)
                   ->title('Upload Twibbon')
                   ->description('Foto profil dengan twibbon')
                   ->withPreview()
+                  ->originalMedia($twibbonIcon)
                   ->fileInput('twibbon_' . $p, $twibbonAttrs)
                   ->render() ?>
               <?php endif; ?>

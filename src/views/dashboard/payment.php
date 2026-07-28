@@ -9,6 +9,7 @@ use App\Components\Icon;
 /** @var array|null $payment */
 
 $status = $payment['status'] ?? null;
+$uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
 ?>
 <div class="min-h-screen bg-gray-50">
   <div class="bg-brand border-b border-gray-200 text-white">
@@ -111,10 +112,12 @@ $status = $payment['status'] ?? null;
                 <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Ulang Bukti Transfer <span class="text-red-500">*</span></label>
                 <?= Attachment::make()
                   ->state('idle')
-                  ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
+                  ->media($uploadIcon)
                   ->title('Upload Ulang Bukti Transfer')
                   ->description('PNG, JPG, GIF, WebP — maks 2MB')
+                  ->clearable()
                   ->withPreview()
+                  ->originalMedia($uploadIcon)
                   ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true, 'data-error' => 'err-payment-proof'])
                   ->render() ?>
                 <p id="err-payment-proof" class="text-xs text-red-500 mt-1 hidden">Bukti transfer wajib diupload</p>
@@ -151,10 +154,12 @@ $status = $payment['status'] ?? null;
               <div>
                 <?= Attachment::make()
                   ->state('idle')
-                  ->media(Icon::make()->name('upload')->class('size-6 text-gray-400'))
+                  ->media($uploadIcon)
                   ->title('Upload Bukti Transfer')
                   ->description('PNG, JPG, GIF, WebP — maks 2MB')
+                  ->clearable()
                   ->withPreview()
+                  ->originalMedia($uploadIcon)
                   ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true, 'data-error' => 'err-payment-proof'])
                   ->render() ?>
                 <p id="err-payment-proof" class="text-xs text-red-500 mt-1 hidden">Bukti transfer wajib diupload</p>
@@ -182,6 +187,10 @@ $status = $payment['status'] ?? null;
       var att = e.target.closest('[data-slot="attachment"]');
       if (!att) return;
       att.dataset.state = 'done';
+      var trash = att.querySelector('[data-clear-attachment]');
+      if (trash) trash.classList.remove('hidden');
+      var fi = att.querySelector('input[type="file"]');
+      if (fi) fi.classList.add('hidden');
       var title = att.querySelector('[data-slot="attachment-title"]');
       if (title) title.textContent = file.name;
       var media = att.querySelector('[data-slot="attachment-media"]');
@@ -196,15 +205,20 @@ $status = $payment['status'] ?? null;
     document.addEventListener('click', function(e) {
       var clearBtn = e.target.closest('[data-clear-attachment]');
       if (!clearBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
       var att = clearBtn.closest('[data-slot="attachment"]');
       if (!att) return;
       var input = att.querySelector('input[type="file"]');
       if (input) input.value = '';
       att.dataset.state = 'idle';
+      clearBtn.classList.add('hidden');
+      if (input) input.classList.remove('hidden');
       var title = att.querySelector('[data-slot="attachment-title"]');
       if (title) title.textContent = att.dataset.originalTitle || '';
       var media = att.querySelector('[data-slot="attachment-media"]');
-      if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
+      var origMedia = att.dataset.originalMedia;
+      if (media && origMedia) media.innerHTML = origMedia;
     });
   });
 </script>

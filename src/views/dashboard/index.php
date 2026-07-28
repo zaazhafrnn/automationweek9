@@ -242,6 +242,33 @@ if (!isset($activeTab)) {
           state[el.name] = orig;
         }
       });
+      panel.querySelectorAll('input[name^="delete_"]').forEach(function(el) { el.remove(); });
+      panel.querySelectorAll('[data-slot="attachment"]').forEach(function(att) {
+        var origSrc = att.dataset.originalSrc;
+        var origTitle = att.dataset.originalTitle;
+        var origMedia = att.dataset.originalMedia;
+        var title = att.querySelector('[data-slot="attachment-title"]');
+        var media = att.querySelector('[data-slot="attachment-media"]');
+        var trash = att.querySelector('[data-clear-attachment]');
+        if (origSrc) {
+          att.dataset.state = 'done';
+          if (trash) trash.classList.remove('hidden');
+          var fi = att.querySelector('input[type="file"]');
+          if (fi) fi.classList.add('hidden');
+          att.setAttribute('href', origSrc);
+          att.setAttribute('target', '_blank');
+          att.setAttribute('rel', 'noopener noreferrer');
+          if (title) title.textContent = origTitle || '';
+          if (media) media.innerHTML = '<img src="' + origSrc + '" class="w-full h-full object-cover">';
+        } else {
+          att.dataset.state = 'idle';
+          if (trash) trash.classList.add('hidden');
+          var fi = att.querySelector('input[type="file"]');
+          if (fi) fi.classList.remove('hidden');
+          if (title) title.textContent = origTitle || '';
+          if (media && origMedia) media.innerHTML = origMedia;
+        }
+      });
     }
 
     function goTo(num) {
@@ -412,6 +439,10 @@ if (!isset($activeTab)) {
       var att = e.target.closest('[data-slot="attachment"]');
       if (!att) return;
       att.dataset.state = 'done';
+      var trash = att.querySelector('[data-clear-attachment]');
+      if (trash) trash.classList.remove('hidden');
+      var fileInput = att.querySelector('input[type="file"]');
+      if (fileInput) fileInput.classList.add('hidden');
       var title = att.querySelector('[data-slot="attachment-title"]');
       if (title) title.textContent = file.name;
       var media = att.querySelector('[data-slot="attachment-media"]');
@@ -426,15 +457,44 @@ if (!isset($activeTab)) {
     document.addEventListener('click', function(e) {
       var clearBtn = e.target.closest('[data-clear-attachment]');
       if (!clearBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
       var att = clearBtn.closest('[data-slot="attachment"]');
       if (!att) return;
       var input = att.querySelector('input[type="file"]');
-      if (input) input.value = '';
-      att.dataset.state = 'idle';
+      var inputName = att.dataset.inputName || (input ? input.name : '');
+      if (input) {
+        input.value = '';
+        if (inputName && state.hasOwnProperty(inputName)) state[inputName] = null;
+      }
+      var origSrc = att.dataset.originalSrc;
+      var origTitle = att.dataset.originalTitle;
+      var origMedia = att.dataset.originalMedia;
       var title = att.querySelector('[data-slot="attachment-title"]');
-      if (title) title.textContent = att.dataset.originalTitle || '';
       var media = att.querySelector('[data-slot="attachment-media"]');
-      if (media) media.innerHTML = '<?= addslashes(Icon::make()->name('image')->class('size-5 text-gray-400')) ?>';
+      if (origSrc && inputName) {
+        var form = att.closest('form');
+        if (form) {
+          var del = document.createElement('input');
+          del.type = 'hidden';
+          del.name = 'delete_' + inputName;
+          del.value = '1';
+          form.appendChild(del);
+        }
+      }
+      att.dataset.state = 'idle';
+      clearBtn.classList.add('hidden');
+      if (att.tagName === 'A') {
+        att.removeAttribute('href');
+        att.removeAttribute('target');
+        att.removeAttribute('rel');
+        att.setAttribute('tabindex', '0');
+        att.setAttribute('role', 'button');
+      }
+      var fileInput = att.querySelector('input[type="file"]');
+      if (fileInput) fileInput.classList.remove('hidden');
+      if (title) title.textContent = att.dataset.idleTitle || origTitle || '';
+      if (media && origMedia) media.innerHTML = origMedia;
     });
 
     const divCards = document.getElementById('divisionCards');

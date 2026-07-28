@@ -37,6 +37,8 @@ $UPLOAD_URL = '/uploads/teams/';
         $existingTwibbon = $uploads[$p]['twibbon'] ?? null;
         $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
         $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
+        $igIcon = Icon::make()->name('image')->class('size-5 text-gray-400');
+        $twibbonIcon = Icon::make()->name('image')->class('size-5 text-gray-400');
       ?>
         <div class="member-group relative" data-member="<?= $p ?>">
           <div class="flex items-center gap-3 mb-4">
@@ -61,19 +63,23 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
                     ->title($originalIg ?: basename($existingIg))
-                    ->description('Sudah diupload')
                     ->clearable()
                     ->withPreview()
+                    ->fileUrl($UPLOAD_URL . htmlspecialchars($existingIg))
+                    ->originalMedia($igIcon)
+                    ->originalSrc($UPLOAD_URL . htmlspecialchars($existingIg))
+                    ->idleTitle('Screenshot Follow')
                     ->fileInput('igFollow_' . $p, $igAttrs)
                     ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
                     ->state('idle')
-                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                    ->media($igIcon)
                     ->title('Screenshot Follow')
                     ->description('Bukti follow Instagram @lombax')
                     ->clearable()
                     ->withPreview()
+                    ->originalMedia($igIcon)
                     ->fileInput('igFollow_' . $p, $igAttrs)
                     ->render() ?>
                 <?php endif; ?>
@@ -92,19 +98,23 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
                     ->title($originalTwibbon ?: basename($existingTwibbon))
-                    ->description('Sudah diupload')
                     ->clearable()
                     ->withPreview()
+                    ->fileUrl($UPLOAD_URL . htmlspecialchars($existingTwibbon))
+                    ->originalMedia($twibbonIcon)
+                    ->originalSrc($UPLOAD_URL . htmlspecialchars($existingTwibbon))
+                    ->idleTitle('Upload Twibbon')
                     ->fileInput('twibbon_' . $p, $twibbonAttrs)
                     ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
                     ->state('idle')
-                    ->media(Icon::make()->name('image')->class('size-5 text-gray-400'))
+                    ->media($twibbonIcon)
                     ->title('Upload Twibbon')
                     ->description('Foto profil dengan twibbon')
                     ->clearable()
                     ->withPreview()
+                    ->originalMedia($twibbonIcon)
                     ->fileInput('twibbon_' . $p, $twibbonAttrs)
                     ->render() ?>
                 <?php endif; ?>

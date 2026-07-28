@@ -16,6 +16,11 @@ class Attachment extends Component
     private bool $preview = false;
     private string $titleClass = '';
     private bool $clearable = false;
+    private string $fileUrl = '';
+    private string $originalMedia = '';
+    private string $originalSrc = '';
+    private string $inputName = '';
+    private string $idleTitle = '';
 
     public function mediaVariant(string $variant): static
     {
@@ -89,8 +94,27 @@ class Attachment extends Component
         return $this;
     }
 
+    public function fileUrl(string $url): static
+    {
+        $this->fileUrl = $url;
+        return $this;
+    }
+
+    public function originalMedia(string $html): static
+    {
+        $this->originalMedia = $html;
+        return $this;
+    }
+
+    public function originalSrc(string $src): static
+    {
+        $this->originalSrc = $src;
+        return $this;
+    }
+
     public function fileInput(string $name, array $attrs = []): static
     {
+        $this->inputName = $name;
         $accept = $attrs['accept'] ?? 'image/*';
         $required = !empty($attrs['required']);
         $extraAttr = !empty($attrs['data-error']) ? ' data-error="' . htmlspecialchars($attrs['data-error']) . '"' : '';
@@ -107,6 +131,12 @@ class Attachment extends Component
         return $this;
     }
 
+    public function idleTitle(string $title): static
+    {
+        $this->idleTitle = $title;
+        return $this;
+    }
+
     private function rootClasses(): string
     {
         $base = 'rounded-xl border transition-colors relative flex max-w-full min-w-0 group/attachment';
@@ -115,7 +145,7 @@ class Attachment extends Component
         if ($this->state === 'idle') {
             $base .= ' border-dashed border-gray-300 hover:border-brand/50 hover:bg-brand/5 cursor-pointer';
         } elseif ($this->state === 'error') {
-            $base .= ' border-dashed border-red-300 bg-red-50/30';
+            $base .= ' border-red-500 bg-red-50/30';
         } else {
             $base .= ' border-gray-200';
         }
@@ -227,17 +257,29 @@ class Attachment extends Component
             $this->trigger = '<input type="file" class="absolute inset-0 opacity-0 cursor-pointer z-10">';
         }
 
-        $html = '<div data-slot="attachment" data-state="' . htmlspecialchars($this->state) . '"'
+        $isLink = $this->state === 'done' && $this->fileUrl;
+        $tag = $isLink ? 'a' : 'div';
+        $extraAttrs = '';
+
+        if ($isLink) {
+            $extraAttrs .= ' href="' . htmlspecialchars($this->fileUrl) . '" target="_blank" rel="noopener noreferrer"';
+        }
+
+        $html = '<' . $tag . ' data-slot="attachment" data-state="' . htmlspecialchars($this->state) . '"'
             . ' data-size="' . htmlspecialchars($this->size) . '"'
             . ' data-orientation="' . htmlspecialchars($this->orientation) . '"'
             . ' data-original-title="' . htmlspecialchars($this->title) . '"'
-            . ' class="' . $this->rootClasses() . '"';
+            . ' data-idle-title="' . htmlspecialchars($this->idleTitle) . '"'
+            . ' data-original-media="' . htmlspecialchars($this->originalMedia) . '"'
+            . ' data-original-src="' . htmlspecialchars($this->originalSrc) . '"'
+            . ' data-input-name="' . htmlspecialchars($this->inputName) . '"'
+            . ' class="' . $this->rootClasses() . '"'
+            . $extraAttrs;
 
-        $extra = '';
-        if ($this->state === 'idle') {
-            $extra .= ' tabindex="0" role="button"';
+        if (!$isLink && $this->state === 'idle') {
+            $html .= ' tabindex="0" role="button"';
         }
-        $html .= $extra . '>';
+        $html .= '>';
 
         if ($this->media) {
             $html .= '<div data-slot="attachment-media" class="' . $this->mediaClasses() . '">';
@@ -261,17 +303,20 @@ class Attachment extends Component
         $html .= $this->renderActions();
 
         if ($this->clearable) {
+            $hidden = $this->state !== 'done' ? ' hidden' : '';
             $html .= '<button type="button" aria-label="Hapus" data-clear-attachment'
-                . ' class="inline-flex items-center justify-center w-7 h-7 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors absolute top-2 right-2 z-20">'
-                . '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>'
+                . ' onclick="event.preventDefault();"'
+                . ' class="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200 hover:bg-red-50 hover:border-red-300 transition-colors' . $hidden . '">'
+                . '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>'
                 . '</button>';
         }
 
         if ($this->trigger) {
-            $html .= $this->trigger;
+            $hidden = $this->state !== 'idle' ? ' hidden' : '';
+            $html .= str_replace('class="absolute', 'class="absolute' . $hidden, $this->trigger);
         }
 
-        $html .= '</div>';
+        $html .= '</' . $tag . '>';
         return $html;
     }
 }

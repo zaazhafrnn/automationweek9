@@ -43,6 +43,7 @@ $UPLOAD_URL = '/uploads/teams/';
         $cardRequired = $hasData && !$existingCard;
         $cardAttrs = ['accept' => 'image/*', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-file'];
         if ($cardRequired) $cardAttrs['required'] = true;
+        $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-gray-400');
       ?>
         <div class="member-group relative" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
           <div class="flex items-center gap-3 mb-4">
@@ -65,10 +66,9 @@ $UPLOAD_URL = '/uploads/teams/';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA</label>
                 <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" placeholder="Masukkan nomor telepon" inputmode="numeric" pattern="[0-9]*"
-                  oninput="this.value=this.value.replace(/[^0-9]/g,''); this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')"
                   data-error="err-anggota-<?= $p ?>-phone"
                   class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
-                  oninput="this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
+                  oninput="this.value=this.value.replace(/[^0-9]/g,''); this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
                 <p id="err-anggota-<?= $p ?>-phone" class="text-xs text-red-500 mt-1 hidden">No. telepon wajib diisi</p>
               </div>
             </div>
@@ -80,19 +80,23 @@ $UPLOAD_URL = '/uploads/teams/';
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
                   ->title($originalCard ?: basename($existingCard))
-                  ->description('Sudah diupload')
                   ->clearable()
                   ->withPreview()
+                  ->fileUrl($UPLOAD_URL . htmlspecialchars($existingCard))
+                  ->originalMedia($cardIcon)
+                  ->originalSrc($UPLOAD_URL . htmlspecialchars($existingCard))
+                  ->idleTitle('Upload Kartu Pelajar')
                   ->fileInput('studentCard_' . $p, $cardAttrs)
                   ->render() ?>
               <?php else: ?>
                 <?= Attachment::make()
                   ->state('idle')
-                  ->media(Icon::make()->name('credit-card')->class('size-5 text-gray-400'))
+                  ->media($cardIcon)
                   ->title('Upload Kartu Pelajar')
                   ->description('Scan atau foto kartu pelajar/mahasiswa')
                   ->clearable()
                   ->withPreview()
+                  ->originalMedia($cardIcon)
                   ->fileInput('studentCard_' . $p, $cardAttrs)
                   ->render() ?>
               <?php endif; ?>
