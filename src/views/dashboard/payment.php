@@ -9,7 +9,7 @@ use App\Components\Icon;
 /** @var array|null $payment */
 
 $status = $payment['status'] ?? null;
-$uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
+$uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
 ?>
 <div class="min-h-screen bg-gray-50">
   <div class="bg-brand border-b border-gray-200 text-white">
@@ -111,7 +111,7 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
               <div>
                 <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Ulang Bukti Transfer <span class="text-red-500">*</span></label>
                 <?= Attachment::make()
-                  ->state('idle')
+                  
                   ->media($uploadIcon)
                   ->title('Upload Ulang Bukti Transfer')
                   ->description('PNG, JPG, GIF, WebP — maks 2MB')
@@ -153,7 +153,7 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
               <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
               <div>
                 <?= Attachment::make()
-                  ->state('idle')
+                  
                   ->media($uploadIcon)
                   ->title('Upload Bukti Transfer')
                   ->description('PNG, JPG, GIF, WebP — maks 2MB')
@@ -180,6 +180,13 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    function formatFileSize(bytes) {
+      if (!bytes) return '';
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
     document.addEventListener('change', function(e) {
       if (!e.target.matches('[data-preview]')) return;
       var file = e.target.files && e.target.files[0];
@@ -187,12 +194,19 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
       var att = e.target.closest('[data-slot="attachment"]');
       if (!att) return;
       att.dataset.state = 'done';
-      var trash = att.querySelector('[data-clear-attachment]');
-      if (trash) trash.classList.remove('hidden');
-      var fi = att.querySelector('input[type="file"]');
-      if (fi) fi.classList.add('hidden');
       var title = att.querySelector('[data-slot="attachment-title"]');
       if (title) title.textContent = file.name;
+      var desc = att.querySelector('[data-slot="attachment-description"]');
+      if (desc) desc.textContent = formatFileSize(file.size);
+
+      var errId = e.target.dataset.error;
+      if (errId) {
+        var errEl = document.getElementById(errId);
+        if (errEl) errEl.classList.add('hidden');
+      }
+      e.target.classList.remove('border-red-500');
+      att.classList.remove('border-red-500');
+
       var media = att.querySelector('[data-slot="attachment-media"]');
       if (!media) return;
       var reader = new FileReader();
@@ -212,10 +226,10 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-gray-400');
       var input = att.querySelector('input[type="file"]');
       if (input) input.value = '';
       att.dataset.state = 'idle';
-      clearBtn.classList.add('hidden');
-      if (input) input.classList.remove('hidden');
       var title = att.querySelector('[data-slot="attachment-title"]');
-      if (title) title.textContent = att.dataset.originalTitle || '';
+      if (title) title.textContent = att.dataset.idleTitle || att.dataset.originalTitle || '';
+      var desc = att.querySelector('[data-slot="attachment-description"]');
+      if (desc) desc.textContent = att.dataset.idleDescription || '';
       var media = att.querySelector('[data-slot="attachment-media"]');
       var origMedia = att.dataset.originalMedia;
       if (media && origMedia) media.innerHTML = origMedia;

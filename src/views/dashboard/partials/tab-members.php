@@ -43,7 +43,7 @@ $UPLOAD_URL = '/uploads/teams/';
         $cardRequired = $hasData && !$existingCard;
         $cardAttrs = ['accept' => 'image/*', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-file'];
         if ($cardRequired) $cardAttrs['required'] = true;
-        $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-gray-400');
+        $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-black');
       ?>
         <div class="member-group relative" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
           <div class="flex items-center gap-3 mb-4">
@@ -73,13 +73,13 @@ $UPLOAD_URL = '/uploads/teams/';
               </div>
             </div>
             <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar / Mahasiswa</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar</label>
               <?php if ($existingCard): ?>
                 <?= Attachment::make()
-                  ->state('done')
                   ->mediaVariant('image')
                   ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
                   ->title($originalCard ?: basename($existingCard))
+                  ->description('Scan atau foto kartu pelajar')
                   ->clearable()
                   ->withPreview()
                   ->fileUrl($UPLOAD_URL . htmlspecialchars($existingCard))
@@ -90,10 +90,9 @@ $UPLOAD_URL = '/uploads/teams/';
                   ->render() ?>
               <?php else: ?>
                 <?= Attachment::make()
-                  ->state('idle')
                   ->media($cardIcon)
                   ->title('Upload Kartu Pelajar')
-                  ->description('Scan atau foto kartu pelajar/mahasiswa')
+                  ->description('Scan atau foto kartu pelajar')
                   ->clearable()
                   ->withPreview()
                   ->originalMedia($cardIcon)

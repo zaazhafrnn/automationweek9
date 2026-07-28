@@ -242,30 +242,29 @@ if (!isset($activeTab)) {
           state[el.name] = orig;
         }
       });
-      panel.querySelectorAll('input[name^="delete_"]').forEach(function(el) { el.remove(); });
+      panel.querySelectorAll('[id^="err-"]').forEach(function(el) {
+        el.classList.add('hidden');
+      });
+      panel.querySelectorAll('.border-red-500').forEach(function(el) {
+        el.classList.remove('border-red-500');
+      });
+      panel.querySelectorAll('input[name^="delete_"]').forEach(function(el) {
+        el.remove();
+      });
       panel.querySelectorAll('[data-slot="attachment"]').forEach(function(att) {
         var origSrc = att.dataset.originalSrc;
         var origTitle = att.dataset.originalTitle;
+        var origIdleTitle = att.dataset.idleTitle;
         var origMedia = att.dataset.originalMedia;
         var title = att.querySelector('[data-slot="attachment-title"]');
         var media = att.querySelector('[data-slot="attachment-media"]');
-        var trash = att.querySelector('[data-clear-attachment]');
         if (origSrc) {
           att.dataset.state = 'done';
-          if (trash) trash.classList.remove('hidden');
-          var fi = att.querySelector('input[type="file"]');
-          if (fi) fi.classList.add('hidden');
-          att.setAttribute('href', origSrc);
-          att.setAttribute('target', '_blank');
-          att.setAttribute('rel', 'noopener noreferrer');
           if (title) title.textContent = origTitle || '';
           if (media) media.innerHTML = '<img src="' + origSrc + '" class="w-full h-full object-cover">';
         } else {
           att.dataset.state = 'idle';
-          if (trash) trash.classList.add('hidden');
-          var fi = att.querySelector('input[type="file"]');
-          if (fi) fi.classList.remove('hidden');
-          if (title) title.textContent = origTitle || '';
+          if (title) title.textContent = origIdleTitle || origTitle || '';
           if (media && origMedia) media.innerHTML = origMedia;
         }
       });
@@ -432,6 +431,13 @@ if (!isset($activeTab)) {
       autoRedirect();
     }
 
+    function formatFileSize(bytes) {
+      if (!bytes) return '';
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
     document.addEventListener('change', function(e) {
       if (!e.target.matches('[data-preview]')) return;
       var file = e.target.files && e.target.files[0];
@@ -439,12 +445,19 @@ if (!isset($activeTab)) {
       var att = e.target.closest('[data-slot="attachment"]');
       if (!att) return;
       att.dataset.state = 'done';
-      var trash = att.querySelector('[data-clear-attachment]');
-      if (trash) trash.classList.remove('hidden');
-      var fileInput = att.querySelector('input[type="file"]');
-      if (fileInput) fileInput.classList.add('hidden');
       var title = att.querySelector('[data-slot="attachment-title"]');
       if (title) title.textContent = file.name;
+      var desc = att.querySelector('[data-slot="attachment-description"]');
+      if (desc) desc.textContent = formatFileSize(file.size);
+
+      var errId = e.target.dataset.error;
+      if (errId) {
+        var errEl = document.getElementById(errId);
+        if (errEl) errEl.classList.add('hidden');
+      }
+      e.target.classList.remove('border-red-500');
+      att.classList.remove('border-red-500');
+
       var media = att.querySelector('[data-slot="attachment-media"]');
       if (!media) return;
       var reader = new FileReader();
@@ -471,6 +484,7 @@ if (!isset($activeTab)) {
       var origTitle = att.dataset.originalTitle;
       var origMedia = att.dataset.originalMedia;
       var title = att.querySelector('[data-slot="attachment-title"]');
+      var desc = att.querySelector('[data-slot="attachment-description"]');
       var media = att.querySelector('[data-slot="attachment-media"]');
       if (origSrc && inputName) {
         var form = att.closest('form');
@@ -481,19 +495,11 @@ if (!isset($activeTab)) {
           del.value = '1';
           form.appendChild(del);
         }
+        if (input) input.setAttribute('required', '');
       }
       att.dataset.state = 'idle';
-      clearBtn.classList.add('hidden');
-      if (att.tagName === 'A') {
-        att.removeAttribute('href');
-        att.removeAttribute('target');
-        att.removeAttribute('rel');
-        att.setAttribute('tabindex', '0');
-        att.setAttribute('role', 'button');
-      }
-      var fileInput = att.querySelector('input[type="file"]');
-      if (fileInput) fileInput.classList.remove('hidden');
       if (title) title.textContent = att.dataset.idleTitle || origTitle || '';
+      if (desc) desc.textContent = att.dataset.idleDescription || '';
       if (media && origMedia) media.innerHTML = origMedia;
     });
 
