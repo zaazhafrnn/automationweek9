@@ -213,7 +213,7 @@ class Attachment extends Component
             }
         }
         if ($this->title || $descText) {
-            $titleClasses = 'text-sm font-medium text-gray-700 truncate';
+            $titleClasses = 'text-sm font-medium text-gray-700 truncate pr-10';
             if ($this->size === 'sm') $titleClasses .= ' text-xs';
             if ($this->titleClass) $titleClasses .= ' ' . $this->titleClass;
 
