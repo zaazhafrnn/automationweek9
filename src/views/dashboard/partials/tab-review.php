@@ -79,7 +79,7 @@ $hasM3 = !empty($team['secondMemberName']);
           <div class="mt-2">
             <label class="text-xs text-gray-500 mb-1 block">Kartu Pelajar</label>
             <?php
-            $cardAttrs = ['accept' => 'image/*'];
+            $cardAttrs = ['accept' => 'image/*,.pdf,application/pdf'];
             if ($existingCard):
             ?>
               <?= Attachment::make()
@@ -141,7 +141,7 @@ $hasM3 = !empty($team['secondMemberName']);
             <div>
               <label class="text-xs text-gray-500 mb-1 block">Bukti Follow IG</label>
               <?php
-              $igAttrs = ['accept' => 'image/*'];
+              $igAttrs = ['accept' => 'image/*,.pdf,application/pdf'];
               if ($ig):
               ?>
                 <?= Attachment::make()
@@ -172,7 +172,7 @@ $hasM3 = !empty($team['secondMemberName']);
             <div>
               <label class="text-xs text-gray-500 mb-1 block">Twibbon</label>
               <?php
-              $twibbonAttrs = ['accept' => 'image/*'];
+              $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf'];
               if ($twibbon):
               ?>
                 <?= Attachment::make()

@@ -51,7 +51,7 @@ class PaymentController extends Controller
 
         $file = $_FILES['proofImage'];
         $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-        $maxSize = 2 * 1024 * 1024;
+        $maxSize = 5 * 1024 * 1024;
 
         if ($file['size'] > $maxSize) {
             Session::flash('payment_error', 'File terlalu besar. Maksimal 2MB.');

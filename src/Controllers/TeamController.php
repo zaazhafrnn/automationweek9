@@ -129,7 +129,9 @@ class TeamController extends Controller
 
             $columnMap = ['studentCard' => 'student_card', 'igFollow' => 'ig_follow', 'twibbon' => 'twibbon'];
             $members = [1, 2, 3];
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+            $maxSize = 10 * 1024 * 1024;
+            $errors = [];
 
             foreach ($members as $m) {
                 foreach ($columnMap as $inputName => $column) {
@@ -144,10 +146,24 @@ class TeamController extends Controller
                         }
                     }
 
-                    if (empty($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) continue;
+                    if (empty($_FILES[$key])) continue;
+                    $fileErr = $_FILES[$key]['error'];
+                    if ($fileErr === UPLOAD_ERR_NO_FILE) continue;
+                    if ($fileErr === UPLOAD_ERR_INI_SIZE || $fileErr === UPLOAD_ERR_FORM_SIZE) {
+                        $errors[] = 'File ' . $key . ' terlalu besar. Maksimal 10MB.';
+                        continue;
+                    }
+                    if ($fileErr !== UPLOAD_ERR_OK) continue;
 
                     $file = $_FILES[$key];
-                    if (!in_array($file['type'], $allowedTypes)) continue;
+                    if ($file['size'] > $maxSize) {
+                        $errors[] = 'File ' . $key . ' terlalu besar. Maksimal 10MB.';
+                        continue;
+                    }
+                    if (!in_array($file['type'], $allowedTypes)) {
+                        $errors[] = 'File ' . $key . ' harus berupa gambar (JPEG, PNG, GIF, WebP).';
+                        continue;
+                    }
 
                     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
                     $slug = preg_replace('/[^a-z0-9]/i', '-', $team['name']);
@@ -163,6 +179,12 @@ class TeamController extends Controller
                         $this->uploadModel->upsertColumn($team['id'], $m, $column, $fileName, $file['name']);
                     }
                 }
+            }
+
+            if ($errors) {
+                Session::flash('team_update_error', implode('<br>', $errors));
+                $this->redirect('/application/' . ($_POST['next_tab'] ?? 'members'));
+                return;
             }
 
             Session::flash('team_update_success', 'Data tim berhasil diperbarui!');
