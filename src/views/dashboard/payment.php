@@ -152,6 +152,7 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
             <form action="/payments" method="POST" enctype="multipart/form-data" novalidate>
               <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
               <div>
+                <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Bukti Transfer <span class="text-red-500">*</span></label>
                 <?= Attachment::make()
                   
                   ->media($uploadIcon)

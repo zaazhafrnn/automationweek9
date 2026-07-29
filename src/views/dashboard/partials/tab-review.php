@@ -68,11 +68,11 @@ $hasM3 = !empty($team['secondMemberName']);
           <p class="text-xs font-semibold text-gray-800 mb-2"><?= htmlspecialchars($m['label']) ?></p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="text-xs text-gray-500 mb-1 block">Nama Lengkap</label>
+              <label class="text-xs text-gray-500 mb-1 block">Nama Lengkap<span class="text-red-500">*</span></label>
               <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($team[$m['nameKey']] ?? '') ?>" placeholder="Nama Lengkap" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
             </div>
             <div>
-              <label class="text-xs text-gray-500 mb-1 block">No. Telepon / WA</label>
+              <label class="text-xs text-gray-500 mb-1 block">No. Telepon / WA<span class="text-red-500">*</span></label>
               <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($team[$m['phoneKey']] ?? '') ?>" placeholder="No. Telepon" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
             </div>
           </div>

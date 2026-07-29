@@ -63,7 +63,7 @@ if (!isset($activeTab)) {
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
       <div class="border-b border-gray-200">
         <div class="px-4 sm:px-6">
-          <div role="tablist" class="flex overflow-x-auto gap-1 p-1" id="tabList">
+          <div role="tablist" class="overflow-x-auto gap-1 p-1 hidden md:flex" id="tabList">
             <?php foreach ($tabs as $num => $tab): ?>
               <?php $isActive = $activeTab === $num; ?>
               <a href="/application/<?= $tab['slug'] ?>" role="tab" data-tab-num="<?= $num ?>" aria-selected="<?= $isActive ? 'true' : 'false' ?>"
@@ -92,24 +92,19 @@ if (!isset($activeTab)) {
           </div>
         <?php endforeach; ?>
       </div>
-
-      <div class="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-gray-100" id="tabNav">
-        <span class="text-xs text-gray-400 mr-auto" id="tabIndicator">Tab <?= $activeTab ?> dari 4</span>
-        <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>" role="button" data-goto="<?= $activeTab - 1 ?>"
-          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
-          id="prevTab" <?= $activeTab <= 1 ? 'style="display:none"' : '' ?>>
-          <?= Icon::make()->name('chevron-left')->class('w-4 h-4') ?>
-          Kembali
-        </a>
-        <button type="button" id="nextTabSave" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? 'style="display:none"' : '' ?>>
-          Simpan & Lanjut
-          <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
-        </button>
-        <button type="button" id="nextTabSubmit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? '' : 'style="display:none"' ?>>
-          Submit
-          <?= Icon::make()->name('check')->class('w-4 h-4') ?>
-        </button>
-      </div>
+    </div>
+    <div class="flex items-center justify-end gap-2 py-4" id="tabNav">
+      <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>" role="button" data-goto="<?= $activeTab - 1 ?>"
+        class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
+        id="prevTab" <?= $activeTab <= 1 ? 'style="display:none"' : '' ?>>
+        Kembali
+      </a>
+      <button type="button" id="nextTabSave" class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold text-white bg-brand rounded-lg hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? 'style="display:none"' : '' ?>>
+        Simpan & Lanjut
+      </button>
+      <button type="button" id="nextTabSubmit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? '' : 'style="display:none"' ?>>
+        Submit
+      </button>
     </div>
   </div>
 </div>

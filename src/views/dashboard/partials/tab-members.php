@@ -56,7 +56,7 @@ $UPLOAD_URL = '/uploads/teams/';
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap<span class="text-red-500">*</span></label>
                 <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($name) ?>" placeholder="Masukkan nama lengkap"
                   data-error="err-anggota-<?= $p ?>-name"
                   class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
@@ -64,7 +64,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-anggota-<?= $p ?>-name" class="text-xs text-red-500 mt-1 hidden">Nama lengkap wajib diisi</p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA<span class="text-red-500">*</span></label>
                 <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" placeholder="Masukkan nomor telepon" inputmode="numeric" pattern="[0-9]*"
                   data-error="err-anggota-<?= $p ?>-phone"
                   class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
@@ -73,7 +73,7 @@ $UPLOAD_URL = '/uploads/teams/';
               </div>
             </div>
             <div class="mt-4 xl:w-1/2 md:pr-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar<span class="text-red-500">*</span></label>
               <?php if ($existingCard): ?>
                 <?= Attachment::make()
                   ->mediaVariant('image')

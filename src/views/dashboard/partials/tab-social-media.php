@@ -51,7 +51,7 @@ $UPLOAD_URL = '/uploads/teams/';
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
                 <?php
                 $igRequired = !$disabled && !$existingIg;
                 $igAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-ig'];
@@ -59,7 +59,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 if ($existingIg):
                 ?>
                   <?= Attachment::make()
-                    
+
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingIg) . '" class="w-full h-full object-cover">')
                     ->title($originalIg ?: basename($existingIg))
@@ -74,7 +74,7 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
-                    
+
                     ->media($igIcon)
                     ->title('Screenshot Follow')
                     ->description('Bukti follow Instagram @automationweek')
@@ -87,7 +87,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
                 <?php
                 $twibbonRequired = !$disabled && !$existingTwibbon;
                 $twibbonAttrs = ['accept' => 'image/*', 'data-error' => 'err-sosmed-' . $p . '-twibbon'];
@@ -95,7 +95,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 if ($existingTwibbon):
                 ?>
                   <?= Attachment::make()
-                    
+
                     ->mediaVariant('image')
                     ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingTwibbon) . '" class="w-full h-full object-cover">')
                     ->title($originalTwibbon ?: basename($existingTwibbon))
@@ -110,7 +110,7 @@ $UPLOAD_URL = '/uploads/teams/';
                     ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
-                    
+
                     ->media($twibbonIcon)
                     ->title('Upload Twibbon')
                     ->description('Foto profil dengan twibbon')
