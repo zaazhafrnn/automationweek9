@@ -119,7 +119,7 @@ if (!isset($activeTab)) {
       slugToNum[s] = i + 1;
     });
 
-    const state = <?= json_encode([
+    const _state = <?= json_encode([
                     'division' => $team['division'] ?? null,
                     'name' => $team['name'] ?? null,
                     'teamSchool' => $team['teamSchool'] ?? null,
@@ -142,7 +142,8 @@ if (!isset($activeTab)) {
                     'twibbon_2' => $uploads[2]['twibbon'] ?? null,
                     'twibbon_3' => $uploads[3]['twibbon'] ?? null,
                   ]) ?>;
-
+    window.state = _state;
+    const state = _state;
     const savedState = JSON.parse(JSON.stringify(state));
 
     function hasChanges() {

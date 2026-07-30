@@ -85,11 +85,11 @@ $UPLOAD_URL = '/uploads/teams/';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Jenis Kelamin</label>
                 <div class="flex gap-3">
-                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer has-[:checked]:ring-brand/20 transition-all">
+                  <label class="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-xl cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand/5 transition-all">
                     <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
                     <span class="text-sm text-gray-700">Laki-laki</span>
                   </label>
-                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer has-[:checked]:ring-brand/20 transition-all">
+                  <label class="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-xl cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand/5 transition-all">
                     <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
                     <span class="text-sm text-gray-700">Perempuan</span>
                   </label>
