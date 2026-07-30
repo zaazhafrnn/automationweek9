@@ -72,11 +72,13 @@ $UPLOAD_URL = '/uploads/teams/';
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA<span class="text-red-500">*</span></label>
-                <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" placeholder="Masukkan nomor telepon" inputmode="numeric" pattern="[0-9]*"
+                <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" placeholder="Masukkan nomor telepon" inputmode="numeric" pattern="08[0-9]{6,}"
                   data-error="err-anggota-<?= $p ?>-phone"
+                  data-format-error="err-anggota-<?= $p ?>-phone-format"
                   class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
-                  oninput="this.value=this.value.replace(/[^0-9]/g,''); this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden')">
+                  oninput="this.value=this.value.replace(/[^0-9]/g,''); this.classList.remove('border-red-500'); document.getElementById(this.dataset.error)?.classList.add('hidden'); document.getElementById(this.dataset.formatError)?.classList.add('hidden')">
                 <p id="err-anggota-<?= $p ?>-phone" class="text-xs text-red-500 mt-1 hidden">No. telepon wajib diisi</p>
+                <p id="err-anggota-<?= $p ?>-phone-format" class="text-xs text-red-500 mt-1 hidden">Nomer harus berawalan 08xx & minimal 8 digit</p>
               </div>
             </div>
             <div class="mt-4 xl:w-1/2 md:pr-2">

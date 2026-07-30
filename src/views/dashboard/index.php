@@ -342,6 +342,17 @@ if (!isset($activeTab)) {
           var att = f.closest('[data-slot="attachment"]');
           if (att) att.dataset.state = 'done';
           if (errEl) errEl.classList.add('hidden');
+          const fmtErrId = f.dataset.formatError;
+          if (fmtErrId && f.pattern) {
+            var fmtErrEl = document.getElementById(fmtErrId);
+            if (fmtErrEl && !new RegExp('^' + f.pattern + '$').test(f.value)) {
+              f.classList.add('border-red-500');
+              fmtErrEl.classList.remove('hidden');
+              valid = false;
+            } else if (fmtErrEl) {
+              fmtErrEl.classList.add('hidden');
+            }
+          }
         }
       });
       return valid;

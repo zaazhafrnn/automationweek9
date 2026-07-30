@@ -73,7 +73,7 @@ $hasM3 = !empty($team['secondMemberName']);
             </div>
             <div>
               <label class="text-xs text-gray-500 mb-1 block">No. Telepon / WA<span class="text-red-500">*</span></label>
-              <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($team[$m['phoneKey']] ?? '') ?>" placeholder="No. Telepon" required class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
+              <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($team[$m['phoneKey']] ?? '') ?>" placeholder="No. Telepon" required pattern="08[0-9]{6,}" class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
             </div>
           </div>
           <div class="mt-2">
