@@ -145,6 +145,15 @@ class TeamController extends Controller
             $maxSize = 10 * 1024 * 1024;
             $errors = [];
 
+            foreach ($members as $to) {
+                for ($from = 2; $from <= 3; $from++) {
+                    if ($from <= $to) continue;
+                    if (!empty($_POST['move_member_' . $from . '_to_' . $to])) {
+                        $this->uploadModel->moveToMember($team['id'], $from, $to, $uploadDir);
+                    }
+                }
+            }
+
             foreach ($members as $m) {
                 foreach ($columnMap as $inputName => $column) {
                     $key = $inputName . '_' . $m;

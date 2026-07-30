@@ -176,45 +176,135 @@ $UPLOAD_URL = '/uploads/teams/';
     document.querySelectorAll('.cancel-member').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var g = this.closest('[data-optional]');
-        g.dataset.activated = 'false';
-        g.querySelectorAll('.member-input').forEach(function(i) {
-          i.value = '';
-          i.removeAttribute('required');
-          i.classList.remove('border-red-500');
-          document.getElementById(i.dataset.error)?.classList.add('hidden');
-          document.getElementById(i.dataset.formatError)?.classList.add('hidden');
-        });
-        g.querySelectorAll('.member-radio').forEach(function(r) {
-          r.checked = false;
-          r.removeAttribute('required');
-          document.getElementById(r.dataset.error)?.classList.add('hidden');
-          if (r.name) window.state[r.name] = null;
-        });
-        g.querySelectorAll('[data-clear-attachment]').forEach(function(btn) {
-          btn.click();
-        });
-        g.querySelectorAll('.member-fields [data-slot="attachment"] input[type="file"]').forEach(function(inp) {
-          inp.removeAttribute('required');
-          document.getElementById(inp.dataset.error)?.classList.add('hidden');
-        });
-        var mNum = g.dataset.member;
-        var form = g.closest('form');
-        if (form) {
-          ['igFollow_' + mNum, 'twibbon_' + mNum].forEach(function(name) {
-            var existing = form.querySelector('input[name="delete_' + name + '"]');
-            if (!existing) {
-              var del = document.createElement('input');
-              del.type = 'hidden';
-              del.name = 'delete_' + name;
-              del.value = '1';
-              form.appendChild(del);
-            }
-          });
+        var num = parseInt(g.dataset.member);
+        var next = g.parentElement.querySelector('.member-group[data-member="' + (num + 1) + '"]');
+        var hasData = next && (next.dataset.activated === 'true' || Array.from(next.querySelectorAll('.member-input')).some(function(i) { return i.value.trim(); }));
+        if (hasData) {
+          shiftDown(num, num + 1);
+        } else {
+          clearMember(g);
         }
-        g.querySelector('.member-fields').classList.add('opacity-30', 'pointer-events-none');
-        g.querySelector('.member-overlay').classList.remove('hidden');
-        this.classList.add('hidden');
       });
     });
+
+    function clearMember(g, keepData) {
+      g.dataset.activated = 'false';
+      g.querySelectorAll('.member-input').forEach(function(i) {
+        i.value = '';
+        i.removeAttribute('required');
+        i.classList.remove('border-red-500');
+        document.getElementById(i.dataset.error)?.classList.add('hidden');
+        document.getElementById(i.dataset.formatError)?.classList.add('hidden');
+      });
+      g.querySelectorAll('.member-radio').forEach(function(r) {
+        r.checked = false;
+        r.removeAttribute('required');
+        document.getElementById(r.dataset.error)?.classList.add('hidden');
+        if (r.name) window.state[r.name] = null;
+      });
+      g.querySelectorAll('.member-fields [data-slot="attachment"]').forEach(function(att) {
+        if (!keepData) {
+          att.querySelector('[data-clear-attachment]')?.click();
+        } else {
+          att.dataset.state = 'idle';
+          var title = att.querySelector('[data-slot="attachment-title"]');
+          if (title) title.textContent = att.dataset.idleTitle || att.dataset.originalTitle || '';
+          var desc = att.querySelector('[data-slot="attachment-description"]');
+          if (desc) desc.textContent = att.dataset.idleDescription || '';
+          var media = att.querySelector('[data-slot="attachment-media"]');
+          if (media && att.dataset.originalMedia) media.innerHTML = att.dataset.originalMedia;
+        }
+        var inp = att.querySelector('input[type="file"]');
+        if (inp) inp.removeAttribute('required');
+        var errEl = inp && inp.dataset.error ? document.getElementById(inp.dataset.error) : null;
+        if (errEl) errEl.classList.add('hidden');
+      });
+      var mNum = g.dataset.member;
+      var form = g.closest('form');
+      if (form && !keepData) {
+        ['igFollow_' + mNum, 'twibbon_' + mNum].forEach(function(name) {
+          var existing = form.querySelector('input[name="delete_' + name + '"]');
+          if (!existing) {
+            var del = document.createElement('input');
+            del.type = 'hidden';
+            del.name = 'delete_' + name;
+            del.value = '1';
+            form.appendChild(del);
+          }
+        });
+      }
+      g.querySelector('.member-fields').classList.add('opacity-30', 'pointer-events-none');
+      g.querySelector('.member-overlay').classList.remove('hidden');
+      g.querySelector('.cancel-member').classList.add('hidden');
+    }
+
+    function shiftDown(toNum, fromNum) {
+      var prefix = { 2: 'firstMember', 3: 'secondMember' };
+      var to = document.querySelector('.member-group[data-member="' + toNum + '"]');
+      var from = document.querySelector('.member-group[data-member="' + fromNum + '"]');
+      if (!to || !from) return;
+
+      ['Name', 'PhoneNumber'].forEach(function(field) {
+        var fromInput = from.querySelector('.member-input[name="' + prefix[fromNum] + field + '"]');
+        var toInput = to.querySelector('.member-input[name="' + prefix[toNum] + field + '"]');
+        if (fromInput && toInput) toInput.value = fromInput.value;
+      });
+
+      var fromChecked = from.querySelector('.member-radio[name="' + prefix[fromNum] + 'Gender"]:checked');
+      if (fromChecked) {
+        var toRadio = to.querySelector('.member-radio[name="' + prefix[toNum] + 'Gender"][value="' + fromChecked.value + '"]');
+        if (toRadio) {
+          toRadio.checked = true;
+          if (window.state) window.state[toRadio.name] = toRadio.value;
+        }
+      }
+
+      var fromAtt = from.querySelector('[data-slot="attachment"]');
+      var toAtt = to.querySelector('[data-slot="attachment"]');
+      if (fromAtt && toAtt) {
+        var newName = fromAtt.dataset.inputName.replace(fromNum, toNum);
+        toAtt.dataset.state = fromAtt.dataset.state;
+        toAtt.dataset.originalSrc = fromAtt.dataset.originalSrc || '';
+        toAtt.dataset.originalTitle = fromAtt.dataset.originalTitle || '';
+        toAtt.dataset.originalMedia = fromAtt.dataset.originalMedia || '';
+        toAtt.dataset.inputName = newName;
+
+        var toFile = toAtt.querySelector('input[type="file"]');
+        var fromFile = fromAtt.querySelector('input[type="file"]');
+        if (toFile && fromFile) {
+          toFile.name = newName;
+          toFile.dataset.error = 'err-anggota-' + toNum + '-card';
+          toFile.value = '';
+          if (toAtt.dataset.originalSrc) toFile.removeAttribute('required');
+        }
+
+        var toTitle = toAtt.querySelector('[data-slot="attachment-title"]');
+        var fromTitle = fromAtt.querySelector('[data-slot="attachment-title"]');
+        if (toTitle && fromTitle) toTitle.textContent = fromTitle.textContent;
+
+        var toDesc = toAtt.querySelector('[data-slot="attachment-description"]');
+        var fromDesc = fromAtt.querySelector('[data-slot="attachment-description"]');
+        if (toDesc && fromDesc) toDesc.textContent = fromDesc.textContent;
+
+        var toMedia = toAtt.querySelector('[data-slot="attachment-media"]');
+        var fromMedia = fromAtt.querySelector('[data-slot="attachment-media"]');
+        if (toMedia && fromMedia) toMedia.innerHTML = fromMedia.innerHTML;
+      }
+
+      to.querySelectorAll('.member-input').forEach(function(i) {
+        i.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      var form = from.closest('form');
+      if (form) {
+        var move = document.createElement('input');
+        move.type = 'hidden';
+        move.name = 'move_member_' + fromNum + '_to_' + toNum;
+        move.value = '1';
+        form.appendChild(move);
+      }
+
+      clearMember(from, true);
+    }
   </script>
 <?php endif; ?>
