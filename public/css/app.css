@@ -1617,6 +1617,9 @@
   .accent-accent {
     accent-color: var(--color-accent);
   }
+  .accent-brand {
+    accent-color: var(--color-brand);
+  }
   .opacity-0 {
     opacity: 0%;
   }

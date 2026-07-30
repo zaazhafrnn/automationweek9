@@ -28,7 +28,7 @@ $UPLOAD_URL = '/uploads/teams/';
     <input type="hidden" name="next_tab" value="review">
     <input type="hidden" name="current_tab" value="social-media">
 
-    <div class="space-y-8">
+    <div class="space-y-6">
       <?php foreach ($members as $i => $m):
         $p = $m['num'];
         $isOptional = $p > 1;
@@ -40,7 +40,7 @@ $UPLOAD_URL = '/uploads/teams/';
         $igIcon = Icon::make()->name('image')->class('size-5 text-black');
         $twibbonIcon = Icon::make()->name('image')->class('size-5 text-black');
       ?>
-        <div class="member-group relative" data-member="<?= $p ?>">
+        <div class="member-group relative bg-white rounded-xl border border-gray-200 p-4 sm:p-5" data-member="<?= $p ?>">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
             <div>
@@ -134,8 +134,6 @@ $UPLOAD_URL = '/uploads/teams/';
             </div>
           <?php endif; ?>
         </div>
-        <?php if ($i < count($members) - 1): ?>
-          <hr class="border-gray-100"><?php endif; ?>
       <?php endforeach; ?>
     </div>
   </form>

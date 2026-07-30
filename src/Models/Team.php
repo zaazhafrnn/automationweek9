@@ -9,8 +9,8 @@ class Team extends Model
     public function create(int $userId, array $data): bool
     {
         $stmt = $this->db->prepare("
-            INSERT INTO teams (user_id, name, teamSchool, division, leaderName, leaderPhoneNumber, firstMemberName, firstMemberPhoneNumber, secondMemberName, secondMemberPhoneNumber) 
-            VALUES (:user_id, :name, :teamSchool, :division, :leaderName, :leaderPhoneNumber, :firstMemberName, :firstMemberPhoneNumber, :secondMemberName, :secondMemberPhoneNumber)
+            INSERT INTO teams (user_id, name, teamSchool, division, leaderName, leaderPhoneNumber, leaderGender, firstMemberName, firstMemberPhoneNumber, firstMemberGender, secondMemberName, secondMemberPhoneNumber, secondMemberGender) 
+            VALUES (:user_id, :name, :teamSchool, :division, :leaderName, :leaderPhoneNumber, :leaderGender, :firstMemberName, :firstMemberPhoneNumber, :firstMemberGender, :secondMemberName, :secondMemberPhoneNumber, :secondMemberGender)
         ");
 
         return $stmt->execute([
@@ -20,10 +20,13 @@ class Team extends Model
             ':division' => $data['division'],
             ':leaderName' => $data['leaderName'],
             ':leaderPhoneNumber' => $data['leaderPhoneNumber'],
+            ':leaderGender' => $data['leaderGender'] ?? null,
             ':firstMemberName' => $data['firstMemberName'],
             ':firstMemberPhoneNumber' => $data['firstMemberPhoneNumber'],
+            ':firstMemberGender' => $data['firstMemberGender'] ?? null,
             ':secondMemberName' => $data['secondMemberName'],
-            ':secondMemberPhoneNumber' => $data['secondMemberPhoneNumber']
+            ':secondMemberPhoneNumber' => $data['secondMemberPhoneNumber'],
+            ':secondMemberGender' => $data['secondMemberGender'] ?? null,
         ]);
     }
 
@@ -43,10 +46,13 @@ class Team extends Model
             division = :division,
             leaderName = :leaderName,
             leaderPhoneNumber = :leaderPhoneNumber,
+            leaderGender = :leaderGender,
             firstMemberName = :firstMemberName,
             firstMemberPhoneNumber = :firstMemberPhoneNumber,
+            firstMemberGender = :firstMemberGender,
             secondMemberName = :secondMemberName,
-            secondMemberPhoneNumber = :secondMemberPhoneNumber
+            secondMemberPhoneNumber = :secondMemberPhoneNumber,
+            secondMemberGender = :secondMemberGender
             WHERE id = :id");
 
         return $stmt->execute([
@@ -56,10 +62,13 @@ class Team extends Model
             ':division' => $data['division'] ?? '',
             ':leaderName' => $data['leaderName'],
             ':leaderPhoneNumber' => $data['leaderPhoneNumber'],
+            ':leaderGender' => $data['leaderGender'] ?? null,
             ':firstMemberName' => $data['firstMemberName'],
             ':firstMemberPhoneNumber' => $data['firstMemberPhoneNumber'],
+            ':firstMemberGender' => $data['firstMemberGender'] ?? null,
             ':secondMemberName' => $data['secondMemberName'],
             ':secondMemberPhoneNumber' => $data['secondMemberPhoneNumber'],
+            ':secondMemberGender' => $data['secondMemberGender'] ?? null,
         ]);
     }
 

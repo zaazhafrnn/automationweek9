@@ -30,10 +30,12 @@ $UPLOAD_URL = '/uploads/teams/';
     <input type="hidden" name="next_tab" value="social-media">
     <input type="hidden" name="current_tab" value="members">
 
-    <div class="space-y-8">
+    <div class="space-y-6">
       <?php foreach ($members as $i => $m):
         $name = $team[$m['nameKey']] ?? '';
         $phone = $team[$m['phoneKey']] ?? '';
+        $genderKey = $m['nameKey'] === 'leaderName' ? 'leaderGender' : ($m['nameKey'] === 'firstMemberName' ? 'firstMemberGender' : 'secondMemberGender');
+        $gender = $team[$genderKey] ?? '';
         $isOptional = $m['num'] > 1;
         $p = $m['num'];
         $existingCard = $uploads[$p]['student_card'] ?? null;
@@ -45,7 +47,7 @@ $UPLOAD_URL = '/uploads/teams/';
         if ($cardRequired) $cardAttrs['required'] = true;
         $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-black');
       ?>
-        <div class="member-group relative" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
+        <div class="member-group relative bg-white rounded-xl border border-gray-200 p-4 sm:p-5" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
           <div class="flex items-center gap-3 mb-4 justify-between">
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
@@ -80,6 +82,19 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-anggota-<?= $p ?>-phone" class="text-xs text-red-500 mt-1 hidden">No. telepon wajib diisi</p>
                 <p id="err-anggota-<?= $p ?>-phone-format" class="text-xs text-red-500 mt-1 hidden">Nomer harus berawalan 08xx & minimal 8 digit</p>
               </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Jenis Kelamin</label>
+                <div class="flex gap-3">
+                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer has-[:checked]:ring-brand/20 transition-all">
+                    <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
+                    <span class="text-sm text-gray-700">Laki-laki</span>
+                  </label>
+                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer has-[:checked]:ring-brand/20 transition-all">
+                    <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
+                    <span class="text-sm text-gray-700">Perempuan</span>
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="mt-4 xl:w-1/2 md:pr-2">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar<span class="text-red-500">*</span></label>
@@ -110,7 +125,6 @@ $UPLOAD_URL = '/uploads/teams/';
               <?php endif; ?>
               <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
             </div>
-
           </div>
           <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer <?= $disabled ? '' : 'hidden' ?>"
             onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
@@ -120,8 +134,6 @@ $UPLOAD_URL = '/uploads/teams/';
             </button>
           </div>
         </div>
-        <?php if ($i < count($members) - 1): ?>
-          <hr class="border-gray-100"><?php endif; ?>
       <?php endforeach; ?>
     </div>
   </form>
@@ -151,6 +163,7 @@ $UPLOAD_URL = '/uploads/teams/';
           i.removeAttribute('required');
           i.classList.remove('border-red-500');
         });
+        g.querySelectorAll('.member-radio').forEach(function(r) { r.checked = false; if (r.name) state[r.name] = null; });
         g.querySelectorAll('[data-clear-attachment]').forEach(function(btn) {
           btn.click();
         });

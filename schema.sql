@@ -19,10 +19,13 @@ CREATE TABLE IF NOT EXISTS teams (
     division VARCHAR(100) NOT NULL,
     leaderName VARCHAR(255) NOT NULL,
     leaderPhoneNumber VARCHAR(100) NOT NULL,
+    leaderGender VARCHAR(20) DEFAULT NULL,
     firstMemberName VARCHAR(255) DEFAULT '',
     firstMemberPhoneNumber VARCHAR(100) DEFAULT '',
+    firstMemberGender VARCHAR(20) DEFAULT NULL,
     secondMemberName VARCHAR(255) DEFAULT '',
     secondMemberPhoneNumber VARCHAR(100) DEFAULT '',
+    secondMemberGender VARCHAR(20) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES accounts(id) ON DELETE CASCADE

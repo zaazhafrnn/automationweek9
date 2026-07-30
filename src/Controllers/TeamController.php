@@ -42,10 +42,13 @@ class TeamController extends Controller
         $division = $_POST['division'] ?? '';
         $leaderName = trim($_POST['leaderName'] ?? '');
         $leaderPhoneNumber = trim($_POST['leaderPhoneNumber'] ?? '');
+        $leaderGender = $_POST['leaderGender'] ?? null;
         $firstMemberName = trim($_POST['firstMemberName'] ?? '');
         $firstMemberPhoneNumber = trim($_POST['firstMemberPhoneNumber'] ?? '');
+        $firstMemberGender = $_POST['firstMemberGender'] ?? null;
         $secondMemberName = trim($_POST['secondMemberName'] ?? '');
         $secondMemberPhoneNumber = trim($_POST['secondMemberPhoneNumber'] ?? '');
+        $secondMemberGender = $_POST['secondMemberGender'] ?? null;
 
         if (empty($teamName) || empty($division)) {
             Session::flash('team_register_error', 'Harap isi nama tim dan pilih divisi.');
@@ -72,10 +75,13 @@ class TeamController extends Controller
                 'division' => $division,
                 'leaderName' => $leaderName,
                 'leaderPhoneNumber' => $leaderPhoneNumber,
+                'leaderGender' => $leaderGender,
                 'firstMemberName' => $firstMemberName,
                 'firstMemberPhoneNumber' => $firstMemberPhoneNumber,
+                'firstMemberGender' => $firstMemberGender,
                 'secondMemberName' => $secondMemberName,
                 'secondMemberPhoneNumber' => $secondMemberPhoneNumber,
+                'secondMemberGender' => $secondMemberGender,
             ]);
             $this->redirect('/application/' . ($_POST['next_tab'] ?? 'members'));
         } catch (\Exception $e) {
@@ -109,10 +115,13 @@ class TeamController extends Controller
             'division' => $_POST['division'] ?? $team['division'],
             'leaderName' => trim($_POST['leaderName'] ?? $team['leaderName'] ?? ''),
             'leaderPhoneNumber' => trim($_POST['leaderPhoneNumber'] ?? $team['leaderPhoneNumber'] ?? ''),
+            'leaderGender' => $_POST['leaderGender'] ?? $team['leaderGender'] ?? null,
             'firstMemberName' => trim($_POST['firstMemberName'] ?? $team['firstMemberName'] ?? ''),
             'firstMemberPhoneNumber' => trim($_POST['firstMemberPhoneNumber'] ?? $team['firstMemberPhoneNumber'] ?? ''),
+            'firstMemberGender' => $_POST['firstMemberGender'] ?? $team['firstMemberGender'] ?? null,
             'secondMemberName' => trim($_POST['secondMemberName'] ?? $team['secondMemberName'] ?? ''),
             'secondMemberPhoneNumber' => trim($_POST['secondMemberPhoneNumber'] ?? $team['secondMemberPhoneNumber'] ?? ''),
+            'secondMemberGender' => $_POST['secondMemberGender'] ?? $team['secondMemberGender'] ?? null,
         ];
 
         if (empty($data['name']) || empty($data['leaderName'])) {
