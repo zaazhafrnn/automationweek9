@@ -114,10 +114,12 @@ class Attachment extends Component
         $required = !empty($attrs['required']);
         $extraAttr = !empty($attrs['data-error']) ? ' data-error="' . htmlspecialchars($attrs['data-error']) . '"' : '';
         $extraClass = !empty($attrs['class']) ? ' ' . htmlspecialchars($attrs['class']) : '';
+        $maxSizeAttr = !empty($attrs['max-size']) ? ' data-max-size="' . ((int) $attrs['max-size']) . '"' : '';
 
         $input = '<input type="file" name="' . htmlspecialchars($name) . '" accept="' . htmlspecialchars($accept) . '"'
             . ($required ? ' required' : '')
             . $extraAttr
+            . $maxSizeAttr
             . ($this->preview ? ' data-preview="true"' : '')
             . ' class="absolute inset-0 opacity-0 cursor-pointer z-10' . $extraClass . '">';
 

@@ -439,6 +439,18 @@ if (!isset($activeTab)) {
       if (!file) return;
       var att = e.target.closest('[data-slot="attachment"]');
       if (!att) return;
+      var maxSize = e.target.dataset.maxSize;
+      if (maxSize && file.size > parseInt(maxSize)) {
+        e.target.value = '';
+        if (e.target.name) state[e.target.name] = null;
+        att.dataset.state = 'error';
+        var errEl = document.getElementById(e.target.dataset.error);
+        if (errEl) {
+          errEl.textContent = 'File terlalu besar. Maksimal ' + formatFileSize(parseInt(maxSize));
+          errEl.classList.remove('hidden');
+        }
+        return;
+      }
       att.dataset.state = 'done';
       var title = att.querySelector('[data-slot="attachment-title"]');
       if (title) title.textContent = file.name;

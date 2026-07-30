@@ -41,7 +41,7 @@ $UPLOAD_URL = '/uploads/teams/';
         $hasData = $name !== '' || $phone !== '' || $existingCard;
         $disabled = $isOptional && !$hasData;
         $cardRequired = $hasData && !$existingCard;
-        $cardAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-file'];
+        $cardAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-anggota-' . $p . '-card', 'class' => 'member-file', 'max-size' => 10 * 1024 * 1024];
         if ($cardRequired) $cardAttrs['required'] = true;
         $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-black');
       ?>

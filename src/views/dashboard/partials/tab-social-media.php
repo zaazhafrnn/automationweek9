@@ -54,7 +54,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
                 <?php
                 $igRequired = !$disabled && !$existingIg;
-                $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-ig'];
+                $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-ig', 'max-size' => 10 * 1024 * 1024];
                 if ($igRequired) $igAttrs['required'] = true;
                 if ($existingIg):
                 ?>
@@ -90,7 +90,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
                 <?php
                 $twibbonRequired = !$disabled && !$existingTwibbon;
-                $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-twibbon'];
+                $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];
                 if ($twibbonRequired) $twibbonAttrs['required'] = true;
                 if ($existingTwibbon):
                 ?>
