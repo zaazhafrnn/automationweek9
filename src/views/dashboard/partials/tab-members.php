@@ -65,7 +65,7 @@ $UPLOAD_URL = '/uploads/teams/';
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap<span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium  mb-1.5">Nama Lengkap<span class="text-red-500">*</span></label>
                 <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($name) ?>" placeholder="Masukkan nama lengkap"
                   data-error="err-anggota-<?= $p ?>-name"
                   class="member-input w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
@@ -73,7 +73,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-anggota-<?= $p ?>-name" class="text-xs text-red-500 mt-1 hidden">Nama lengkap wajib diisi</p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">No. Telepon / WA<span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium  mb-1.5">No. Telepon / WA<span class="text-red-500">*</span></label>
                 <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" placeholder="Masukkan nomor telepon" inputmode="numeric" pattern="08[0-9]{6,}"
                   data-error="err-anggota-<?= $p ?>-phone"
                   data-format-error="err-anggota-<?= $p ?>-phone-format"
@@ -83,57 +83,57 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-anggota-<?= $p ?>-phone-format" class="text-xs text-red-500 mt-1 hidden">Nomer harus berawalan 08xx & minimal 8 digit</p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Jenis Kelamin</label>
+                <label class="block text-sm font-medium  mb-1.5">Jenis Kelamin</label>
                 <div class="flex gap-3">
-                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer transition-all">
+                  <label class="flex items-center gap-2 px-4 py-1 cursor-pointer transition-all">
                     <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
-                    <span class="text-sm text-gray-700">Laki-laki</span>
+                    <span class="text-sm ">Laki-laki</span>
                   </label>
-                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer transition-all">
+                  <label class="flex items-center gap-2 px-4 py-1 cursor-pointer transition-all">
                     <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
-                    <span class="text-sm text-gray-700">Perempuan</span>
+                    <span class="text-sm ">Perempuan</span>
                   </label>
                 </div>
                 <p id="err-<?= $genderKey ?>" class="text-xs text-red-500 mt-1 hidden">Jenis kelamin wajib dipilih</p>
               </div>
-            </div>
-            <div class="mt-4 xl:w-1/2 md:pr-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Kartu Pelajar<span class="text-red-500">*</span></label>
-              <?php if ($existingCard): ?>
-                <?= Attachment::make()
-                  ->mediaVariant('image')
-                  ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
-                  ->title($originalCard ?: basename($existingCard))
-                  ->description('Scan atau foto kartu pelajar')
-                  ->clearable()
-                  ->withPreview()
-                  ->fileUrl($UPLOAD_URL . htmlspecialchars($existingCard))
-                  ->originalMedia($cardIcon)
-                  ->originalSrc($UPLOAD_URL . htmlspecialchars($existingCard))
-                  ->idleTitle('Upload Kartu Pelajar')
-                  ->fileInput('studentCard_' . $p, $cardAttrs)
-                  ->render() ?>
-              <?php else: ?>
-                <?= Attachment::make()
-                  ->media($cardIcon)
-                  ->title('Upload Kartu Pelajar')
-                  ->description('Scan atau foto kartu pelajar')
-                  ->clearable()
-                  ->withPreview()
-                  ->originalMedia($cardIcon)
-                  ->fileInput('studentCard_' . $p, $cardAttrs)
-                  ->render() ?>
-                <script>
-                  document.addEventListener('change', function(e) {
-                    if (e.target.matches('.member-radio')) {
-                      var errEl = document.getElementById(e.target.dataset.error);
-                      if (errEl) errEl.classList.add('hidden');
-                    }
-                  });
-                </script>
-              <?php endif; ?>
+              <div>
+                <label class="block text-sm font-medium  mb-1.5">Kartu Pelajar<span class="text-red-500">*</span></label>
+                <?php if ($existingCard): ?>
+                  <?= Attachment::make()
+                    ->mediaVariant('image')
+                    ->media('<img src="' . $UPLOAD_URL . htmlspecialchars($existingCard) . '" class="w-full h-full object-cover">')
+                    ->title($originalCard ?: basename($existingCard))
+                    ->description('Scan atau foto kartu pelajar')
+                    ->clearable()
+                    ->withPreview()
+                    ->fileUrl($UPLOAD_URL . htmlspecialchars($existingCard))
+                    ->originalMedia($cardIcon)
+                    ->originalSrc($UPLOAD_URL . htmlspecialchars($existingCard))
+                    ->idleTitle('Upload Kartu Pelajar')
+                    ->fileInput('studentCard_' . $p, $cardAttrs)
+                    ->render() ?>
+                <?php else: ?>
+                  <?= Attachment::make()
+                    ->media($cardIcon)
+                    ->title('Upload Kartu Pelajar')
+                    ->description('Scan atau foto kartu pelajar')
+                    ->clearable()
+                    ->withPreview()
+                    ->originalMedia($cardIcon)
+                    ->fileInput('studentCard_' . $p, $cardAttrs)
+                    ->render() ?>
+                  <script>
+                    document.addEventListener('change', function(e) {
+                      if (e.target.matches('.member-radio')) {
+                        var errEl = document.getElementById(e.target.dataset.error);
+                        if (errEl) errEl.classList.add('hidden');
+                      }
+                    });
+                  </script>
+                <?php endif; ?>
 
-              <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
+                <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
+              </div>
             </div>
           </div>
           <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer <?= $disabled ? '' : 'hidden' ?>"
@@ -178,7 +178,9 @@ $UPLOAD_URL = '/uploads/teams/';
         var g = this.closest('[data-optional]');
         var num = parseInt(g.dataset.member);
         var next = g.parentElement.querySelector('.member-group[data-member="' + (num + 1) + '"]');
-        var hasData = next && (next.dataset.activated === 'true' || Array.from(next.querySelectorAll('.member-input')).some(function(i) { return i.value.trim(); }));
+        var hasData = next && (next.dataset.activated === 'true' || Array.from(next.querySelectorAll('.member-input')).some(function(i) {
+          return i.value.trim();
+        }));
         if (hasData) {
           shiftDown(num, num + 1);
         } else {
@@ -239,7 +241,10 @@ $UPLOAD_URL = '/uploads/teams/';
     }
 
     function shiftDown(toNum, fromNum) {
-      var prefix = { 2: 'firstMember', 3: 'secondMember' };
+      var prefix = {
+        2: 'firstMember',
+        3: 'secondMember'
+      };
       var to = document.querySelector('.member-group[data-member="' + toNum + '"]');
       var from = document.querySelector('.member-group[data-member="' + fromNum + '"]');
       if (!to || !from) return;
@@ -292,7 +297,9 @@ $UPLOAD_URL = '/uploads/teams/';
       }
 
       to.querySelectorAll('.member-input').forEach(function(i) {
-        i.dispatchEvent(new Event('input', { bubbles: true }));
+        i.dispatchEvent(new Event('input', {
+          bubbles: true
+        }));
       });
 
       var form = from.closest('form');

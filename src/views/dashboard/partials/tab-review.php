@@ -19,16 +19,16 @@ $hasM3 = !empty($team['secondMemberName']);
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Registrasi Tim</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Tim <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-medium  mb-1.5">Nama Tim <span class="text-red-500">*</span></label>
         <input type="text" name="name" value="<?= htmlspecialchars($team['name'] ?? '') ?>" required placeholder="Masukkan nama tim" class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">Asal Sekolah <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-medium  mb-1.5">Asal Sekolah <span class="text-red-500">*</span></label>
         <input type="text" name="teamSchool" value="<?= htmlspecialchars($team['teamSchool'] ?? '') ?>" required placeholder="Masukkan nama sekolah" class="review-field w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all">
       </div>
     </div>
     <div class="mt-4">
-      <label class="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
+      <label class="block text-sm font-medium  mb-2">Divisi</label>
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2" id="reviewDivision">
         <?php foreach ($DIVISION_LABELS as $k => $v):
           $isOrig = $origDivision === $k;

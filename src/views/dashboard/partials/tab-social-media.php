@@ -45,13 +45,13 @@ $UPLOAD_URL = '/uploads/teams/';
             <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
             <div>
               <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($m['name']) ?></p>
-              <?php if ($isOptional && !$disabled): ?><p class="text-xs text-gray-400">Anggota aktif</p><?php endif; ?>
+              <p class="text-xs text-gray-400">Anggota <?= $p ?><?= $p === 1 ? ' (Ketua Tim)' : '' ?></p>
             </div>
           </div>
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium  mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
                 <?php
                 $igRequired = !$disabled && !$existingIg;
                 $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-ig', 'max-size' => 10 * 1024 * 1024];
@@ -87,7 +87,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium  mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
                 <?php
                 $twibbonRequired = !$disabled && !$existingTwibbon;
                 $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];

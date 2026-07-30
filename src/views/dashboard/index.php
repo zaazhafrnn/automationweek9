@@ -59,8 +59,8 @@ if (!isset($activeTab)) {
     </div>
   </div>
 
-  <div class="px-4 sm:px-6 lg:px-8 py-4">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
+  <div>
+    <div>
       <div class="border-b border-gray-200">
         <div class="px-4 sm:px-6">
           <div role="tablist" class="overflow-x-auto gap-1 p-1 hidden md:flex" id="tabList">
@@ -93,9 +93,9 @@ if (!isset($activeTab)) {
         <?php endforeach; ?>
       </div>
     </div>
-    <div class="flex items-center justify-end gap-2 py-4" id="tabNav">
+    <div class="flex items-center justify-end gap-2 pb-4 pr-4" id="tabNav">
       <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>" role="button" data-goto="<?= $activeTab - 1 ?>"
-        class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
+        class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-medium text-black bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
         id="prevTab" <?= $activeTab <= 1 ? 'style="display:none"' : '' ?>>
         Kembali
       </a>
@@ -120,28 +120,28 @@ if (!isset($activeTab)) {
     });
 
     const _state = <?= json_encode([
-                    'division' => $team['division'] ?? null,
-                    'name' => $team['name'] ?? null,
-                    'teamSchool' => $team['teamSchool'] ?? null,
-                    'leaderName' => $team['leaderName'] ?? null,
-                    'leaderPhoneNumber' => $team['leaderPhoneNumber'] ?? null,
-                    'leaderGender' => $team['leaderGender'] ?? null,
-                    'firstMemberName' => $team['firstMemberName'] ?? null,
-                    'firstMemberPhoneNumber' => $team['firstMemberPhoneNumber'] ?? null,
-                    'firstMemberGender' => $team['firstMemberGender'] ?? null,
-                    'secondMemberName' => $team['secondMemberName'] ?? null,
-                    'secondMemberPhoneNumber' => $team['secondMemberPhoneNumber'] ?? null,
-                    'secondMemberGender' => $team['secondMemberGender'] ?? null,
-                    'studentCard_1' => $uploads[1]['student_card'] ?? null,
-                    'studentCard_2' => $uploads[2]['student_card'] ?? null,
-                    'studentCard_3' => $uploads[3]['student_card'] ?? null,
-                    'igFollow_1' => $uploads[1]['ig_follow'] ?? null,
-                    'igFollow_2' => $uploads[2]['ig_follow'] ?? null,
-                    'igFollow_3' => $uploads[3]['ig_follow'] ?? null,
-                    'twibbon_1' => $uploads[1]['twibbon'] ?? null,
-                    'twibbon_2' => $uploads[2]['twibbon'] ?? null,
-                    'twibbon_3' => $uploads[3]['twibbon'] ?? null,
-                  ]) ?>;
+                      'division' => $team['division'] ?? null,
+                      'name' => $team['name'] ?? null,
+                      'teamSchool' => $team['teamSchool'] ?? null,
+                      'leaderName' => $team['leaderName'] ?? null,
+                      'leaderPhoneNumber' => $team['leaderPhoneNumber'] ?? null,
+                      'leaderGender' => $team['leaderGender'] ?? null,
+                      'firstMemberName' => $team['firstMemberName'] ?? null,
+                      'firstMemberPhoneNumber' => $team['firstMemberPhoneNumber'] ?? null,
+                      'firstMemberGender' => $team['firstMemberGender'] ?? null,
+                      'secondMemberName' => $team['secondMemberName'] ?? null,
+                      'secondMemberPhoneNumber' => $team['secondMemberPhoneNumber'] ?? null,
+                      'secondMemberGender' => $team['secondMemberGender'] ?? null,
+                      'studentCard_1' => $uploads[1]['student_card'] ?? null,
+                      'studentCard_2' => $uploads[2]['student_card'] ?? null,
+                      'studentCard_3' => $uploads[3]['student_card'] ?? null,
+                      'igFollow_1' => $uploads[1]['ig_follow'] ?? null,
+                      'igFollow_2' => $uploads[2]['ig_follow'] ?? null,
+                      'igFollow_3' => $uploads[3]['ig_follow'] ?? null,
+                      'twibbon_1' => $uploads[1]['twibbon'] ?? null,
+                      'twibbon_2' => $uploads[2]['twibbon'] ?? null,
+                      'twibbon_3' => $uploads[3]['twibbon'] ?? null,
+                    ]) ?>;
     window.state = _state;
     const state = _state;
     const savedState = JSON.parse(JSON.stringify(state));
