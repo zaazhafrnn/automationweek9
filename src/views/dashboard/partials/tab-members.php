@@ -46,12 +46,19 @@ $UPLOAD_URL = '/uploads/teams/';
         $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-black');
       ?>
         <div class="member-group relative" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
-            <div>
-              <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($m['label']) ?></p>
-              <?php if ($m['role']): ?><p class="text-xs text-gray-400"><?= htmlspecialchars($m['role']) ?></p><?php endif; ?>
+          <div class="flex items-center gap-3 mb-4 justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
+              <div>
+                <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($m['label']) ?></p>
+                <?php if ($m['role']): ?><p class="text-xs text-gray-400"><?= htmlspecialchars($m['role']) ?></p><?php elseif ($isOptional): ?><p class="text-xs text-gray-400">(opsional)</p><?php endif; ?>
+              </div>
             </div>
+            <?php if ($isOptional): ?>
+              <button type="button" class="cancel-member <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-grey-100 hover:border-red-500 rounded-xl text-gray-400 hover:text-red-500 transition-colors" aria-label="Hapus anggota">
+                <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-red-500') ?>
+              </button>
+            <?php endif; ?>
           </div>
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -101,19 +108,15 @@ $UPLOAD_URL = '/uploads/teams/';
               <?php endif; ?>
               <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
             </div>
-            <?php if ($isOptional && !$hasData): ?>
-              <button type="button" class="cancel-member text-xs text-red-400 hover:text-red-600 mt-3 hidden">Batalkan</button>
-            <?php endif; ?>
+
           </div>
-          <?php if ($disabled): ?>
-            <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer"
-              onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
-              <button type="button" class="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-brand bg-brand/5 border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/10 hover:border-brand/50 transition-all">
-                <?= Icon::make()->name('users')->class('w-5 h-5') ?>
-                + Tambah Member
-              </button>
-            </div>
-          <?php endif; ?>
+          <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer <?= $disabled ? '' : 'hidden' ?>"
+            onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
+            <button type="button" class="flex flex-col items-center gap-3 px-10 py-8 text-sm font-semibold text-brand bg-brand/5 border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/10 hover:border-brand/50 transition-all">
+              <?= Icon::make()->name('user-round-plus')->class('w-8 h-8') ?>
+              Tambah Member
+            </button>
+          </div>
         </div>
         <?php if ($i < count($members) - 1): ?>
           <hr class="border-gray-100"><?php endif; ?>
@@ -146,10 +149,26 @@ $UPLOAD_URL = '/uploads/teams/';
           i.removeAttribute('required');
           i.classList.remove('border-red-500');
         });
-        g.querySelectorAll('[data-slot="attachment"]').forEach(function(a) {
-          a.dataset.state = 'idle';
-          a.querySelector('input[type="file"]').value = '';
+        g.querySelectorAll('[data-clear-attachment]').forEach(function(btn) {
+          btn.click();
         });
+        g.querySelectorAll('.member-fields [data-slot="attachment"] input[type="file"]').forEach(function(inp) {
+          inp.removeAttribute('required');
+        });
+        var mNum = g.dataset.member;
+        var form = g.closest('form');
+        if (form) {
+          ['igFollow_' + mNum, 'twibbon_' + mNum].forEach(function(name) {
+            var existing = form.querySelector('input[name="delete_' + name + '"]');
+            if (!existing) {
+              var del = document.createElement('input');
+              del.type = 'hidden';
+              del.name = 'delete_' + name;
+              del.value = '1';
+              form.appendChild(del);
+            }
+          });
+        }
         g.querySelector('.member-fields').classList.add('opacity-30', 'pointer-events-none');
         g.querySelector('.member-overlay').classList.remove('hidden');
         this.classList.add('hidden');
