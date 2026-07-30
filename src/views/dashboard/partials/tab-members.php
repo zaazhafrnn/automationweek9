@@ -85,15 +85,16 @@ $UPLOAD_URL = '/uploads/teams/';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Jenis Kelamin</label>
                 <div class="flex gap-3">
-                  <label class="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-xl cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand/5 transition-all">
-                    <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
+                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer transition-all">
+                    <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
                     <span class="text-sm text-gray-700">Laki-laki</span>
                   </label>
-                  <label class="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-xl cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand/5 transition-all">
-                    <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
+                  <label class="flex items-center gap-2 px-4 py-2.5 cursor-pointer transition-all">
+                    <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
                     <span class="text-sm text-gray-700">Perempuan</span>
                   </label>
                 </div>
+                <p id="err-<?= $genderKey ?>" class="text-xs text-red-500 mt-1 hidden">Jenis kelamin wajib dipilih</p>
               </div>
             </div>
             <div class="mt-4 xl:w-1/2 md:pr-2">
@@ -122,12 +123,21 @@ $UPLOAD_URL = '/uploads/teams/';
                   ->originalMedia($cardIcon)
                   ->fileInput('studentCard_' . $p, $cardAttrs)
                   ->render() ?>
+                <script>
+                  document.addEventListener('change', function(e) {
+                    if (e.target.matches('.member-radio')) {
+                      var errEl = document.getElementById(e.target.dataset.error);
+                      if (errEl) errEl.classList.add('hidden');
+                    }
+                  });
+                </script>
               <?php endif; ?>
+
               <p id="err-anggota-<?= $p ?>-card" class="text-xs text-red-500 mt-1 hidden">Kartu pelajar wajib diupload</p>
             </div>
           </div>
           <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer <?= $disabled ? '' : 'hidden' ?>"
-            onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
+            onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});g.querySelectorAll('.member-file').forEach(function(f){if(!f.files.length)f.setAttribute('required','');});g.querySelectorAll('.member-radio').forEach(function(r){r.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
             <button type="button" class="flex flex-col items-center gap-3 px-10 py-8 text-sm font-semibold text-brand bg-brand/5 border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/10 hover:border-brand/50 transition-all">
               <?= Icon::make()->name('user-round-plus')->class('w-8 h-8') ?>
               Tambah Member
@@ -145,13 +155,22 @@ $UPLOAD_URL = '/uploads/teams/';
       function check() {
         const activated = group.dataset.activated === 'true';
         const hasValue = Array.from(inputs).some(i => i.value.trim() !== '');
+        const required = hasValue || activated;
         inputs.forEach(i => {
-          if (hasValue || activated) i.setAttribute('required', '');
+          if (required) i.setAttribute('required', '');
           else i.removeAttribute('required');
+        });
+        group.querySelectorAll('.member-radio').forEach(r => {
+          if (required) r.setAttribute('required', '');
+          else {
+            r.removeAttribute('required');
+            document.getElementById(r.dataset.error)?.classList.add('hidden');
+          }
         });
       }
       inputs.forEach(i => i.addEventListener('change', check));
       inputs.forEach(i => i.addEventListener('input', check));
+      group.querySelectorAll('.member-radio').forEach(r => r.addEventListener('change', check));
       check();
     });
     document.querySelectorAll('.cancel-member').forEach(function(btn) {
@@ -162,13 +181,21 @@ $UPLOAD_URL = '/uploads/teams/';
           i.value = '';
           i.removeAttribute('required');
           i.classList.remove('border-red-500');
+          document.getElementById(i.dataset.error)?.classList.add('hidden');
+          document.getElementById(i.dataset.formatError)?.classList.add('hidden');
         });
-        g.querySelectorAll('.member-radio').forEach(function(r) { r.checked = false; if (r.name) state[r.name] = null; });
+        g.querySelectorAll('.member-radio').forEach(function(r) {
+          r.checked = false;
+          r.removeAttribute('required');
+          document.getElementById(r.dataset.error)?.classList.add('hidden');
+          if (r.name) window.state[r.name] = null;
+        });
         g.querySelectorAll('[data-clear-attachment]').forEach(function(btn) {
           btn.click();
         });
         g.querySelectorAll('.member-fields [data-slot="attachment"] input[type="file"]').forEach(function(inp) {
           inp.removeAttribute('required');
+          document.getElementById(inp.dataset.error)?.classList.add('hidden');
         });
         var mNum = g.dataset.member;
         var form = g.closest('form');

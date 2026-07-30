@@ -115,14 +115,17 @@ class TeamController extends Controller
             'division' => $_POST['division'] ?? $team['division'],
             'leaderName' => trim($_POST['leaderName'] ?? $team['leaderName'] ?? ''),
             'leaderPhoneNumber' => trim($_POST['leaderPhoneNumber'] ?? $team['leaderPhoneNumber'] ?? ''),
-            'leaderGender' => $_POST['leaderGender'] ?? $team['leaderGender'] ?? null,
+            'leaderGender' => array_key_exists('leaderGender', $_POST) ? $_POST['leaderGender'] : ($team['leaderGender'] ?? null),
             'firstMemberName' => trim($_POST['firstMemberName'] ?? $team['firstMemberName'] ?? ''),
             'firstMemberPhoneNumber' => trim($_POST['firstMemberPhoneNumber'] ?? $team['firstMemberPhoneNumber'] ?? ''),
-            'firstMemberGender' => $_POST['firstMemberGender'] ?? $team['firstMemberGender'] ?? null,
+            'firstMemberGender' => array_key_exists('firstMemberGender', $_POST) ? $_POST['firstMemberGender'] : ($team['firstMemberGender'] ?? null),
             'secondMemberName' => trim($_POST['secondMemberName'] ?? $team['secondMemberName'] ?? ''),
             'secondMemberPhoneNumber' => trim($_POST['secondMemberPhoneNumber'] ?? $team['secondMemberPhoneNumber'] ?? ''),
-            'secondMemberGender' => $_POST['secondMemberGender'] ?? $team['secondMemberGender'] ?? null,
+            'secondMemberGender' => array_key_exists('secondMemberGender', $_POST) ? $_POST['secondMemberGender'] : ($team['secondMemberGender'] ?? null),
         ];
+
+        if (empty($data['firstMemberName'])) $data['firstMemberGender'] = null;
+        if (empty($data['secondMemberName'])) $data['secondMemberGender'] = null;
 
         if (empty($data['name']) || empty($data['leaderName'])) {
             Session::flash('team_update_error', 'Nama tim dan ketua harus diisi.');
