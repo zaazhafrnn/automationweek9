@@ -42,11 +42,11 @@ $sectionBtn = function (): string {
     <div class="space-y-6">
       <section data-section="team" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
         <label class="block text-sm font-semibold text-gray-900 mb-3">Pilih Divisi Lomba<span class="text-red-500">*</span></label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div class="flex flex-wrap justify-center gap-3">
           <?php foreach ($DIVISION_LABELS as $k => $v):
             $isDiv = $team['division'] === $k;
           ?>
-            <label class="division-card relative block rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20 <?= $isDiv ? 'border-brand bg-brand/5' : '' ?>">
+            <label class="division-card relative block w-[calc(50%-0.375rem)] rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20 <?= $isDiv ? 'border-brand bg-brand/5' : '' ?>">
               <input type="radio" name="division" value="<?= $k ?>" class="hidden" <?= $isDiv ? 'checked' : '' ?>>
               <div class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center mb-2 text-xs font-bold text-gray-600"><?= $k ?></div>
               <p class="text-sm font-medium text-gray-900"><?= htmlspecialchars($v) ?></p>
@@ -188,7 +188,7 @@ $sectionBtn = function (): string {
                 <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
                 <div>
                   <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($team[$m['nameKey']] ?? $m['label']) ?></p>
-                  <p class="text-xs text-gray-400"><?= htmlspecialchars($m['label']) ?></p>
+                  <p class="text-xs text-gray-400"><?= htmlspecialchars($m['role'] ? ($m['label'] . ' (' . $m['role'] . ')') : $m['label']) ?></p>
                 </div>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

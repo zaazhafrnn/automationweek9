@@ -13,9 +13,9 @@ $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Contro
   <div class="space-y-6 gap-3">
     <div class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
       <label class="block text-sm font-semibold text-black mb-3">Pilih Divisi Lomba<span class="text-red-500">*</span></label>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" id="divisionCards">
+      <div class="flex flex-wrap justify-center gap-3" id="divisionCards">
         <?php foreach ($DIVISION_LABELS as $k => $v): ?>
-          <label class="division-card relative block rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20">
+          <label class="division-card relative block w-[calc(50%-0.375rem)] rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20">
             <input type="radio" name="division" value="<?= $k ?>" class="hidden" <?= ($team['division'] ?? '') === $k ? 'checked' : '' ?> required data-error="err-division" onchange="document.querySelectorAll('.division-card').forEach(c=>c.classList.remove('border-red-500')); document.getElementById('err-division')?.classList.add('hidden')">
             <div class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center mb-2 text-xs font-bold text-gray-600"><?= $k ?></div>
             <p class="text-sm font-medium text-gray-900"><?= htmlspecialchars($v) ?></p>

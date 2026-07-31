@@ -644,6 +644,9 @@
   .w-\[72px\] {
     width: 72px;
   }
+  .w-\[calc\(50\%-0\.375rem\)\] {
+    width: calc(50% - 0.375rem);
+  }
   .w-\[var\(--sidebar-width\)\] {
     width: var(--sidebar-width);
   }
