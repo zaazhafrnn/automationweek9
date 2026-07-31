@@ -65,7 +65,7 @@ class Controller
     protected function requireGuest(): void
     {
         if (Session::get('user_id')) {
-            $this->redirect(Session::get('role') === 'admin' ? '/admin/dashboard' : '/application/team-register');
+            $this->redirect(Session::get('role') === 'admin' ? '/admin/dashboard' : '/home');
         }
     }
 }

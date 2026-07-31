@@ -37,6 +37,7 @@ $router->post('/login', 'AuthController@login');
 $router->get('/register', 'AuthController@registerForm');
 $router->post('/register', 'AuthController@register');
 
+$router->get('/home', 'DashboardController@home');
 $router->get('/application', 'DashboardController@index');
 $router->get('/application/team-register', 'DashboardController@tab');
 $router->get('/application/members', 'DashboardController@tab');

@@ -46,7 +46,7 @@ $sectionBtn = function (): string {
           <?php foreach ($DIVISION_LABELS as $k => $v):
             $isDiv = $team['division'] === $k;
           ?>
-            <label class="division-card relative block w-[calc(50%-0.375rem)] rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20 <?= $isDiv ? 'border-brand bg-brand/5' : '' ?>">
+            <label class="division-card relative block w-[calc(50%-0.375rem)] rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20">
               <input type="radio" name="division" value="<?= $k ?>" class="hidden" <?= $isDiv ? 'checked' : '' ?>>
               <div class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center mb-2 text-xs font-bold text-gray-600"><?= $k ?></div>
               <p class="text-sm font-medium text-gray-900"><?= htmlspecialchars($v) ?></p>

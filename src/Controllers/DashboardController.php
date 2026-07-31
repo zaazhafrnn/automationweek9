@@ -136,4 +136,25 @@ class DashboardController extends Controller
             'payment' => $payment,
         ]);
     }
+
+    public function home()
+    {
+        $this->requireAuth();
+        if (Session::get('role') === 'admin') {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $team = (new Team())->findByUserId(Session::get('user_id'));
+        $payment = null;
+        if ($team) {
+            $payment = (new Payment())->findByTeamId($team['id']);
+        }
+
+        $this->view('dashboard/home', [
+            'user_name' => Session::get('user_name'),
+            'csrf_token' => Security::generateCsrfToken(),
+            'team' => $team,
+            'payment' => $payment,
+        ]);
+    }
 }
