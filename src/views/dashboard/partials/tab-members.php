@@ -57,7 +57,7 @@ $UPLOAD_URL = '/uploads/teams/';
               </div>
             </div>
             <?php if ($isOptional): ?>
-              <button type="button" class="cancel-member <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-grey-100 hover:border-red-500 rounded-xl text-gray-400 hover:text-red-500 transition-colors" aria-label="Hapus anggota">
+              <button type="button" class="cancel-member cursor-pointer <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-grey-100 hover:border-red-500 rounded-xl text-gray-400 hover:text-red-500 transition-colors" aria-label="Hapus anggota">
                 <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-red-500') ?>
               </button>
             <?php endif; ?>
@@ -86,11 +86,11 @@ $UPLOAD_URL = '/uploads/teams/';
                 <label class="block text-sm font-medium  mb-1.5">Jenis Kelamin</label>
                 <div class="flex gap-3">
                   <label class="flex items-center gap-2 px-4 py-1 cursor-pointer transition-all">
-                    <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
+                    <input type="radio" name="<?= $genderKey ?>" value="Laki-laki" class="member-radio accent-brand cursor-pointer" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
                     <span class="text-sm ">Laki-laki</span>
                   </label>
                   <label class="flex items-center gap-2 px-4 py-1 cursor-pointer transition-all">
-                    <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
+                    <input type="radio" name="<?= $genderKey ?>" value="Perempuan" class="member-radio accent-brand cursor-pointer" <?= !$isOptional ? 'required' : '' ?> data-error="err-<?= $genderKey ?>" <?= $gender === 'Perempuan' ? 'checked' : '' ?>>
                     <span class="text-sm ">Perempuan</span>
                   </label>
                 </div>
@@ -138,7 +138,7 @@ $UPLOAD_URL = '/uploads/teams/';
           </div>
           <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-pointer <?= $disabled ? '' : 'hidden' ?>"
             onclick="var g=this.closest('[data-optional]');g.dataset.activated='true';this.classList.add('hidden');g.querySelector('.member-fields').classList.remove('opacity-30','pointer-events-none');g.querySelectorAll('.member-input').forEach(function(i){if(!i.value.trim())i.setAttribute('required','');});g.querySelectorAll('.member-file').forEach(function(f){if(!f.files.length)f.setAttribute('required','');});g.querySelectorAll('.member-radio').forEach(function(r){r.setAttribute('required','');});(g.querySelector('.cancel-member')||{}).classList?.remove('hidden')">
-            <button type="button" class="flex flex-col items-center gap-3 px-10 py-8 text-sm font-semibold text-brand bg-brand/5 border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/10 hover:border-brand/50 transition-all">
+            <button type="button" class="flex flex-col items-center gap-3 px-10 py-8 text-sm font-semibold text-brand bg-brand/5 border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/10 hover:border-brand/50 transition-all cursor-pointer">
               <?= Icon::make()->name('user-round-plus')->class('w-8 h-8') ?>
               Tambah Member
             </button>

@@ -125,12 +125,7 @@ $UPLOAD_URL = '/uploads/teams/';
             </div>
           </div>
           <?php if ($disabled): ?>
-            <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/80 cursor-default">
-              <div class="text-center">
-                <?= Icon::make()->name('lock')->class('w-5 h-5 text-gray-300 mx-auto mb-1') ?>
-                <p class="text-xs text-gray-400">Data anggota belum diisi</p>
-                <p class="text-xs text-gray-400">Isi di tab Data Anggota terlebih dahulu</p>
-              </div>
+            <div class="member-overlay absolute inset-0 z-10 flex items-center justify-center rounded-xl cursor-default">
             </div>
           <?php endif; ?>
         </div>
