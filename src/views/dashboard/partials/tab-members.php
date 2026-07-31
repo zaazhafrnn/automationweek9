@@ -195,6 +195,7 @@ $UPLOAD_URL = '/uploads/teams/';
         i.value = '';
         i.removeAttribute('required');
         i.classList.remove('border-red-500');
+        if (i.name && window.state) window.state[i.name] = null;
         document.getElementById(i.dataset.error)?.classList.add('hidden');
         document.getElementById(i.dataset.formatError)?.classList.add('hidden');
       });

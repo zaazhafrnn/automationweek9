@@ -167,6 +167,10 @@ if (!isset($activeTab)) {
     window.state = _state;
     const state = _state;
     const savedState = JSON.parse(JSON.stringify(state));
+    const savedAttachments = {};
+    document.querySelectorAll('[data-slot="attachment"]').forEach(function(a) {
+      savedAttachments[a.dataset.inputName] = a.cloneNode(true);
+    });
 
     window.__syncSavedState = function(submitted) {
       if (submitted) state.__submitted = true;
@@ -274,25 +278,36 @@ if (!isset($activeTab)) {
       panel.querySelectorAll('.border-red-500').forEach(function(el) {
         el.classList.remove('border-red-500');
       });
-      panel.querySelectorAll('input[name^="delete_"]').forEach(function(el) {
+      panel.querySelectorAll('input[name^="delete_"], input[name^="move_member_"]').forEach(function(el) {
         el.remove();
       });
       panel.querySelectorAll('[data-slot="attachment"]').forEach(function(att) {
-        var origSrc = att.dataset.originalSrc;
-        var origTitle = att.dataset.originalTitle;
-        var origIdleTitle = att.dataset.idleTitle;
-        var origMedia = att.dataset.originalMedia;
-        var title = att.querySelector('[data-slot="attachment-title"]');
-        var media = att.querySelector('[data-slot="attachment-media"]');
-        if (origSrc) {
-          att.dataset.state = 'done';
-          if (title) title.textContent = origTitle || '';
-          if (media) media.innerHTML = '<img src="' + origSrc + '" class="w-full h-full object-cover">';
-        } else {
-          att.dataset.state = 'idle';
-          if (title) title.textContent = origIdleTitle || origTitle || '';
-          if (media && origMedia) media.innerHTML = origMedia;
-        }
+        var snap = savedAttachments[att.dataset.inputName];
+        if (snap) att.replaceWith(snap.cloneNode(true));
+      });
+      panel.querySelectorAll('.member-group[data-optional]').forEach(function(g) {
+        var mNum = parseInt(g.dataset.member);
+        var prefix = mNum === 2 ? 'firstMember' : 'secondMember';
+        var cardSaved = filledSaved('studentCard_' + mNum);
+        var hasSaved = filledSaved(prefix + 'Name') || filledSaved(prefix + 'PhoneNumber') || cardSaved;
+        g.dataset.activated = hasSaved ? 'true' : 'false';
+        g.querySelector('.member-fields').classList.toggle('opacity-30', !hasSaved);
+        g.querySelector('.member-fields').classList.toggle('pointer-events-none', !hasSaved);
+        g.querySelector('.member-overlay').classList.toggle('hidden', hasSaved);
+        var cancelBtn = g.querySelector('.cancel-member');
+        if (cancelBtn) cancelBtn.classList.toggle('hidden', !hasSaved);
+        g.querySelectorAll('.member-input').forEach(function(i) {
+          if (hasSaved) i.setAttribute('required', '');
+          else i.removeAttribute('required');
+        });
+        g.querySelectorAll('.member-file').forEach(function(f) {
+          if (hasSaved && !cardSaved) f.setAttribute('required', '');
+          else f.removeAttribute('required');
+        });
+        g.querySelectorAll('.member-radio').forEach(function(r) {
+          if (hasSaved) r.setAttribute('required', '');
+          else r.removeAttribute('required');
+        });
       });
     }
 
