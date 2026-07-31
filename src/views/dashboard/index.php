@@ -86,13 +86,18 @@ if (!isset($activeTab)) {
                 class="relative flex-1 justify-center inline-flex items-center gap-2 px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-bold whitespace-nowrap rounded-xl transition-colors no-underline
                   <?= $isActive ? 'bg-brand text-white hover:bg-red-800' : 'text-gray-500 hover:bg-black/5' ?>">
                 <span class="tab-num w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[10px] font-bold shrink-0 <?= $tabDone[$num] ? 'hidden' : '' ?>"><?= $num ?></span>
-                <span class="tab-check shrink-0 <?= $tabDone[$num] ? '' : 'hidden' ?>"><?= Icon::make()->name('check')->class('w-4 h-4 text-green-500') ?></span>
+                <span class="tab-check shrink-0 <?= $tabDone[$num] ? '' : 'hidden' ?>">
+                  <?= Icon::make()->name('check')
+                    ->class('w-4 h-4 tab-check-icon')
+                  ?>
+                </span>
                 <span class="hidden sm:inline"><?= htmlspecialchars($tab['label']) ?></span>
               </a>
             <?php endforeach; ?>
           </div>
         </div>
       </div>
+
 
       <div class="border-t border-gray-100">
         <?php foreach ($tabs as $num => $tab): ?>
@@ -118,7 +123,7 @@ if (!isset($activeTab)) {
       <button type="button" id="nextTabSave" class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold text-white bg-brand rounded-lg hover:bg-brand/90 transition-all cursor-pointer disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? 'style="display:none"' : '' ?>>
         Simpan & Lanjut
       </button>
-      <button type="button" id="nextTabSubmit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? '' : 'style="display:none"' ?>>
+      <button type="button" id="nextTabSubmit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-brand rounded-lg hover:bg-red-800 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer" <?= $activeTab >= 4 ? '' : 'style="display:none"' ?>>
         Submit
       </button>
     </div>
@@ -162,6 +167,12 @@ if (!isset($activeTab)) {
     window.state = _state;
     const state = _state;
     const savedState = JSON.parse(JSON.stringify(state));
+
+    window.__syncSavedState = function(submitted) {
+      if (submitted) state.__submitted = true;
+      for (var k in state) savedState[k] = state[k];
+      updateTabs();
+    };
 
     function hasChanges() {
       for (var k in state) {
@@ -232,7 +243,6 @@ if (!isset($activeTab)) {
         var done = savedTabDone(n);
         link.classList.toggle('pointer-events-none', locked);
         link.classList.toggle('opacity-40', locked);
-        link.classList.toggle('cursor-not-allowed', locked);
         link.setAttribute('aria-disabled', locked ? 'true' : 'false');
         var numEl = link.querySelector('.tab-num');
         var checkEl = link.querySelector('.tab-check');
@@ -410,7 +420,7 @@ if (!isset($activeTab)) {
         if (next.id === 'nextTabSubmit' && current === total) {
           var rform = panel && panel.querySelector('#reviewForm');
           if (rform) {
-            rform.submit();
+            rform.requestSubmit();
             return;
           }
           return;

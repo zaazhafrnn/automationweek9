@@ -100,6 +100,9 @@ class TeamController extends Controller
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => 'Invalid session. Silakan coba lagi.'], 400);
+            }
             Session::flash('team_update_error', 'Invalid session. Silakan coba lagi.');
             $this->redirect('/application/' . ($_POST['current_tab'] ?? 'members'));
             return;
@@ -107,12 +110,27 @@ class TeamController extends Controller
 
         $team = $this->teamModel->findByUserId(Session::get('user_id'));
         if (!$team) {
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => 'Tim belum terdaftar.'], 400);
+            }
             $this->redirect('/application/team-register');
+            return;
         }
 
-        $this->persist($team, $_POST, $_FILES);
+        $errors = $this->persist($team, $_POST, $_FILES);
+        if ($errors) {
+            $msg = implode('<br>', $errors);
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => $msg], 400);
+            }
+            Session::flash('team_update_error', $msg);
+            $this->redirect('/application/' . ($_POST['current_tab'] ?? 'members'));
+            return;
+        }
 
-        Session::flash('team_update_success', 'Data tim berhasil diperbarui!');
+        if ($this->isAjax()) {
+            $this->json(['ok' => true]);
+        }
         $this->redirect('/application/' . ($_POST['next_tab'] ?? 'members'));
     }
 
@@ -120,32 +138,62 @@ class TeamController extends Controller
     {
         $this->requireAuth();
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => 'Metode tidak valid.'], 400);
+            }
+            $this->redirect('/application/review');
+            return;
+        }
+
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => 'Invalid session. Silakan coba lagi.'], 400);
+            }
             $this->redirect('/application/review');
             return;
         }
 
         $team = $this->teamModel->findByUserId(Session::get('user_id'));
         if (!$team) {
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => 'Tim belum terdaftar.'], 400);
+            }
             $this->redirect('/application/team-register');
             return;
         }
 
         $missing = $this->missingData($team);
         if ($missing) {
-            Session::flash('team_update_error', 'Masih ada data yang belum lengkap: ' . implode(', ', $missing));
+            $msg = 'Masih ada data yang belum lengkap: ' . implode(', ', $missing);
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => $msg], 400);
+            }
+            Session::flash('team_update_error', $msg);
             $this->redirect('/application/review');
             return;
         }
 
-        $this->persist($team, $_POST, $_FILES);
+        $errors = $this->persist($team, $_POST, $_FILES);
+        if ($errors) {
+            $msg = implode('<br>', $errors);
+            if ($this->isAjax()) {
+                $this->json(['ok' => false, 'error' => $msg], 400);
+            }
+            Session::flash('team_update_error', $msg);
+            $this->redirect('/application/review');
+            return;
+        }
 
         (new Submission())->upsert($team['id'], 'application', 'submitted');
-        Session::flash('team_update_success', 'Data tim berhasil dikirim!');
+
+        if ($this->isAjax()) {
+            $this->json(['ok' => true]);
+        }
         $this->redirect('/application/review');
     }
 
-    private function persist(array $team, array $post, array $files): void
+    private function persist(array $team, array $post, array $files): array
     {
         $data = [
             'name' => trim($post['name'] ?? $team['name']),
@@ -166,8 +214,7 @@ class TeamController extends Controller
         if (empty($data['secondMemberName'])) $data['secondMemberGender'] = null;
 
         if (empty($data['name']) || empty($data['leaderName'])) {
-            Session::flash('team_update_error', 'Nama tim dan ketua harus diisi.');
-            $this->redirect('/application/' . ($post['current_tab'] ?? 'members'));
+            return ['Nama tim dan ketua harus diisi.'];
         }
 
         $this->teamModel->update($team['id'], $data);
@@ -239,9 +286,9 @@ class TeamController extends Controller
         }
 
         if ($errors) {
-            Session::flash('team_update_error', implode('<br>', $errors));
-            $this->redirect('/application/' . ($post['next_tab'] ?? 'members'));
+            return $errors;
         }
+        return [];
     }
 
     private function missingData(array $team): array
@@ -268,12 +315,12 @@ class TeamController extends Controller
         $uploadLabels = ['student_card' => 'Kartu pelajar', 'ig_follow' => 'Bukti IG', 'twibbon' => 'Twibbon'];
         for ($i = 1; $i <= $need; $i++) {
             $memberLabel = $i === 1 ? 'ketua' : 'anggota ' . $i;
-        if (empty($team[$nameKeys[$i]])) {
-            $missing[] = 'Data ' . $memberLabel;
-            continue;
-        }
-        if (empty($team[$phoneKeys[$i]])) $missing[] = 'No. telepon ' . $memberLabel;
-        foreach (['student_card', 'ig_follow', 'twibbon'] as $col) {
+            if (empty($team[$nameKeys[$i]])) {
+                $missing[] = 'Data ' . $memberLabel;
+                continue;
+            }
+            if (empty($team[$phoneKeys[$i]])) $missing[] = 'No. telepon ' . $memberLabel;
+            foreach (['student_card', 'ig_follow', 'twibbon'] as $col) {
                 if (empty($uploads[$i][$col])) $missing[] = $uploadLabels[$col] . ' ' . $memberLabel;
             }
         }

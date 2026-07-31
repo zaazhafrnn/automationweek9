@@ -11,8 +11,11 @@ $DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Contro
 $UPLOAD_URL = '/uploads/teams/';
 
 $sectionBtn = function (): string {
-    return '<button type="submit" formaction="/application/team/update" disabled'
-        . ' class="review-section-btn inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all border text-gray-400 bg-white border-gray-200 cursor-not-allowed">Simpan</button>';
+  return '<button type="submit" formaction="/application/team/update" disabled'
+    . ' class="review-section-btn relative inline-flex items-center justify-center min-w-[5rem] px-4 py-2 text-xs font-semibold rounded-lg transition-all border text-gray-400 bg-white border-gray-200">'
+    . '<span class="review-btn-label transition-all duration-300">Simpan</span>'
+    . Icon::make()->name('check')->class('review-btn-check text-white bg-brand h-full w-full size-1 absolute inset-0 m-auto p-1.5 opacity-0 transition-all rounded-lg duration-100')->render()
+    . '</button>';
 };
 ?>
 <?php if (!$team): ?>
@@ -31,6 +34,10 @@ $sectionBtn = function (): string {
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="next_tab" value="review">
     <input type="hidden" name="current_tab" value="review">
+
+    <div id="reviewFormError" class="hidden flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 mb-6">
+      <p class="text-sm text-red-700"></p>
+    </div>
 
     <div class="space-y-6">
       <section data-section="team" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
@@ -258,21 +265,29 @@ $sectionBtn = function (): string {
       if (!form) return;
 
       var onCls = ['text-white', 'bg-brand', 'border-transparent', 'hover:bg-red-800', 'cursor-pointer'];
-      var offCls = ['text-gray-400', 'bg-white', 'border-gray-200', 'cursor-not-allowed'];
-      var updaters = [];
+      var offCls = ['text-gray-400', 'bg-white', 'border-gray-200'];
+      var sections = [];
 
       form.querySelectorAll('.review-section-btn').forEach(function(btn) {
         var section = btn.closest('section[data-section]');
         if (!section) return;
 
         var originals = {};
-        section.querySelectorAll('input[name]').forEach(function(i) {
-          if (i.type === 'radio') {
-            if (i.checked) originals[i.name] = i.value;
-          } else if (i.type !== 'file') {
-            originals[i.name] = i.value;
-          }
-        });
+
+        function captureOriginals() {
+          originals = {};
+          section.querySelectorAll('input[name]').forEach(function(i) {
+            if (i.type === 'radio') {
+              if (i.checked) originals[i.name] = i.value;
+            } else if (i.type === 'file') {
+              originals[i.name] = i.files[0] || null;
+            } else {
+              originals[i.name] = i.value;
+            }
+          });
+        }
+
+        captureOriginals();
 
         function sectionChanged() {
           var changed = false;
@@ -281,7 +296,7 @@ $sectionBtn = function (): string {
             if (i.type === 'radio') {
               if (i.checked && i.value !== (originals[i.name] || '')) changed = true;
             } else if (i.type === 'file') {
-              if (i.files.length > 0) changed = true;
+              if ((i.files[0] || null) !== (originals[i.name] || null)) changed = true;
             } else if ((i.value || '') !== (originals[i.name] || '')) {
               changed = true;
             }
@@ -296,8 +311,12 @@ $sectionBtn = function (): string {
         function update() {
           var on = sectionChanged();
           btn.disabled = !on;
-          onCls.forEach(function(c) { btn.classList.toggle(c, on); });
-          offCls.forEach(function(c) { btn.classList.toggle(c, !on); });
+          onCls.forEach(function(c) {
+            btn.classList.toggle(c, on);
+          });
+          offCls.forEach(function(c) {
+            btn.classList.toggle(c, !on);
+          });
         }
 
         section.addEventListener('input', update);
@@ -305,9 +324,41 @@ $sectionBtn = function (): string {
         section.addEventListener('click', function(e) {
           if (e.target.closest('[data-clear-attachment]')) setTimeout(update, 0);
         });
-        updaters.push(update);
+        sections.push({
+          section: section,
+          update: update,
+          capture: captureOriginals
+        });
         update();
       });
+
+      function sectionSaved(section) {
+        sections.forEach(function(s) {
+          if (section && s.section !== section) return;
+          s.capture();
+          s.update();
+        });
+      }
+
+      function flashSaved(btn) {
+        var label = btn.querySelector('.review-btn-label');
+        var check = btn.querySelector('.review-btn-check');
+        btn.disabled = true;
+        if (label) label.classList.add('opacity-0');
+        if (check) check.classList.remove('opacity-0', 'scale-50');
+        setTimeout(function() {
+          if (label) label.classList.remove('opacity-0');
+          if (check) check.classList.add('opacity-0', 'scale-50');
+        }, 1500);
+      }
+
+      function showError(msg) {
+        var box = document.getElementById('reviewFormError');
+        if (!box) return;
+        var p = box.querySelector('p');
+        if (p) p.innerHTML = msg;
+        box.classList.remove('hidden');
+      }
 
       form.addEventListener('submit', function(e) {
         var t = e.submitter || document.activeElement;
@@ -315,11 +366,55 @@ $sectionBtn = function (): string {
         if (section && window.validateScope && !window.validateScope(section)) e.preventDefault();
       });
 
+      form.addEventListener('submit', function(e) {
+        if (e.defaultPrevented) return;
+        var t = e.submitter || document.activeElement;
+        var section = t && t.closest ? t.closest('section[data-section]') : null;
+        var btn = t && t.matches ? t.closest('button[type="submit"]') : null;
+        var isSubmit = (btn && btn.formAction ? btn.formAction : form.action).indexOf('/submit') !== -1;
+
+        e.preventDefault();
+        if (btn) btn.disabled = true;
+        document.getElementById('reviewFormError')?.classList.add('hidden');
+
+        fetch((btn && btn.formAction) || form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(function(r) {
+            return r.json().catch(function() {
+              return null;
+            });
+          })
+          .then(function(data) {
+            if (btn) btn.disabled = false;
+            if (data && data.ok) {
+              if (btn && !isSubmit) flashSaved(btn);
+              sectionSaved(section);
+              if (window.__syncSavedState) window.__syncSavedState(isSubmit);
+            } else {
+              showError((data && data.error) || 'Terjadi kesalahan. Silakan coba lagi.');
+            }
+          })
+          .catch(function() {
+            if (btn) btn.disabled = false;
+            showError('Terjadi kesalahan jaringan. Silakan coba lagi.');
+          });
+      });
+
       var panel = form.closest('.tab-panel');
       if (panel && 'MutationObserver' in window) {
         new MutationObserver(function() {
-          if (!panel.classList.contains('hidden')) updaters.forEach(function(u) { u(); });
-        }).observe(panel, { attributes: true, attributeFilter: ['class'] });
+          if (!panel.classList.contains('hidden')) sections.forEach(function(s) {
+            s.update();
+          });
+        }).observe(panel, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
       }
     })();
   </script>
