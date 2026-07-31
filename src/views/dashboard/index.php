@@ -362,7 +362,6 @@ if (!isset($activeTab)) {
           var att = f.closest('[data-slot="attachment"]');
           if (att) att.dataset.state = 'error';
           if (errEl) {
-            errEl.textContent = errEl.dataset.msg || 'Field wajib diisi';
             errEl.classList.remove('hidden');
           }
           valid = false;
