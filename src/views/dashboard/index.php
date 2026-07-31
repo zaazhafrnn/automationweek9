@@ -1,6 +1,7 @@
 <?php
 
 use App\Components\Icon;
+use App\Utils\Session;
 
 /** @var string $csrf_token */
 /** @var string $user_name */
@@ -26,7 +27,7 @@ $tabDone = [
   1 => (bool) $team,
   2 => !empty($team['leaderName']),
   3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
-  4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
+  4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']) && (bool) $submission,
 ];
 
 if (!isset($activeTab)) {
@@ -58,6 +59,21 @@ if (!isset($activeTab)) {
       </form>
     </div>
   </div>
+
+  <?php
+  $flashError = Session::flash('team_update_error') ?? Session::flash('team_register_error');
+  $flashSuccess = Session::flash('team_update_success');
+  if ($flashError || $flashSuccess):
+    $isError = (bool) $flashError;
+    $msg = $isError ? $flashError : $flashSuccess;
+  ?>
+    <div class="px-4 sm:px-6 lg:px-8 mt-4">
+      <div class="flex items-start gap-3 p-4 rounded-xl border <?= $isError ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200' ?>">
+        <?= Icon::make()->name($isError ? 'alert-circle' : 'check-circle')->class($isError ? 'w-5 h-5 text-red-500 shrink-0' : 'w-5 h-5 text-green-500 shrink-0') ?>
+        <p class="text-sm <?= $isError ? 'text-red-700' : 'text-green-700' ?>"><?= $msg ?></p>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <div>
     <div>
@@ -93,13 +109,13 @@ if (!isset($activeTab)) {
         <?php endforeach; ?>
       </div>
     </div>
-    <div class="flex items-center justify-end gap-2 pb-4 pr-4" id="tabNav">
+    <div class="flex items-center justify-end gap-2 pb-4 pr-4 md:pr-6" id="tabNav">
       <a href="/application/<?= $activeTab > 1 ? $tabs[$activeTab - 1]['slug'] : '' ?>" role="button" data-goto="<?= $activeTab - 1 ?>"
         class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-medium text-black bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-800 transition-all no-underline"
         id="prevTab" <?= $activeTab <= 1 ? 'style="display:none"' : '' ?>>
         Kembali
       </a>
-      <button type="button" id="nextTabSave" class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold text-white bg-brand rounded-lg hover:bg-brand/90 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? 'style="display:none"' : '' ?>>
+      <button type="button" id="nextTabSave" class="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold text-white bg-brand rounded-lg hover:bg-brand/90 transition-all cursor-pointer disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? 'style="display:none"' : '' ?>>
         Simpan & Lanjut
       </button>
       <button type="button" id="nextTabSubmit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all disabled:opacity-30 disabled:pointer-events-none" <?= $activeTab >= 4 ? '' : 'style="display:none"' ?>>
@@ -141,6 +157,7 @@ if (!isset($activeTab)) {
                       'twibbon_1' => $uploads[1]['twibbon'] ?? null,
                       'twibbon_2' => $uploads[2]['twibbon'] ?? null,
                       'twibbon_3' => $uploads[3]['twibbon'] ?? null,
+                      '__submitted' => (bool) ($submission !== null),
                     ]) ?>;
     window.state = _state;
     const state = _state;
@@ -181,7 +198,7 @@ if (!isset($activeTab)) {
         if (filled('secondMemberName') && (!filled('igFollow_3') || !filled('twibbon_3'))) return false;
         return true;
       }
-      if (n === 4) return tabDone(1) && tabDone(2) && tabDone(3);
+      if (n === 4) return tabDone(1) && tabDone(2) && tabDone(3) && filled('__submitted');
       return false;
     }
 
@@ -189,7 +206,7 @@ if (!isset($activeTab)) {
       if (n === 1) return filledSaved('division') && filledSaved('name') && filledSaved('teamSchool');
       if (n === 2) return filledSaved('leaderName');
       if (n === 3) return filledSaved('igFollow_1') && filledSaved('twibbon_1');
-      if (n === 4) return savedTabDone(1) && savedTabDone(2) && savedTabDone(3);
+      if (n === 4) return savedTabDone(1) && savedTabDone(2) && savedTabDone(3) && filledSaved('__submitted');
       return false;
     }
 
@@ -307,17 +324,15 @@ if (!isset($activeTab)) {
       current = num;
     }
 
-    function validateTab(num) {
-      const panel = document.querySelector(`.tab-panel[data-tab="${num}"]`);
-      if (!panel) return true;
-      const fields = panel.querySelectorAll('[required]');
+    function validateScope(scope) {
+      const fields = scope.querySelectorAll('[required]');
       let valid = true;
       const radioGroups = new Set();
       fields.forEach(f => {
         if (f.type === 'radio') {
           if (radioGroups.has(f.name)) return;
           radioGroups.add(f.name);
-          const group = panel.querySelectorAll(`input[type="radio"][name="${f.name}"]`);
+          const group = scope.querySelectorAll(`input[type="radio"][name="${f.name}"]`);
           const checked = Array.from(group).some(r => r.checked);
           const errEl = document.getElementById(f.dataset.error);
           group.forEach(r => r.closest('.division-card')?.classList.toggle('border-red-500', !checked));
@@ -361,6 +376,13 @@ if (!isset($activeTab)) {
       });
       return valid;
     }
+    window.validateScope = validateScope;
+
+    function validateTab(num) {
+      const panel = document.querySelector(`.tab-panel[data-tab="${num}"]`);
+      if (!panel) return true;
+      return validateScope(panel);
+    }
 
     document.getElementById('tabList').addEventListener('click', function(e) {
       var link = e.target.closest('a[data-tab-num]');
@@ -384,11 +406,19 @@ if (!isset($activeTab)) {
       var next = e.target.closest('#nextTabSave, #nextTabSubmit');
       if (next) {
         if (!validateTab(current)) return;
+        var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
+        if (next.id === 'nextTabSubmit' && current === total) {
+          var rform = panel && panel.querySelector('#reviewForm');
+          if (rform) {
+            rform.submit();
+            return;
+          }
+          return;
+        }
         if (!hasChanges()) {
           if (current < total) goTo(current + 1);
           return;
         }
-        var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
         var form = panel && panel.querySelector('form');
         if (form) {
           var btn = form.querySelector('button[type="submit"]');

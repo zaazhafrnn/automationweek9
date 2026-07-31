@@ -52,6 +52,7 @@ $router->get('/admin/submissions', 'AdminController@submissions');
 
 $router->post('/application/team/register', 'TeamController@register');
 $router->post('/application/team/update', 'TeamController@update');
+$router->post('/application/team/submit', 'TeamController@submit');
 
 $router->post('/payments', 'PaymentController@upload');
 

@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS payments (
 
 CREATE TABLE IF NOT EXISTS submissions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    team_id INT NOT NULL,
-    type VARCHAR(100) NOT NULL,
+    team_id INT NOT NULL UNIQUE,
+    type ENUM('file', 'youtube_link', 'application') NOT NULL DEFAULT 'file',
     value TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

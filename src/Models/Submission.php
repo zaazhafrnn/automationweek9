@@ -31,7 +31,7 @@ class Submission extends Model
             FROM submissions s
             JOIN teams t ON s.team_id = t.id
             JOIN accounts u ON t.user_id = u.id
-            WHERE t.division = :division
+            WHERE t.division = :division AND s.type IN ('file', 'youtube_link')
             ORDER BY s.updated_at DESC
         ");
         $stmt->execute([':division' => $division]);
