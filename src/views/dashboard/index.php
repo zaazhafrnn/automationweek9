@@ -50,7 +50,7 @@ if (!isset($activeTab)) {
       </div>
       <?php $current = 'application';
       include __DIR__ . '/partials/nav-tabs.php'; ?>
-      <form action="/logout" method="POST" class="m-0">
+      <form action="/logout" method="POST" class="m-0 hidden md:block">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
         <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
           <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>

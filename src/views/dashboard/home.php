@@ -1,6 +1,5 @@
 <?php
 
-// ponytail: minimum logic for division-based beranda view
 use App\Components\Icon;
 
 /** @var string $csrf_token */
@@ -67,11 +66,11 @@ $DIVISION_INFO = [
     <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
       <div>
         <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
-        <p class="text-xs -mt-0.5">Beranda & Informasi Divisi Lomba.</p>
+        <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
       </div>
-      <?php $current = 'beranda';
+      <?php $current = 'home';
       include __DIR__ . '/partials/nav-tabs.php'; ?>
-      <form action="/logout" method="POST" class="m-0">
+      <form action="/logout" method="POST" class="m-0 hidden md:block">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
         <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
           <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>

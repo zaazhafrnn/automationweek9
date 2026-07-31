@@ -53,15 +53,13 @@
         <button type="button"
             id="mobile-nav-pill-toggle"
             class="flex md:pointer-events-none items-center gap-2 no-underline text-foreground bg-transparent border-none outline-none focus:outline-none relative z-20"
-            aria-haspopup="true"
+            aria-haspopup="dialog"
             aria-expanded="false"
             style="appearance: none; -webkit-appearance: none; padding: 0; margin: 0;">
             <img src="/image/logo-aw.png" alt="AW" class="w-6 h-6 object-contain bg-white rounded-full border border-border">
             <span class="font-bold text-sm tracking-tight whitespace-nowrap">Automation Week 9</span>
-            <span class="md:hidden inline-flex items-center justify-center transition-transform duration-200" id="mobile-nav-pill-chevron">
-                <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4" />
-                </svg>
+            <span class="md:hidden inline-flex items-center justify-center" id="mobile-nav-pill-chevron">
+                <?= \App\Components\Icon::make()->name('menu')->class('w-4 h-4') ?>
             </span>
         </button>
 
@@ -69,6 +67,10 @@
             <a href="#competitions" class="hover:text-primary transition-colors no-underline">Lomba</a>
             <a href="#videos" class="hover:text-primary transition-colors no-underline">Video</a>
             <a href="#contact" class="hover:text-primary transition-colors no-underline">Kontak</a>
+            <a href="/application/team-register" class="inline-flex items-center gap-1.5 hover:text-primary transition-colors no-underline">
+                <?= \App\Components\Icon::make()->name('user-round')->class('w-4 h-4') ?>
+                Pendaftaran
+            </a>
         </div>
 
         <div id="mobile-nav-pill-dropdown"
@@ -81,6 +83,34 @@
 
         <a href="/login" class="px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-sm transition-all bg-accent hover:bg-accent/90 no-underline">Login</a>
     </nav>
+
+    <div id="mobile-nav-sheet-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden"></div>
+
+    <div id="mobile-nav-sheet" class="fixed inset-y-0 right-0 z-50 w-72 sm:w-80 bg-background border-l border-border shadow-2xl transition-transform duration-300 ease-in-out translate-x-full md:hidden flex flex-col">
+        <div class="flex items-center justify-between border-b border-border px-5 py-4">
+            <div class="flex items-center gap-2">
+                <img src="/image/logo-aw.png" alt="AW" class="w-7 h-7 object-contain bg-white rounded-full border border-border">
+                <span class="font-bold text-sm tracking-tight text-foreground whitespace-nowrap">Automation Week 9</span>
+            </div>
+            <button type="button" id="mobile-nav-sheet-close" class="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors" aria-label="Tutup menu">
+                <?= \App\Components\Icon::make()->name('x')->class('w-5 h-5') ?>
+            </button>
+        </div>
+
+        <nav class="flex-1 space-y-1.5 p-5">
+            <a href="/application/team-register" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">
+                <?= \App\Components\Icon::make()->name('user-round')->class('w-4 h-4 text-accent') ?>
+                Pendaftaran
+            </a>
+            <a href="#competitions" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Lomba</a>
+            <a href="#videos" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Video</a>
+            <a href="#contact" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Kontak</a>
+        </nav>
+
+        <div class="border-t border-border p-5">
+            <a href="/login" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full text-xs font-bold text-white bg-accent hover:bg-accent/90 transition-all no-underline">Login</a>
+        </div>
+    </div>
     <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
         <div class="absolute inset-0 z-0 hero-bg"></div>
         <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-12">
@@ -395,35 +425,37 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var pill = document.getElementById('mobile-nav-pill-toggle');
-            var dropdown = document.getElementById('mobile-nav-pill-dropdown');
-            var chevron = document.getElementById('mobile-nav-pill-chevron');
-            if (!pill || !dropdown) return;
+            var backdrop = document.getElementById('mobile-nav-sheet-backdrop');
+            var sheet = document.getElementById('mobile-nav-sheet');
+            var closeBtn = document.getElementById('mobile-nav-sheet-close');
+            if (!pill || !sheet || !backdrop) return;
 
             function close() {
-                dropdown.classList.add('hidden');
-                dropdown.classList.remove('block');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                sheet.classList.add('translate-x-full');
+                document.body.classList.remove('overflow-hidden');
                 pill.setAttribute('aria-expanded', 'false');
-                if (chevron) chevron.classList.remove('rotate-180');
             }
 
             function open() {
-                dropdown.classList.remove('hidden');
-                dropdown.classList.add('block');
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                sheet.classList.remove('translate-x-full');
+                document.body.classList.add('overflow-hidden');
                 pill.setAttribute('aria-expanded', 'true');
-                if (chevron) chevron.classList.add('rotate-180');
             }
 
             pill.addEventListener('click', function(e) {
                 if (window.innerWidth >= 768) return;
                 e.stopPropagation();
-                dropdown.classList.contains('block') ? close() : open();
+                backdrop.classList.contains('pointer-events-none') ? open() : close();
             });
-            document.addEventListener('click', function(e) {
-                if (window.innerWidth >= 768) return;
-                if (!dropdown.contains(e.target) && !pill.contains(e.target)) close();
+            if (closeBtn) closeBtn.addEventListener('click', close);
+            backdrop.addEventListener('click', close);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') close();
             });
-            dropdown.addEventListener('click', function(e) {
-                if (e.target.closest('a')) close();
+            sheet.querySelectorAll('a').forEach(function(a) {
+                a.addEventListener('click', close);
             });
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 768) close();
