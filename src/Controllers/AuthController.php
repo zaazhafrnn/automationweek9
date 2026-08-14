@@ -162,6 +162,11 @@ class AuthController extends Controller
         }
 
         if ($this->userModel->create($name, $email, $password)) {
+            $body = '<p>Halo ' . htmlspecialchars($name) . ',</p>'
+                . '<p>Selamat! Akun Anda berhasil dibuat di ' . APP_NAME . '.</p>'
+                . '<p>Anda sekarang dapat <a href="/login">masuk</a> menggunakan email dan password yang terdaftar.</p>';
+            Mailer::send($email, 'Selamat Datang di ' . APP_NAME, $body);
+
             if ($this->wantsJson()) {
                 $this->jsonExit(['success' => true, 'redirect' => '/login']);
             }

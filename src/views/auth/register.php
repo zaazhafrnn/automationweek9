@@ -197,13 +197,13 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                             </form>
                         </div>
 
-                        <div id="register-success" class="hidden text-center py-8 space-y-4">
+                        <div id="register-success" class="hidden text-center pt-8 space-y-4">
                             <div id="success-icon" class="w-16 h-16 mx-auto text-green-400"></div>
                             <h2 class="text-xl font-bold text-white">Pendaftaran Berhasil!</h2>
                             <p class="text-gray-400 text-sm">Akun untuk <span id="success-email" class="text-white font-semibold"></span> berhasil dibuat!<br>Silakan masuk untuk melanjutkan pendaftaran.</p>
                             <div class="flex flex-col gap-2 pt-4">
                                 <a href="/login" class="w-full block text-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-[#161512] bg-white hover:bg-gray-200 transition">Masuk</a>
-                                <a href="/register" class="w-full block text-center py-2 px-4 border border-white/10 rounded-xl shadow-sm text-sm font-medium text-gray-400 hover:text-white transition">Daftar Akun Lain</a>
+                                <!-- <a href="/register" class="w-full block text-center py-2 px-4 border border-white/10 rounded-xl shadow-sm text-sm font-medium text-gray-400 hover:text-white transition">Daftar Akun Lain</a> -->
                             </div>
                         </div>
 
