@@ -145,9 +145,24 @@ class DashboardController extends Controller
         }
 
         $team = (new Team())->findByUserId(Session::get('user_id'));
+
         $payment = null;
+        $submission = null;
+        $uploads = [];
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
+            $submission = (new Submission())->findByTeamId($team['id']);
+            $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
+            foreach ($rows as $r) {
+                $uploads[$r['member_number']] = [
+                    'student_card' => $r['student_card'],
+                    'ig_follow' => $r['ig_follow'],
+                    'twibbon' => $r['twibbon'],
+                    'original_student_card' => $r['original_student_card'] ?? null,
+                    'original_ig_follow' => $r['original_ig_follow'] ?? null,
+                    'original_twibbon' => $r['original_twibbon'] ?? null,
+                ];
+            }
         }
 
         $this->view('dashboard/home', [
@@ -155,6 +170,8 @@ class DashboardController extends Controller
             'csrf_token' => Security::generateCsrfToken(),
             'team' => $team,
             'payment' => $payment,
+            'submission' => $submission,
+            'uploads' => $uploads,
         ]);
     }
 }

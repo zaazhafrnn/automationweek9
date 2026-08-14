@@ -6,59 +6,79 @@ use App\Components\Icon;
 /** @var string $user_name */
 /** @var array|null $team */
 /** @var array|null $payment */
+/** @var array|null $submission */
+/** @var array $uploads */
 
 $division = $team['division'] ?? null;
 $divisionUpper = strtoupper((string) $division);
+$upload1 = $uploads[1] ?? [];
+
+$steps = [
+  1 => ['label' => 'Registrasi', 'title' => 'Registrasi Tim', 'done' => (bool) $team],
+  2 => ['label' => 'Data Anggota', 'title' => 'Data Anggota', 'done' => !empty($team['leaderName'])],
+  3 => ['label' => 'Media Sosial', 'title' => 'Media Sosial', 'done' => !empty($upload1['ig_follow']) && !empty($upload1['twibbon'])],
+  4 => ['label' => 'Review', 'title' => 'Review & Submit', 'done' => (bool) $submission],
+  5 => ['label' => 'Pembayaran', 'title' => 'Pembayaran', 'done' => !empty($payment) && ($payment['status'] ?? '') === 'verified'],
+];
+$currentStep = null;
+foreach ($steps as $n => $s) {
+  if (!$s['done']) {
+    $currentStep = $n;
+    break;
+  }
+}
+$nextLabel = $currentStep ? $steps[$currentStep]['title'] : null;
+$applicationDone = $steps[1]['done'] && $steps[2]['done'] && $steps[3]['done'] && $steps[4]['done'];
 
 $DIVISION_INFO = [
-    'LKTI' => [
-        'title' => 'LKTI (Lomba Karya Tulis Ilmiah)',
-        'logo' => '/image/LKTI_AW8.png',
-        'desc' => 'Lomba Karya Tulis Ilmiah merupakan sebuah perlombaan yang bertujuan untuk mengembangkan ide kreatif dan inovatif siswa dalam memecahkan masalah yang ada di lingkungan sekitar.',
-        'guide_book' => 'https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb',
-        'timeline' => [
-            ['title' => 'Pendaftaran & Pengumpulan Abstrak', 'date' => '22 September - 9 Oktober 2025'],
-            ['title' => 'Pengumuman Lolos Abstrak', 'date' => '15 Oktober 2025'],
-            ['title' => 'Pelaksanaan Final LKTI', 'date' => '28 Oktober 2025'],
-        ],
-        'video' => null
+  'LKTI' => [
+    'title' => 'LKTI (Lomba Karya Tulis Ilmiah)',
+    'logo' => '/image/LKTI_AW8.png',
+    'desc' => 'Lomba Karya Tulis Ilmiah merupakan sebuah perlombaan yang bertujuan untuk mengembangkan ide kreatif dan inovatif siswa dalam memecahkan masalah yang ada di lingkungan sekitar.',
+    'guide_book' => 'https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb',
+    'timeline' => [
+      ['title' => 'Pendaftaran & Pengumpulan Abstrak', 'date' => '22 September - 9 Oktober 2025'],
+      ['title' => 'Pengumuman Lolos Abstrak', 'date' => '15 Oktober 2025'],
+      ['title' => 'Pelaksanaan Final LKTI', 'date' => '28 Oktober 2025'],
     ],
-    'FFR' => [
-        'title' => 'FFR (Fire Fighting Roboboat)',
-        'logo' => '/image/FFR_AW8.png',
-        'desc' => 'Fire Fighting Roboboat merupakan perlombaan kapal tanpa awak yang bergerak secara otomatis dan memiliki misi untuk memadamkan api.',
-        'guide_book' => 'https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0',
-        'timeline' => [
-            ['title' => 'Pendaftaran & Pembayaran FFR', 'date' => '22 September - 27 Oktober 2025'],
-            ['title' => 'Running Test & Technical Meeting', 'date' => '27 Oktober 2025'],
-            ['title' => 'Pelaksanaan Race Day FFR', 'date' => '28 Oktober 2025'],
-        ],
-        'video' => 'https://www.youtube.com/embed/ZRfGoB4jJPw'
+    'video' => null
+  ],
+  'FFR' => [
+    'title' => 'FFR (Fire Fighting Roboboat)',
+    'logo' => '/image/FFR_AW8.png',
+    'desc' => 'Fire Fighting Roboboat merupakan perlombaan kapal tanpa awak yang bergerak secara otomatis dan memiliki misi untuk memadamkan api.',
+    'guide_book' => 'https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0',
+    'timeline' => [
+      ['title' => 'Pendaftaran & Pembayaran FFR', 'date' => '22 September - 27 Oktober 2025'],
+      ['title' => 'Running Test & Technical Meeting', 'date' => '27 Oktober 2025'],
+      ['title' => 'Pelaksanaan Race Day FFR', 'date' => '28 Oktober 2025'],
     ],
-    'PLC' => [
-        'title' => 'PLC (Programmable Logic Controller)',
-        'logo' => '/image/PLC_AW8.png',
-        'desc' => 'Programmable Logic Controller merupakan jenis lomba yang bertujuan untuk mengasah logika dan kemampuan siswa dalam bidang pemrograman PLC.',
-        'guide_book' => 'https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO',
-        'timeline' => [
-            ['title' => 'Pendaftaran & Pembayaran PLC', 'date' => '22 September - 23 Oktober 2025'],
-            ['title' => 'Babak Penyisihan PLC', 'date' => '25 Oktober 2025'],
-            ['title' => 'Pelaksanaan Final PLC', 'date' => '28 Oktober 2025'],
-        ],
-        'video' => null
+    'video' => 'https://www.youtube.com/embed/ZRfGoB4jJPw'
+  ],
+  'PLC' => [
+    'title' => 'PLC (Programmable Logic Controller)',
+    'logo' => '/image/PLC_AW8.png',
+    'desc' => 'Programmable Logic Controller merupakan jenis lomba yang bertujuan untuk mengasah logika dan kemampuan siswa dalam bidang pemrograman PLC.',
+    'guide_book' => 'https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO',
+    'timeline' => [
+      ['title' => 'Pendaftaran & Pembayaran PLC', 'date' => '22 September - 23 Oktober 2025'],
+      ['title' => 'Babak Penyisihan PLC', 'date' => '25 Oktober 2025'],
+      ['title' => 'Pelaksanaan Final PLC', 'date' => '28 Oktober 2025'],
     ],
-    'LF' => [
-        'title' => 'Line Follower',
-        'logo' => '/image/LF_AW8.png',
-        'desc' => 'Lomba Line Follower Mikrokontroler, Kompetisi robot berbasis mikrokontroler yang ditantang untuk mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.',
-        'guide_book' => 'https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq',
-        'timeline' => [
-            ['title' => 'Pendaftaran & Pembayaran Line Follower', 'date' => '22 September - 27 Oktober 2025'],
-            ['title' => 'Technical Meeting & Running Test', 'date' => '27 Oktober 2025'],
-            ['title' => 'Pelaksanaan Race Line Follower', 'date' => '28 Oktober 2025'],
-        ],
-        'video' => null
+    'video' => null
+  ],
+  'LF' => [
+    'title' => 'Line Follower',
+    'logo' => '/image/LF_AW8.png',
+    'desc' => 'Lomba Line Follower Mikrokontroler, Kompetisi robot berbasis mikrokontroler yang ditantang untuk mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.',
+    'guide_book' => 'https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq',
+    'timeline' => [
+      ['title' => 'Pendaftaran & Pembayaran Line Follower', 'date' => '22 September - 27 Oktober 2025'],
+      ['title' => 'Technical Meeting & Running Test', 'date' => '27 Oktober 2025'],
+      ['title' => 'Pelaksanaan Race Line Follower', 'date' => '28 Oktober 2025'],
     ],
+    'video' => null
+  ],
 ];
 ?>
 <div class="min-h-screen bg-gray-50">
@@ -81,6 +101,45 @@ $DIVISION_INFO = [
   </div>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6 max-w-5xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6">
+      <div class="flex items-baseline justify-between flex-wrap gap-1 mb-5">
+        <h2 class="text-sm font-bold text-gray-800">Progress Pendaftaran</h2>
+        <p class="text-xs text-gray-500">
+          <?= $nextLabel ? 'Silahkan selesaikan <span class="font-semibold text-brand">' . htmlspecialchars($nextLabel) . '</span>' : 'Semua langkah selesai' ?>
+        </p>
+      </div>
+      <div class="overflow-x-auto pb-2 px-4 pt-2 sm:mx-0 sm:px-0">
+        <div class="flex items-start sm:justify-between min-w-max sm:min-w-0">
+          <?php foreach ($steps as $n => $s):
+            $isDone = $s['done'];
+            $isCurrent = $currentStep === $n;
+            $circleCls = $isDone
+              ? 'bg-green-500 border-green-500 text-white'
+              : ($isCurrent ? 'bg-brand border-brand text-white ring-4 ring-brand/15' : 'bg-gray-100 border-gray-200 text-gray-400');
+          ?>
+            <?php if ($n > 1): ?>
+              <div class="w-8 sm:flex-1 shrink-0 h-0.5 mt-5 rounded-full <?= $steps[$n - 1]['done'] ? 'bg-green-500' : 'bg-gray-200' ?>"></div>
+            <?php endif; ?>
+            <div class="flex flex-col items-center gap-1.5 w-16 sm:flex-1 sm:w-auto shrink-0 px-0.5 sm:px-1">
+              <span class="<?= $circleCls ?> w-10 h-10 sm:w-11 sm:h-11 rounded-full border flex items-center justify-center shrink-0">
+                <?php if ($isDone): ?>
+                  <?= Icon::make()->name('check')->class('w-5 h-5') ?>
+                <?php else: ?>
+                  <span class="text-sm font-bold"><?= $n ?></span>
+                <?php endif; ?>
+              </span>
+              <span class="text-xs font-semibold text-center leading-tight <?= $isDone || $isCurrent ? 'text-gray-800' : 'text-gray-400' ?>"><?= htmlspecialchars($s['label']) ?></span>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+      <div class="mt-6 mb-4 md:mb-0 flex justify-center">
+        <a href="<?= $applicationDone ? '/payments' : '/application' ?>" class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline shadow-sm">
+          <?= $applicationDone ? 'Lanjut ke Pembayaran' : 'Lanjutkan Pendaftaran' ?>
+        </a>
+      </div>
+    </div>
+
     <?php if (!$team): ?>
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 max-w-lg mx-auto text-center">
         <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
@@ -90,7 +149,7 @@ $DIVISION_INFO = [
         <p class="text-sm text-gray-500 mb-6">Kamu belum membuat atau mendaftarkan tim. Silakan daftarkan tim kamu terlebih dahulu untuk melihat informasi spesifik divisi.</p>
         <a href="/application/team-register" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline shadow-sm">
           Daftarkan Tim Sekarang
-          <?= Icon::make()->name('arrow-right')->class('w-4 h-4') ?>
+          <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
         </a>
       </div>
     <?php else: ?>
