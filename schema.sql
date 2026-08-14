@@ -55,6 +55,17 @@ CREATE TABLE IF NOT EXISTS submissions (
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+DROP TABLE IF EXISTS password_reset_tokens;
+DROP TABLE IF EXISTS password_resets;
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    account_id INT PRIMARY KEY,
+    token_hash CHAR(64) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS team_documentation_uploads (
     id INT AUTO_INCREMENT PRIMARY KEY,
     team_id INT NOT NULL,

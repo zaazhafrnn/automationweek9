@@ -100,7 +100,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                                        text-sm max-sm:text-xs font-bold text-[#161512] bg-white hover:bg-gray-200
                                        transition duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95 cursor-pointer
                                        disabled:opacity-50 disabled:hover:bg-white disabled:hover:scale-100 disabled:active:scale-100" ontouchstart="">
-                                Login
+                                Masuk
                             </button>
                         </form>
                     </div>
@@ -114,6 +114,17 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                             class="inline-block font-semibold text-brand
                         transition-all duration-100 ease-out">
                             Daftar sekarang
+                        </a>
+                    </p>
+                </div>
+
+                <div class="mt-1 text-center">
+                    <p class="max-sm:text-xs text-sm">
+                        <a
+                            href="/forgot-password"
+                            class="inline-block font-semibold text-brand
+                        transition-all duration-100 ease-out">
+                            Lupa password?
                         </a>
                     </p>
                 </div>

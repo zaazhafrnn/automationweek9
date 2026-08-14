@@ -37,6 +37,11 @@ $router->post('/login', 'AuthController@login');
 $router->get('/register', 'AuthController@registerForm');
 $router->post('/register', 'AuthController@register');
 
+$router->get('/forgot-password', 'AuthController@forgotPasswordForm');
+$router->post('/forgot-password', 'AuthController@forgotPassword');
+$router->get('/reset-password', 'AuthController@resetPasswordForm');
+$router->post('/reset-password', 'AuthController@resetPassword');
+
 $router->get('/home', 'DashboardController@home');
 $router->get('/application', 'DashboardController@index');
 $router->get('/application/team-register', 'DashboardController@tab');
