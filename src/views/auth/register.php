@@ -207,7 +207,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                             </div>
                         </div>
 
-                        <div id="register-error" class="hidden text-center py-8 space-y-4">
+                        <div id="register-error" class="hidden text-center pt-8 space-y-4">
                             <div id="error-icon" class="w-16 h-16 mx-auto text-red-400"></div>
                             <h2 class="text-xl font-bold text-white">Email Sudah Terdaftar</h2>
                             <p class="text-gray-400 text-sm">Gunakan email lain untuk mendaftar akun baru.</p>
