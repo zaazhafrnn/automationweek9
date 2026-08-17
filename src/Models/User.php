@@ -78,4 +78,23 @@ class User extends Model
 
         return $stmt->execute([':id' => $userId]);
     }
+
+    public function getPasswordHash(int $id): string|false
+    {
+        $stmt = $this->db->prepare("SELECT password FROM accounts WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row ? $row['password'] : false;
+    }
+
+    public function updateName(int $id, string $name): bool
+    {
+        $stmt = $this->db->prepare("UPDATE accounts SET name = :name WHERE id = :id");
+
+        return $stmt->execute([
+            ':name' => $name,
+            ':id' => $id
+        ]);
+    }
 }

@@ -18,24 +18,6 @@
             }
         }
 
-        .marquee-track {
-            display: inline-flex;
-        }
-
-        @keyframes marquee {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .marquee-track:hover {
-            animation-play-state: paused;
-        }
-
         html {
             scroll-behavior: smooth;
         }
@@ -134,15 +116,17 @@
             </div>
         </div>
         <div class="absolute left-0 right-0 bottom-0 z-20">
-            <div class="py-3.5 border-y border-border overflow-hidden whitespace-nowrap relative" style="background: linear-gradient(90deg, #ba1229 0%, #f27c29 50%, #ba1229 100%);">
-                <div class="marquee-track inline-flex text-white text-xs font-semibold tracking-wide" style="animation: marquee 45s linear infinite;">
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('lock')->class('w-4 h-4 text-white shrink-0') ?> 5 kategori: LF · PLC · FFR · LKTI · PROGRAM</span>
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('megaphone')->class('w-4 h-4 text-white shrink-0') ?> <strong>Pendaftaran dibuka!</strong> Segera daftarkan tim Anda — <strong>29 September – 14 Oktober 2025</strong></span>
-                    <span class="px-8 inline-flex items-center gap-2"><?= \App\Components\Icon::make()->name('trophy')->class('w-4 h-4 text-white shrink-0') ?> Total hadiah <strong>puluhan juta rupiah</strong> + trophy + e-sertifikat</span>
-                </div>
+            <div class="curved-marquee w-full overflow-hidden" style="background: linear-gradient(90deg, #ba1229 0%, #f27c29 50%, #ba1229 100%);">
+                <svg class="w-full block" viewBox="0 0 1440 200" preserveAspectRatio="none" style="transform: rotate(2deg); transform-origin: center;">
+                    <defs>
+                        <path id="marquee-curve" d="M-100,40 Q500,280 1540,40" fill="none"/>
+                    </defs>
+                    <text class="fill-white font-bold uppercase" style="font-size: 4.5rem; letter-spacing: 0.08em;" xml:space="preserve">
+                        <textPath href="#marquee-curve" id="curved-marquee-text"></textPath>
+                    </text>
+                </svg>
             </div>
+        </div>
         </div>
     </section>
 
@@ -457,6 +441,75 @@
                 if (window.innerWidth >= 768) close();
             });
         });
+
+        (function() {
+            var textPath = document.getElementById('curved-marquee-text');
+            if (!textPath) return;
+
+            var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 29 September – 14 Oktober 2025 ✦ Total hadiah puluhan juta rupiah + trophy + e-sertifikat ✦ 5 kategori: LF · PLC · FFR · LKTI · PROGRAM ';
+            var speed = 1.5;
+            var spacing = 0;
+            var measureEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            measureEl.setAttribute('xml:space', 'preserve');
+            measureEl.style.visibility = 'hidden';
+            measureEl.style.fontSize = '4.5rem';
+            measureEl.style.fontWeight = 'bold';
+            measureEl.style.letterSpacing = '0.1em';
+            measureEl.style.textTransform = 'uppercase';
+            measureEl.textContent = text;
+            textPath.closest('svg').appendChild(measureEl);
+            spacing = measureEl.getComputedTextLength();
+            measureEl.remove();
+
+            var repeat = Math.ceil(1800 / spacing) + 2;
+            var totalText = Array(repeat).fill(text).join('');
+            textPath.textContent = totalText;
+            textPath.setAttribute('startOffset', -spacing + 'px');
+
+            var dragRef = false, lastXRef = 0, velRef = 0, dirRef = 'left';
+            var svg = textPath.closest('svg');
+
+            function step() {
+                if (!dragRef) {
+                    var cur = parseFloat(textPath.getAttribute('startOffset') || '0');
+                    var delta = dirRef === 'right' ? speed : -speed;
+                    var next = cur + delta;
+                    if (next <= -spacing) next += spacing;
+                    if (next > 0) next -= spacing;
+                    textPath.setAttribute('startOffset', next + 'px');
+                }
+                requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+
+            svg.style.cursor = 'grab';
+            svg.addEventListener('pointerdown', function(e) {
+                dragRef = true;
+                lastXRef = e.clientX;
+                velRef = 0;
+                svg.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+            svg.addEventListener('pointermove', function(e) {
+                if (!dragRef) return;
+                var dx = e.clientX - lastXRef;
+                lastXRef = e.clientX;
+                velRef = dx;
+                var cur = parseFloat(textPath.getAttribute('startOffset') || '0');
+                var next = cur + dx;
+                if (next <= -spacing) next += spacing;
+                if (next > 0) next -= spacing;
+                textPath.setAttribute('startOffset', next + 'px');
+            });
+            function endDrag() {
+                if (!dragRef) return;
+                dragRef = false;
+                dirRef = velRef > 0 ? 'right' : 'left';
+                svg.style.cursor = 'grab';
+            }
+            svg.addEventListener('pointerup', endDrag);
+            svg.addEventListener('pointerleave', endDrag);
+        })();
     </script>
 </body>
 
