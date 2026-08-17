@@ -177,6 +177,8 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
       </div>
     <?php endif; ?>
   </div>
+
+  <?php include __DIR__ . '/partials/footer.php'; ?>
 </div>
 
 <script>
