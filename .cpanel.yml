@@ -3,3 +3,6 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/autg6277/public_html
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH/ 2>/dev/null || :
+    - /bin/cp public/.htaccess $DEPLOYPATH/public/ 2>/dev/null || :
+
