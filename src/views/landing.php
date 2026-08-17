@@ -116,12 +116,12 @@
             </div>
         </div>
         <div class="absolute left-0 right-0 bottom-0 z-20">
-            <div class="curved-marquee w-full overflow-hidden" style="background: linear-gradient(90deg, #ba1229 0%, #f27c29 50%, #ba1229 100%);">
+            <div class="curved-marquee w-full overflow-hidden">
                 <svg class="w-full block" viewBox="0 0 1440 200" preserveAspectRatio="none" style="transform: rotate(2deg); transform-origin: center;">
                     <defs>
                         <path id="marquee-curve" d="M-100,40 Q500,280 1540,40" fill="none"/>
                     </defs>
-                    <text class="fill-white font-bold uppercase" style="font-size: 4.5rem; letter-spacing: 0.08em;" xml:space="preserve">
+                    <text class="fill-white font-bold uppercase" style="font-size: 2rem; letter-spacing: 0.08em;" xml:space="preserve">
                         <textPath href="#marquee-curve" id="curved-marquee-text"></textPath>
                     </text>
                 </svg>
@@ -452,7 +452,7 @@
             var measureEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             measureEl.setAttribute('xml:space', 'preserve');
             measureEl.style.visibility = 'hidden';
-            measureEl.style.fontSize = '4.5rem';
+            measureEl.style.fontSize = '2rem';
             measureEl.style.fontWeight = 'bold';
             measureEl.style.letterSpacing = '0.1em';
             measureEl.style.textTransform = 'uppercase';
