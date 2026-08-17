@@ -39,12 +39,6 @@
         html {
             scroll-behavior: smooth;
         }
-
-        @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
-        }
     </style>
 </head>
 
@@ -67,10 +61,10 @@
             <a href="#competitions" class="hover:text-primary transition-colors no-underline">Lomba</a>
             <a href="#videos" class="hover:text-primary transition-colors no-underline">Video</a>
             <a href="#contact" class="hover:text-primary transition-colors no-underline">Kontak</a>
-            <a href="/application/team-register" class="inline-flex items-center gap-1.5 hover:text-primary transition-colors no-underline">
+            <!-- <a href="/application/team-register" class="inline-flex items-center gap-1.5 hover:text-primary transition-colors no-underline">
                 <?= \App\Components\Icon::make()->name('user-round')->class('w-4 h-4') ?>
                 Pendaftaran
-            </a>
+            </a> -->
         </div>
 
         <div id="mobile-nav-pill-dropdown"
@@ -98,10 +92,10 @@
         </div>
 
         <nav class="flex-1 space-y-1.5 p-5">
-            <a href="/application/team-register" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">
+            <!-- <a href="/application/team-register" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">
                 <?= \App\Components\Icon::make()->name('user-round')->class('w-4 h-4 text-accent') ?>
                 Pendaftaran
-            </a>
+            </a> -->
             <a href="#competitions" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Lomba</a>
             <a href="#videos" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Video</a>
             <a href="#contact" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Kontak</a>
@@ -280,45 +274,47 @@
                     </div>
                 </div>
 
-                <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
-                    <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
-                    <div class="p-8 flex flex-col items-center flex-grow">
-                        <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
-                            <div class="w-16 h-16 flex items-center justify-center text-2xl font-black text-emerald-600">PRG</div>
+                <div class="md:col-span-2 flex justify-center">
+                    <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl w-full md:w-[calc(50%-1rem)]">
+                        <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
+                        <div class="p-8 flex flex-col items-center flex-grow">
+                            <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
+                                <div class="w-16 h-16 flex items-center justify-center text-2xl font-black text-emerald-600">PRG</div>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2 text-emerald-600 tracking-tight">Program</h3>
+                            <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.</p>
+                            <ul class="w-full mb-8 text-sm">
+                                <li class="flex items-center justify-between py-3 border-b border-border">
+                                    <span class="text-muted">Pendaftaran Dibuka</span>
+                                    <span class="font-semibold">22 Sep 2025</span>
+                                </li>
+                                <li class="flex items-center justify-between py-3 border-b border-border">
+                                    <span class="text-muted">Deadline Pembayaran</span>
+                                    <span class="font-semibold">27 Okt 2025</span>
+                                </li>
+                                <li class="flex items-center justify-between py-3">
+                                    <span class="text-muted">Pelaksanaan Final</span>
+                                    <span class="text-emerald-600 font-bold">28 Okt 2025</span>
+                                </li>
+                            </ul>
+                            <a href="#" target="_blank"
+                                class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
+                                <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
+                            </a>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 text-emerald-600 tracking-tight">Program</h3>
-                        <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.</p>
-                        <ul class="w-full mb-8 text-sm">
-                            <li class="flex items-center justify-between py-3 border-b border-border">
-                                <span class="text-muted">Pendaftaran Dibuka</span>
-                                <span class="font-semibold">22 Sep 2025</span>
-                            </li>
-                            <li class="flex items-center justify-between py-3 border-b border-border">
-                                <span class="text-muted">Deadline Pembayaran</span>
-                                <span class="font-semibold">27 Okt 2025</span>
-                            </li>
-                            <li class="flex items-center justify-between py-3">
-                                <span class="text-muted">Pelaksanaan Final</span>
-                                <span class="text-emerald-600 font-bold">28 Okt 2025</span>
-                            </li>
-                        </ul>
-                        <a href="#" target="_blank"
-                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
-                            <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="py-12 px-4 bg-background">
+    <!-- <section class="py-12 px-4 bg-background">
         <div class="max-w-6xl mx-auto">
             <div class="border border-border rounded-2xl overflow-hidden shadow-xl">
                 <img src="/image/poster/TES_BANNER 1.png" alt="Banner Automation Week 9" class="w-full block object-cover">
             </div>
         </div>
-    </section>
+    </section> -->
 
     <section id="videos" class="py-24 px-4 bg-background">
         <div class="max-w-6xl mx-auto">

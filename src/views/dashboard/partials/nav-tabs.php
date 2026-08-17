@@ -8,19 +8,28 @@ use App\Components\Icon;
 
 <div class="hidden md:flex items-end gap-0.25 tracking-wide -mb-4.75">
   <a href="/home"
-    class="px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
       <?= ($current ?? '') === 'home' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+    <?= Icon::make()->name('home')->class('w-3.5 h-3.5') ?>
     Beranda
   </a>
   <a href="/application"
-    class="px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
       <?= ($current ?? '') === 'application' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+    <?= Icon::make()->name('file')->class('w-3.5 h-3.5') ?>
     Pendaftaran
   </a>
   <a href="/payments"
-    class="px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
       <?= ($current ?? '') === 'payment' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+    <?= Icon::make()->name('credit-card')->class('w-3.5 h-3.5') ?>
     Pembayaran
+  </a>
+  <a href="/profile"
+    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+      <?= ($current ?? '') === 'profile' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+    <?= Icon::make()->name('user-round')->class('w-3.5 h-3.5') ?>
+    Profil
   </a>
 </div>
 
@@ -59,6 +68,11 @@ use App\Components\Icon;
         <?= ($current ?? '') === 'payment' ? 'bg-red-50 text-brand font-bold' : 'text-gray-700 hover:bg-gray-50' ?>">
         <?= Icon::make()->name('credit-card')->class('w-4 h-4') ?>
         Pembayaran
+      </a>
+      <a href="/profile" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors no-underline
+        <?= ($current ?? '') === 'profile' ? 'bg-red-50 text-brand font-bold' : 'text-gray-700 hover:bg-gray-50' ?>">
+        <?= Icon::make()->name('user-round')->class('w-4 h-4') ?>
+        Profil
       </a>
     </nav>
   </div>

@@ -2746,6 +2746,11 @@
       display: none;
     }
   }
+  .md\:w-\[calc\(50\%-1rem\)\] {
+    @media (width >= 48rem) {
+      width: calc(50% - 1rem);
+    }
+  }
   .md\:max-w-md {
     @media (width >= 48rem) {
       max-width: var(--container-md);
