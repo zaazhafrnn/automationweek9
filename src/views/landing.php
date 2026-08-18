@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Automation Week 9</title>
-    <link class="w-4 h-4" rel="icon" href="/image/logo-aw.png">
+    <link rel="icon" href="/image/faveicon.png">
+    <link rel="apple-touch-icon" href="/image/faveicon.png">
     <link rel="stylesheet" href="/css/app.css">
     <style>
         .hero-bg {
             background: url('/image/hero-landing.png') left center/cover no-repeat;
         }
-
-
 
         @media (min-width: 640px) {
             .hero-bg {
@@ -22,6 +21,12 @@
 
         html {
             scroll-behavior: smooth;
+        }
+
+        @media (max-width: 640px) {
+            .curved-marquee text {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
@@ -96,16 +101,19 @@
 
             <div class="flex items-center justify-center gap-3 sm:gap-4 mb-8 bg-white/70 rounded-full p-2">
                 <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
-                    <img src="/image/LKTI_AW8.png" alt="LKTI Logo" class="w-full h-full object-contain">
+                    <img src="/image/lkti_icon.png" alt="LKTI Logo" class="w-full h-full object-contain">
                 </a>
                 <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
-                    <img src="/image/FFR_AW8.png" alt="FFR Logo" class="w-full h-full object-contain">
+                    <img src="/image/ffr_icon.png" alt="FFR Logo" class="w-full h-full object-contain">
                 </a>
                 <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
-                    <img src="/image/PLC_AW8.png" alt="PLC Logo" class="w-full h-full object-contain">
+                    <img src="/image/plc_icon.png" alt="PLC Logo" class="w-full h-full object-contain">
                 </a>
                 <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
-                    <img src="/image/LF_AW8.png" alt="Line Follower Logo" class="w-full h-full object-contain">
+                    <img src="/image/lf_icon.png" alt="Line Follower Logo" class="w-full h-full object-contain">
+                </a>
+                <a href="#competitions" class="w-8 h-8 sm:w-14 sm:h-14 hover:scale-110 transition-transform block">
+                    <img src="/image/program_icon.png" alt="Program Logo" class="w-full h-full object-contain">
                 </a>
             </div>
 
@@ -115,10 +123,21 @@
             <div class="flex flex-row w-full max-w-xs sm:max-w-none gap-3 sm:gap-4 justify-center mx-auto">
                 <a href="/application/team-register" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg border border-white/40 transition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
                 <a href="#competitions" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm text-white font-bold text-foreground border border-border hover:text-black hover:bg-card transition-all no-underline text-center">Lihat Lomba</a>
+            </div>
+        </div>
+        <div class="absolute left-0 right-0 bottom-0 z-0">
+            <div class="curved-marquee w-full overflow-hidden">
+                <svg class="w-full block" viewBox="0 0 1440 200" preserveAspectRatio="none" style="transform: rotate(2deg); transform-origin: center;">
+                    <defs>
+                        <path id="marquee-curve" d="M-100,40 Q500,280 1540,40" fill="none" />
+                    </defs>
+                    <text class="fill-white font-bold uppercase select-none" style="font-size: 2rem; letter-spacing: 0.08em;" xml:space="preserve">
+                        <textPath href="#marquee-curve" id="curved-marquee-text"></textPath>
+                    </text>
+                </svg>
+            </div>
         </div>
     </section>
-
-
 
 
     <section id="competitions" class="py-24 px-4 bg-background">
@@ -136,9 +155,9 @@
                     <div class="h-1.5 bg-gradient-to-r from-yellow-500 to-yellow-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
-                            <img src="/image/LKTI_AW8.png" alt="LKTI" class="w-16 h-16 object-contain">
+                            <img src="/image/lkti_icon.png" alt="LKTI" class="w-16 h-16 object-contain">
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 text-accent tracking-tight">LKTI</h3>
+                        <h3 class="text-2xl font-bold mb-2 text-yellow-500 tracking-tight">LKTI</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Lomba Karya Tulis Ilmiah — mengembangkan ide kreatif dan inovatif dalam memecahkan masalah lingkungan sekitar.</p>
                         <ul class="w-full mb-8 text-sm">
                             <li class="flex items-center justify-between py-3 border-b border-border">
@@ -151,11 +170,11 @@
                             </li>
                             <li class="flex items-center justify-between py-3">
                                 <span class="text-muted">Pelaksanaan Final</span>
-                                <span class="text-primary font-bold">28 Okt 2025</span>
+                                <span class="text-yellow-500 font-bold">28 Okt 2025</span>
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb" target="_blank"
-                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-accent hover:bg-accent/90 transition-all no-underline shadow">
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-yellow-500 hover:bg-yellow-600/90 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
                         </a>
                     </div>
@@ -165,7 +184,7 @@
                     <div class="h-1.5 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
-                            <img src="/image/FFR_AW8.png" alt="FFR" class="w-16 h-16 object-contain">
+                            <img src="/image/ffr_icon.png" alt="FFR" class="w-16 h-16 object-contain">
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-cyan-600 tracking-tight">FFR</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Fire Fighting Roboboat — kapal tanpa awak yang bergerak otomatis dengan misi memadamkan api.</p>
@@ -177,7 +196,7 @@
                             <li class="flex items-center justify-between py-3 border-b border-border">
                                 <span class="text-muted">Deadline Pembayaran</span>
                                 <span class="font-semibold">27 Okt 2025</span>
-                            </li>
+                            </li>accent
                             <li class="flex items-center justify-between py-3">
                                 <span class="text-muted">Pelaksanaan Final</span>
                                 <span class="text-cyan-600 font-bold">28 Okt 2025</span>
@@ -194,7 +213,7 @@
                     <div class="h-1.5 bg-gradient-to-r from-accent to-red-800"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
-                            <img src="/image/PLC_AW8.png" alt="PLC" class="w-16 h-16 object-contain">
+                            <img src="/image/plc_icon.png" alt="PLC" class="w-16 h-16 object-contain">
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-accent tracking-tight">PLC</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Programmable Logic Controller — mengasah logika dan kemampuan dalam bidang pemrograman PLC industri.</p>
@@ -213,19 +232,19 @@
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO" target="_blank"
-                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-accent hover:bg-accent/90 transition-all no-underline shadow">
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-accent hover:bg-red-600/90 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
                         </a>
                     </div>
                 </div>
 
                 <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
-                    <div class="h-1.5 bg-gradient-to-r from-purple-600 to-purple-400"></div>
+                    <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
-                            <img src="/image/LF_AW8.png" alt="Line Follower" class="w-16 h-16 object-contain">
+                            <img src="/image/lf_icon.png" alt="Line Follower" class="w-16 h-16 object-contain">
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 text-purple-700 tracking-tight">Line Follower</h3>
+                        <h3 class="text-2xl font-bold mb-2 text-emerald-600 tracking-tight">Line Follower</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Robot mikrokontroler yang ditantang mengikuti lintasan secara otomatis dengan kecepatan tinggi.</p>
                         <ul class="w-full mb-8 text-sm">
                             <li class="flex items-center justify-between py-3 border-b border-border">
@@ -238,11 +257,11 @@
                             </li>
                             <li class="flex items-center justify-between py-3">
                                 <span class="text-muted">Pelaksanaan Final</span>
-                                <span class="text-purple-700 font-bold">28 Okt 2025</span>
+                                <span class="text-emerald-600 font-bold">28 Okt 2025</span>
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq" target="_blank"
-                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-purple-600 hover:bg-purple-500 transition-all no-underline shadow">
+                            class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
                         </a>
                     </div>
@@ -250,12 +269,12 @@
 
                 <div class="md:col-span-2 flex justify-center">
                     <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl w-full md:w-[calc(50%-1rem)]">
-                        <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
+                        <div class="h-1.5 bg-gradient-to-r from-amber-500 to-amber-600"></div>
                         <div class="p-8 flex flex-col items-center flex-grow">
                             <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
-                                <div class="w-16 h-16 flex items-center justify-center text-2xl font-black text-emerald-600">PRG</div>
+                                <img src="/image/program_icon.png" alt="Program" class="w-16 h-16 object-contain">
                             </div>
-                            <h3 class="text-2xl font-bold mb-2 text-emerald-600 tracking-tight">Program</h3>
+                            <h3 class="text-2xl font-bold mb-2 text-amber-600 tracking-tight">Program</h3>
                             <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.</p>
                             <ul class="w-full mb-8 text-sm">
                                 <li class="flex items-center justify-between py-3 border-b border-border">
@@ -268,11 +287,11 @@
                                 </li>
                                 <li class="flex items-center justify-between py-3">
                                     <span class="text-muted">Pelaksanaan Final</span>
-                                    <span class="text-emerald-600 font-bold">28 Okt 2025</span>
+                                    <span class="text-amber-600 font-bold">28 Okt 2025</span>
                                 </li>
                             </ul>
                             <a href="#" target="_blank"
-                                class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
+                                class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-amber-600 hover:bg-amber-500 transition-all no-underline shadow">
                                 <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
                             </a>
                         </div>
@@ -293,7 +312,7 @@
     <section id="videos" class="py-24 px-4 bg-background">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Keseruan Dokumentasi</h2>
+                <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Dokumentasi</h2>
                 <p class="text-muted max-w-lg mx-auto text-sm md:text-base">Lihat profil jurusan Teknik Otomasi PPNS serta rekap keseruan Automation Week tahun-tahun sebelumnya.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -325,7 +344,7 @@
         </div>
     </section>
 
-    <section class="py-24 px-4 bg-background border-t border-border">
+    <!-- <section class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-6xl mx-auto text-center">
             <h2 class="text-3xl font-bold text-foreground mb-4 tracking-tight">Sponsor</h2>
             <p class="text-muted mb-12 text-sm max-w-sm mx-auto">Didukung oleh berbagai mitra industri dan sponsor terpercaya.</p>
@@ -336,7 +355,7 @@
                 <div class="w-32 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-muted text-xs font-semibold shadow-sm">Logo Sponsor</div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <section id="contact" class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-4xl mx-auto text-center">
@@ -436,28 +455,40 @@
             var textPath = document.getElementById('curved-marquee-text');
             if (!textPath) return;
 
-            var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 29 September – 14 Oktober 2025 ✦ Total hadiah puluhan juta rupiah + trophy + e-sertifikat ✦ 5 kategori: LF · PLC · FFR · LKTI · PROGRAM ';
+            var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 24 Agustus – 1 Oktober 2026 ✦ Total hadiah puluhan juta rupiah + Free pass Teknik Otomasi + trophy + e-sertifikat ✦ 5 kategori lomba: LF · PLC · FFR · LKTI · PROGRAM ';
             var speed = 1.5;
             var spacing = 0;
+            var svg = textPath.closest('svg');
+
+            var computedFontSize = getComputedStyle(textPath).fontSize;
             var measureEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             measureEl.setAttribute('xml:space', 'preserve');
             measureEl.style.visibility = 'hidden';
-            measureEl.style.fontSize = '2rem';
+            measureEl.style.fontSize = computedFontSize;
             measureEl.style.fontWeight = 'bold';
             measureEl.style.letterSpacing = '0.1em';
             measureEl.style.textTransform = 'uppercase';
             measureEl.textContent = text;
-            textPath.closest('svg').appendChild(measureEl);
+            svg.appendChild(measureEl);
             spacing = measureEl.getComputedTextLength();
             measureEl.remove();
+
+            if (window.innerWidth < 640) {
+                svg.setAttribute('viewBox', '0 0 600 200');
+                var scale = 600 / 1440;
+                svg.querySelector('#marquee-curve').setAttribute('d',
+                    'M' + (-100 * scale) + ',40 Q' + (500 * scale) + ',280 ' + (1540 * scale) + ',40');
+            }
 
             var repeat = Math.ceil(1800 / spacing) + 2;
             var totalText = Array(repeat).fill(text).join('');
             textPath.textContent = totalText;
             textPath.setAttribute('startOffset', -spacing + 'px');
 
-            var dragRef = false, lastXRef = 0, velRef = 0, dirRef = 'left';
-            var svg = textPath.closest('svg');
+            var dragRef = false,
+                lastXRef = 0,
+                velRef = 0,
+                dirRef = 'left';
 
             function step() {
                 if (!dragRef) {
@@ -491,6 +522,7 @@
                 if (next > 0) next -= spacing;
                 textPath.setAttribute('startOffset', next + 'px');
             });
+
             function endDrag() {
                 if (!dragRef) return;
                 dragRef = false;
