@@ -74,4 +74,15 @@ $router->post('/application/submission', 'SubmissionController@upload');
 
 $router->post('/logout', 'AuthController@logout');
 
-$router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+try {
+    $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo '<div style="padding:2rem; background:#fee2e2; border:2px solid #ef4444; font-family:sans-serif; color:#991b1b; margin:2rem; border-radius:1rem;">';
+    echo '<h2 style="margin-top:0;">PHP Fatal Exception / Error</h2>';
+    echo '<p><strong>Message:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
+    echo '<p><strong>File:</strong> ' . htmlspecialchars($e->getFile()) . ' on line ' . $e->getLine() . '</p>';
+    echo '<pre style="background:#fff; padding:1rem; overflow:auto;">' . htmlspecialchars($e->getTraceAsString()) . '</pre>';
+    echo '</div>';
+}
+
