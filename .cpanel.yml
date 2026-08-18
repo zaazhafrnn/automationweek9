@@ -1,11 +1,12 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/autg6277/staging.automationweek-ppns.org
+    - export DEPLOYPATH=/home/autg6277/public_html/staging.automationweek-ppns.org
     - /bin/mkdir -p $DEPLOYPATH
     - /usr/bin/rsync -av --exclude='.git' --exclude='node_modules' ./ $DEPLOYPATH/
     - /bin/cp .htaccess $DEPLOYPATH/ 2>/dev/null || :
     - /bin/cp public/.htaccess $DEPLOYPATH/public/ 2>/dev/null || :
+
 
 
 
