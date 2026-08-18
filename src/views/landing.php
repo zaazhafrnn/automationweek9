@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Automation Week 9</title>
-    <link class="w-4 h-4" rel="icon" href="/public/image/logo-aw.png">
-    <link rel="stylesheet" href="/public/css/app.css">
+    <link class="w-4 h-4" rel="icon" href="/image/logo-aw.png">
+    <link rel="stylesheet" href="/css/app.css">
     <style>
         .hero-bg {
-            background: url('/public/image/hero-landing.png') left center/cover no-repeat;
+            background: url('/image/hero-landing.png') left center/cover no-repeat;
         }
+
 
 
         @media (min-width: 640px) {
