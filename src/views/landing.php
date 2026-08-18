@@ -117,20 +117,9 @@
                 <a href="#competitions" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm text-white font-bold text-foreground border border-border hover:text-black hover:bg-card transition-all no-underline text-center">Lihat Lomba</a>
             </div>
         </div>
-        <div class="absolute left-0 right-0 bottom-0 z-20">
-            <div class="curved-marquee w-full overflow-hidden">
-                <svg class="w-full block" viewBox="0 0 1440 200" preserveAspectRatio="none" style="transform: rotate(2deg); transform-origin: center;">
-                    <defs>
-                        <path id="marquee-curve" d="M-100,40 Q500,280 1540,40" fill="none"/>
-                    </defs>
-                    <text class="fill-white font-bold uppercase" style="font-size: 2rem; letter-spacing: 0.08em;" xml:space="preserve">
-                        <textPath href="#marquee-curve" id="curved-marquee-text"></textPath>
-                    </text>
-                </svg>
-            </div>
-        </div>
         </div>
     </section>
+
 
 
     <section id="competitions" class="py-24 px-4 bg-background">
