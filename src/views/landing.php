@@ -159,42 +159,42 @@
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-yellow-500 tracking-tight">LKTI</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Lomba Karya Tulis Ilmiah — mengembangkan ide kreatif dan inovatif dalam memecahkan masalah lingkungan sekitar.</p>
-                        <ul class="w-full mb-8 text-sm">
+                        <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pendaftaran & Pengumpulan Abstrak</span>
-                                <span class="font-semibold">24 Agt 2026</span>
+                                <span class="font-semibold">24 Agustus 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Close Registration</span>
-                                <span class="font-semibold">1 Okt 2026</span>
+                                <span class="font-semibold">1 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Lolos Abstrak</span>
-                                <span class="font-semibold">3 Okt 2026</span>
+                                <span class="font-semibold">3 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumpulan Full Paper</span>
-                                <span class="font-semibold">4–26 Okt 2026</span>
+                                <span class="font-semibold">4 – 26 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Finalis</span>
-                                <span class="font-semibold">2 Nov 2026</span>
+                                <span class="font-semibold">2 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
-                                <span class="font-semibold">6 Nov 2026</span>
+                                <span class="font-semibold">6 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pembukaan & Persiapan Prototype</span>
-                                <span class="font-semibold">13 Nov 2026</span>
+                                <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Presentasi</span>
-                                <span class="font-semibold">14 Nov 2026</span>
+                                <span class="font-semibold">14 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
                                 <span class="text-muted">Pameran</span>
-                                <span class="text-yellow-500 font-bold">15 Nov 2026</span>
+                                <span class="text-yellow-500 font-bold">15 November 2026</span>
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb" target="_blank"
@@ -212,42 +212,42 @@
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-accent tracking-tight">PLC</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Programmable Logic Controller — mengasah logika dan kemampuan dalam bidang pemrograman PLC industri.</p>
-                        <ul class="w-full mb-8 text-sm">
+                        <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Open Registration</span>
-                                <span class="font-semibold">24 Agt 2026</span>
+                                <span class="font-semibold">24 Agustus 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Close Registration</span>
-                                <span class="font-semibold">30 Sep 2026</span>
+                                <span class="font-semibold">30 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Plan Contest</span>
-                                <span class="font-semibold">11 Okt 2026</span>
+                                <span class="font-semibold">11 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pelatihan Sesi 1</span>
-                                <span class="font-semibold">17 Okt 2026</span>
+                                <span class="font-semibold">17 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pelatihan Sesi 2</span>
-                                <span class="font-semibold">18 Okt 2026</span>
+                                <span class="font-semibold">18 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
-                                <span class="font-semibold">8 Nov 2026</span>
+                                <span class="font-semibold">8 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Penyisihan 1 & 2</span>
-                                <span class="font-semibold">13 Nov 2026</span>
+                                <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Penyisihan 3</span>
-                                <span class="font-semibold">14 Nov 2026</span>
+                                <span class="font-semibold">14 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
                                 <span class="text-muted">Final</span>
-                                <span class="text-primary font-bold">15 Nov 2026</span>
+                                <span class="text-primary font-bold">15 November 2026</span>
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO" target="_blank"
@@ -265,22 +265,22 @@
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-cyan-600 tracking-tight">FFR</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Fire Fighting Roboboat — kapal tanpa awak yang bergerak otomatis dengan misi memadamkan api.</p>
-                        <ul class="w-full mb-8 text-sm">
+                        <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pendaftaran</span>
-                                <span class="font-semibold">26 Agt 2026</span>
+                                <span class="font-semibold">26 Agustus 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">TM FFR & Test Track</span>
-                                <span class="font-semibold">13 Nov 2026</span>
+                                <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Penyisihan</span>
-                                <span class="font-semibold">14 Nov 2026</span>
+                                <span class="font-semibold">14 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
                                 <span class="text-muted">Semifinal & Final</span>
-                                <span class="text-cyan-600 font-bold">15 Nov 2026</span>
+                                <span class="text-cyan-600 font-bold">15 November 2026</span>
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0" target="_blank"
@@ -298,30 +298,30 @@
                         </div>
                         <h3 class="text-2xl font-bold mb-2 text-emerald-600 tracking-tight">Line Follower</h3>
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Robot mikrokontroler yang ditantang mengikuti lintasan secara otomatis dengan kecepatan tinggi.</p>
-                        <ul class="w-full mb-8 text-sm">
+                        <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Open Registration</span>
-                                <span class="font-semibold">17 Agt 2026</span>
+                                <span class="font-semibold">17 Agustus 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Close Registration</span>
-                                <span class="font-semibold">2 Nov 2026</span>
+                                <span class="font-semibold">2 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
-                                <span class="font-semibold">7 Nov 2026</span>
+                                <span class="font-semibold">7 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Uji Lintasan / Track</span>
-                                <span class="font-semibold">13 Nov 2026</span>
+                                <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Penyisihan</span>
-                                <span class="font-semibold">14 Nov 2026</span>
+                                <span class="font-semibold">14 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
                                 <span class="text-muted">16 Besar – Final</span>
-                                <span class="text-emerald-600 font-bold">15 Nov 2026</span>
+                                <span class="text-emerald-600 font-bold">15 November 2026</span>
                             </li>
                         </ul>
                         <a href="https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq" target="_blank"
@@ -340,30 +340,31 @@
                             </div>
                             <h3 class="text-2xl font-bold mb-2 text-amber-600 tracking-tight">Algoritma Program</h3>
                             <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.</p>
-                            <ul class="w-full mb-8 text-sm">
+                            <ul class="w-full mb-8 text-xs">
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Open Registrasi</span>
-                                    <span class="font-semibold">24 Agt 2026</span>
+                                    <span class="font-semibold">24 Agustus 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Close Registrasi</span>
-                                    <span class="font-semibold">1 Okt 2026</span>
+                                    <span class="font-semibold">1 Oktober 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Technical Meeting</span>
-                                    <span class="font-semibold">4 Okt 2026</span>
+                                    <span class="font-semibold">4 Oktober 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Pelatihan</span>
-                                    <span class="font-semibold">13 Nov 2026</span>
+                                    <span class="font-semibold">13 November 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Penyisihan 1 & 2</span>
-                                    <span class="font-semibold">14 Okt 2026</span>
+                                    <span class="font-semibold">14 Oktober 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5">
                                     <span class="text-muted">Final</span>
-                                    <span class="text-amber-600 font-bold">15 Nov 2026</span>
+                                    <span class="text-amber-600 font-bold">15 November 2026</span>
+
                                 </li>
                             </ul>
                             <a href="#" target="_blank"
