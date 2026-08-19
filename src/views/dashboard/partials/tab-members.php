@@ -1,6 +1,7 @@
 <?php
 
 use App\Components\Attachment;
+use App\Components\Dialog;
 use App\Components\Icon;
 
 /** @var array|null $team */
@@ -57,8 +58,8 @@ $UPLOAD_URL = '/uploads/teams/';
               </div>
             </div>
             <?php if ($isOptional): ?>
-              <button type="button" class="cancel-member cursor-pointer <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-grey-100 hover:border-red-500 rounded-xl text-gray-400 hover:text-red-500 transition-colors" aria-label="Hapus anggota">
-                <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-red-500') ?>
+              <button type="button" class="cancel-member cursor-pointer <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-gray-200 hover:border-red-500 rounded-xl text-red-500 hover:text-red-600 transition-colors" aria-label="Hapus anggota">
+                <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-current') ?>
               </button>
             <?php endif; ?>
           </div>
@@ -148,6 +149,16 @@ $UPLOAD_URL = '/uploads/teams/';
     </div>
   </form>
 
+  <?= Dialog::make()->id('delete-member-dialog')->title('Apakah anda yakin?')->width('max-w-md')->content('
+    <p class="text-sm text-gray-600 mb-6">Apakah kamu yakin ingin menghapus anggota ini? Data yang sudah diisi akan dihapus permanen.</p>
+    <div class="flex justify-end gap-3">
+      <button onclick="closeDialog(\'delete-member-dialog\')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
+      <button onclick="confirmDeleteMember()" class="px-4 py-2 text-sm font-medium text-white bg-red-700 rounded-lg hover:bg-red-800 items-center transition-colors">'
+    . Icon::make()->name('trash-2')->class('w-4 h-4 inline')->render()
+    . ' Hapus</button>
+    </div>
+  ')->render() ?>
+
   <script>
     document.querySelectorAll('[data-optional]').forEach(group => {
       const inputs = group.querySelectorAll('.member-input');
@@ -173,21 +184,29 @@ $UPLOAD_URL = '/uploads/teams/';
       group.querySelectorAll('.member-radio').forEach(r => r.addEventListener('change', check));
       check();
     });
+    window.__pendingDeleteGroup = null;
     document.querySelectorAll('.cancel-member').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        var g = this.closest('[data-optional]');
-        var num = parseInt(g.dataset.member);
-        var next = g.parentElement.querySelector('.member-group[data-member="' + (num + 1) + '"]');
-        var hasData = next && (next.dataset.activated === 'true' || Array.from(next.querySelectorAll('.member-input')).some(function(i) {
-          return i.value.trim();
-        }));
-        if (hasData) {
-          shiftDown(num, num + 1);
-        } else {
-          clearMember(g);
-        }
+        window.__pendingDeleteGroup = this.closest('[data-optional]');
+        openDialog('delete-member-dialog');
       });
     });
+    window.confirmDeleteMember = function() {
+      closeDialog('delete-member-dialog');
+      var g = window.__pendingDeleteGroup;
+      if (!g) return;
+      window.__pendingDeleteGroup = null;
+      var num = parseInt(g.dataset.member);
+      var next = g.parentElement.querySelector('.member-group[data-member="' + (num + 1) + '"]');
+      var hasData = next && (next.dataset.activated === 'true' || Array.from(next.querySelectorAll('.member-input')).some(function(i) {
+        return i.value.trim();
+      }));
+      if (hasData) {
+        shiftDown(num, num + 1);
+      } else {
+        clearMember(g);
+      }
+    };
 
     function clearMember(g, keepData) {
       g.dataset.activated = 'false';
