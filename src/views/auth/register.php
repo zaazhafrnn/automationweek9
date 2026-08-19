@@ -39,7 +39,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                         <span class="text-brand font-semibold">
                             Pendaftaran lomba dibuka
                         </span>
-                        <span>20 Agustus - 20 Oktober 2026</span>
+                        <span>24 Agustus - 1 Oktober 2026</span>
                     </div>
                 </div>
 
