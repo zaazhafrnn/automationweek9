@@ -58,7 +58,7 @@ $UPLOAD_URL = '/uploads/teams/';
               </div>
             </div>
             <?php if ($isOptional): ?>
-              <button type="button" class="cancel-member cursor-pointer <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-gray-200 hover:border-red-500 rounded-xl text-red-500 hover:text-red-600 transition-colors" aria-label="Hapus anggota">
+              <button type="button" class="cancel-member cursor-pointer <?= $hasData ? '' : 'hidden' ?> hover:bg-red-100 p-3 border border-gray-200 hover:border-red-500 rounded-xl text-red-500 hover:text-red-600 transition-colors" data-tooltip="Hapus anggota" aria-label="Hapus anggota">
                 <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-current') ?>
               </button>
             <?php endif; ?>
