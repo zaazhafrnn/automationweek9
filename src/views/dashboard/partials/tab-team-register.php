@@ -3,7 +3,7 @@
 /** @var array|null $team */
 /** @var string $csrf_token */
 
-$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Program'];
+$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Algoritma Program'];
 $DIVISION_ICONS = ['LF' => '/image/lf_icon.png', 'PLC' => '/image/plc_icon.png', 'FFR' => '/image/ffr_icon.png', 'LKTI' => '/image/lkti_icon.png', 'PROG' => '/image/program_icon.png'];
 ?>
 <form action="<?= $team ? '/application/team/update' : '/application/team/register' ?>" method="POST" enctype="multipart/form-data" novalidate>
