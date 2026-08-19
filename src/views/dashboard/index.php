@@ -234,7 +234,7 @@ if (!isset($activeTab)) {
     }
 
     function isTabLocked(num) {
-      if (num <= 2) return false;
+      if (num <= 1) return false;
       for (var i = 1; i < num; i++) {
         if (!savedTabDone(i)) return true;
       }
