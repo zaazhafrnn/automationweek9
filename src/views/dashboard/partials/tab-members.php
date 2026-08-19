@@ -48,7 +48,7 @@ $UPLOAD_URL = '/uploads/teams/';
         if ($cardRequired) $cardAttrs['required'] = true;
         $cardIcon = Icon::make()->name('credit-card')->class('size-5 text-black');
       ?>
-        <div class="member-group relative bg-white rounded-xl border border-gray-200 p-4 sm:p-5" data-member="<?= $p ?>" data-optional="true" <?= $disabled ? '' : 'data-activated="true"' ?>>
+        <div class="member-group relative bg-white rounded-xl border border-gray-200 p-4 sm:p-5" data-member="<?= $p ?>" <?= $isOptional ? 'data-optional="true"' : '' ?> <?= $disabled ? '' : 'data-activated="true"' ?>>
           <div class="flex items-center gap-3 mb-4 justify-between">
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>

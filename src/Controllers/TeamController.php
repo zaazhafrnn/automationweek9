@@ -213,8 +213,15 @@ class TeamController extends Controller
         if (empty($data['firstMemberName'])) $data['firstMemberGender'] = null;
         if (empty($data['secondMemberName'])) $data['secondMemberGender'] = null;
 
-        if (empty($data['name']) || empty($data['leaderName'])) {
-            return ['Nama tim dan ketua harus diisi.'];
+        $currentTab = $post['current_tab'] ?? '';
+        if ($currentTab === 'team-register') {
+            if (empty($data['name'])) {
+                return ['Nama tim harus diisi.'];
+            }
+        } else {
+            if (empty($data['name']) || empty($data['leaderName'])) {
+                return ['Nama tim dan ketua harus diisi.'];
+            }
         }
 
         $this->teamModel->update($team['id'], $data);

@@ -257,8 +257,8 @@ if (!isset($activeTab)) {
       }
     }
 
-    function resetTab() {
-      var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
+    function resetTab(tabNum) {
+      var panel = document.querySelector('.tab-panel[data-tab="' + tabNum + '"]');
       if (!panel) return;
       panel.querySelectorAll('input, textarea, select').forEach(function(el) {
         if (!el.name || !state.hasOwnProperty(el.name)) return;
@@ -415,7 +415,10 @@ if (!isset($activeTab)) {
       if (link && link.getAttribute('aria-disabled') !== 'true') {
         e.preventDefault();
         var target = parseInt(link.dataset.tabNum);
-        if (target !== current) resetTab();
+        if (target !== current) {
+          resetTab(current);
+          resetTab(target);
+        }
         goTo(target);
       }
     });
@@ -425,7 +428,10 @@ if (!isset($activeTab)) {
       if (prev) {
         e.preventDefault();
         var target = parseInt(prev.dataset.goto);
-        if (target !== current) resetTab();
+        if (target !== current) {
+          resetTab(current);
+          resetTab(target);
+        }
         goTo(target);
         return;
       }
