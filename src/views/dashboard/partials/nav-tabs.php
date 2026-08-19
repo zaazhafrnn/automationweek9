@@ -16,7 +16,7 @@ use App\Components\Icon;
   <a href="/application"
     class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
       <?= ($current ?? '') === 'application' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
-    <?= Icon::make()->name('file')->class('w-3.5 h-3.5') ?>
+    <?= Icon::make()->name('mailbox-flag')->class('w-3.5 h-3.5') ?>
     Pendaftaran
   </a>
   <a href="/payments"
@@ -61,7 +61,7 @@ use App\Components\Icon;
       </a>
       <a href="/application" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors no-underline
         <?= ($current ?? '') === 'application' ? 'bg-red-50 text-brand font-bold' : 'text-gray-700 hover:bg-gray-50' ?>">
-        <?= Icon::make()->name('user-round')->class('w-4 h-4') ?>
+        <?= Icon::make()->name('mailbox-flag')->class('w-4 h-4') ?>
         Pendaftaran
       </a>
       <a href="/payments" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors no-underline
