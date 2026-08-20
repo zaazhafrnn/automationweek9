@@ -152,8 +152,8 @@ $UPLOAD_URL = '/uploads/teams/';
   <?= Dialog::make()->id('delete-member-dialog')->title('Apakah anda yakin?')->width('max-w-md')->content('
     <p class="text-sm text-gray-600 mb-6">Apakah kamu yakin ingin menghapus anggota ini? Data yang sudah diisi akan dihapus permanen.</p>
     <div class="flex justify-end gap-3">
-      <button onclick="closeDialog(\'delete-member-dialog\')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
-      <button onclick="confirmDeleteMember()" class="px-4 py-2 text-sm font-medium text-white bg-red-700 rounded-lg hover:bg-red-800 items-center transition-colors">'
+      <button onclick="closeDialog(\'delete-member-dialog\')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
+      <button onclick="confirmDeleteMember()" class="px-4 py-2 text-sm font-semibold text-white bg-red-700 rounded-lg hover:bg-red-800 items-center transition-colors">'
     . Icon::make()->name('trash-2')->class('w-4 h-4 inline')->render()
     . ' Hapus</button>
     </div>
