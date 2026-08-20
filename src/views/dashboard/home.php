@@ -11,6 +11,8 @@ use App\Components\Icon;
 
 $division = $team['division'] ?? null;
 $divisionUpper = strtoupper((string) $division);
+$divisionNames = ['PROG' => 'Program'];
+$divisionDisplay = $divisionNames[$divisionUpper] ?? $divisionUpper;
 $upload1 = $uploads[1] ?? [];
 
 $steps = [
@@ -95,7 +97,7 @@ $DIVISION_INFO = [
     ],
     'video' => null
   ],
-  'PROGRAM' => [
+  'PROG' => [
     'title' => 'Algoritma Program',
     'logo' => '/image/program_icon.png',
     'desc' => 'Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.',
@@ -201,7 +203,7 @@ $DIVISION_INFO = [
               <span class="text-xs uppercase font-bold tracking-wider text-gray-400">Tim Terdaftar</span>
               <h2 class="text-xl font-bold text-gray-800 mt-1"><?= htmlspecialchars($team['name']) ?></h2>
               <p class="text-sm text-gray-500 mt-1">Sekolah: <span class="font-semibold text-gray-700"><?= htmlspecialchars($team['teamSchool']) ?></span></p>
-              <span class="inline-block mt-2 px-2.5 py-1 text-xs font-bold text-brand bg-brand/10 rounded-lg">Divisi <?= htmlspecialchars($divisionUpper) ?></span>
+              <span class="inline-block mt-2 px-2.5 py-1 text-xs font-bold text-brand bg-brand/10 rounded-lg">Divisi <?= htmlspecialchars($divisionDisplay) ?></span>
             </div>
             <?php if ($info && !empty($info['guide_book'])): ?>
               <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
