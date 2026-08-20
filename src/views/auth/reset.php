@@ -13,14 +13,18 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
         <div class="absolute left-1/2 -top-10 -translate-x-1/2 w-full h-[70px] bg-primary rounded-b-4xl shadow-sm z-10"></div>
         <div class="flex-1 flex flex-col justify-center items-center relative min-h-0">
             <div class="w-full max-w-md px-8 md:px-0 xl:px-0">
-                <div class="flex justify-center mb-6">
-                    <img src="/image/logo-aw.png" alt="automationweek logo" class="h-20 sm:h-28 mix-blend-multiply w-auto select-none pointer-events-none">
-                </div>
+                <a href="/" class="block text-center">
+                    <div class="flex justify-center mb-6">
+                        <img src="/image/logo-aw.png" alt="automationweek logo" class="h-20 sm:h-28 mix-blend-multiply w-auto select-none">
+                    </div>
 
+                    <div class="text-center mb-8">
+                        <h1 class="text-2xl sm:text-3xl leading-tighter font-display font-extrabold mb-4">
+                            Reset password
+                        </h1>
+                    </div>
+                </a>
                 <div class="text-center mb-8">
-                    <h1 class="text-2xl sm:text-3xl leading-tighter font-display font-extrabold mb-4">
-                        Reset password
-                    </h1>
                     <p class="text-sm sm:text-base">
                         Masukkan password baru Anda.
                     </p>
