@@ -64,15 +64,10 @@ if (!isset($activeTab)) {
   $flashError = Session::flash('team_update_error') ?? Session::flash('team_register_error');
   $flashSuccess = Session::flash('team_update_success');
   if ($flashError || $flashSuccess):
-    $isError = (bool) $flashError;
-    $msg = $isError ? $flashError : $flashSuccess;
+    $variant = $flashError ? 'error' : 'success';
+    $msg = $flashError ?: $flashSuccess;
   ?>
-    <div class="px-4 sm:px-6 lg:px-8 mt-4">
-      <div class="flex items-start gap-3 p-4 rounded-xl border <?= $isError ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200' ?>">
-        <?= Icon::make()->name($isError ? 'alert-circle' : 'check-circle')->class($isError ? 'w-5 h-5 text-red-500 shrink-0' : 'w-5 h-5 text-green-500 shrink-0') ?>
-        <p class="text-sm <?= $isError ? 'text-red-700' : 'text-green-700' ?>"><?= $msg ?></p>
-      </div>
-    </div>
+    <?= \App\Components\Toast::make()->variant($variant)->message($msg)->render() ?>
   <?php endif; ?>
 
   <div>

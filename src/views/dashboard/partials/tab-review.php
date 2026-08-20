@@ -37,10 +37,6 @@ $sectionBtn = function (): string {
     <input type="hidden" name="next_tab" value="review">
     <input type="hidden" name="current_tab" value="review">
 
-    <div id="reviewFormError" class="hidden flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 mb-6">
-      <p class="text-sm text-red-700"></p>
-    </div>
-
     <div class="space-y-6">
       <section data-section="team" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
         <label class="block text-sm font-semibold mb-3">Pilih Divisi Lomba<span class="text-red-500">*</span></label>
@@ -362,14 +358,6 @@ $sectionBtn = function (): string {
         }, 1500);
       }
 
-      function showError(msg) {
-        var box = document.getElementById('reviewFormError');
-        if (!box) return;
-        var p = box.querySelector('p');
-        if (p) p.innerHTML = msg;
-        box.classList.remove('hidden');
-      }
-
       window.confirmSubmit = function() {
         closeDialog('submit-confirm-dialog');
         form.requestSubmit();
@@ -390,7 +378,6 @@ $sectionBtn = function (): string {
 
         e.preventDefault();
         if (btn) btn.disabled = true;
-        document.getElementById('reviewFormError')?.classList.add('hidden');
 
         fetch((btn && btn.formAction) || form.action, {
             method: 'POST',
@@ -416,12 +403,12 @@ $sectionBtn = function (): string {
               if (window.__syncSavedState) window.__syncSavedState(false);
             } else {
               if (btn) btn.disabled = false;
-              showError((data && data.error) || 'Terjadi kesalahan. Silakan coba lagi.');
+              showToast((data && data.error) || 'Terjadi kesalahan. Silakan coba lagi.', 'error');
             }
           })
           .catch(function() {
             if (btn) btn.disabled = false;
-            showError('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            showToast('Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
           });
       });
 
