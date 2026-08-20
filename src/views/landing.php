@@ -40,7 +40,7 @@
             aria-expanded="false"
             style="appearance: none; -webkit-appearance: none; padding: 0; margin: 0;">
             <img src="/image/logo-aw.png" alt="AW" class="w-6 h-6 object-contain bg-white rounded-full border border-border">
-            <span class="font-bold text-sm tracking-tight whitespace-nowrap">Automation Week 9</span>
+            <span class="font-bold text-sm tracking-tight whitespace-nowrap">Automation Week IX</span>
             <span class="md:hidden inline-flex items-center justify-center" id="mobile-nav-pill-chevron">
                 <?= \App\Components\Icon::make()->name('menu')->class('w-4 h-4') ?>
             </span>
@@ -73,7 +73,7 @@
         <div class="flex items-center justify-between border-b border-border px-5 py-4">
             <div class="flex items-center gap-2">
                 <img src="/image/logo-aw.png" alt="AW" class="w-7 h-7 object-contain bg-white rounded-full border border-border">
-                <span class="font-bold text-sm tracking-tight text-foreground whitespace-nowrap">Automation Week 9</span>
+                <span class="font-bold text-sm tracking-tight text-foreground whitespace-nowrap">Automation Week IX</span>
             </div>
             <button type="button" id="mobile-nav-sheet-close" class="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors" aria-label="Tutup menu">
                 <?= \App\Components\Icon::make()->name('x')->class('w-5 h-5') ?>
@@ -94,7 +94,8 @@
             <a href="/login" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full text-xs font-bold text-white bg-accent hover:bg-accent/90 transition-all no-underline">Login</a>
         </div>
     </div>
-    <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+
+    <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden border-t border-border">
         <div class="absolute inset-0 z-0 hero-bg"></div>
         <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-12">
             <img src="/image/logo-aw.png" alt="AW Logo" class="w-28 h-28 mb-6 object-contain bg-white rounded-full shadow-2xl p-1 border border-border">
@@ -118,7 +119,7 @@
             </div>
 
             <p class="text-xs font-bold uppercase tracking-tighter md:tracking-wide text-white mb-3">Politeknik Perkapalan Negeri Surabaya</p>
-            <h1 class="text-3xl md:text-6xl font-black mb-6 leading-none tracking-tight text-white">Automation <span class="text-white">Week 9</span></h1>
+            <h1 class="text-3xl md:text-6xl font-black mb-6 leading-none tracking-tight text-white">Automation <span class="text-white">Week IX</span></h1>
             <p class="text-lg md:text-xl font-medium tracking-wide text-white mb-8 italic">"Powering the Next Evolution"</p>
             <div class="flex flex-row w-full max-w-xs sm:max-w-none gap-3 sm:gap-4 justify-center mx-auto">
                 <a href="/application/team-register" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold text-white shadow-lg border border-white/40 transition-all hover:scale-105 bg-accent hover:bg-accent/90 no-underline text-center">Daftar Sekarang</a>
@@ -140,7 +141,7 @@
     </section>
 
 
-    <section id="competitions" class="py-24 px-4 bg-background">
+    <section id="competitions" class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-6xl mx-auto">
             <div class="mb-16 text-center">
                 <p class="text-xs font-bold uppercase tracking-widest mb-3 text-accent">5 Kategori Lomba</p>
@@ -386,7 +387,7 @@
         </div>
     </section> -->
 
-    <section id="videos" class="py-24 px-4 bg-background">
+    <section id="videos" class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Dokumentasi</h2>
