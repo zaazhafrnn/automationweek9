@@ -178,8 +178,8 @@ $sectionBtn = function (): string {
             $twibbon = $uploads[$p]['twibbon'] ?? null;
             $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
             $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
-            $igIcon = Icon::make()->name('image')->class('size-5 text-black');
-            $twibbonIcon = Icon::make()->name('image')->class('size-5 text-black');
+            $igIcon = Icon::make()->name('instagram')->class('size-5 text-black');
+            $twibbonIcon = Icon::make()->name('user-round')->class('size-5 text-black');
             $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-review-' . $p . '-ig', 'max-size' => 10 * 1024 * 1024];
             if (!$ig) $igAttrs['required'] = true;
             $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-review-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];
