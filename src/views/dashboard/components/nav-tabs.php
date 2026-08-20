@@ -5,38 +5,59 @@ use App\Components\Icon;
 /** @var string $current */
 /** @var string|null $csrf_token */
 ?>
+<div class="bg-brand border-b border-gray-200 text-white">
+  <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
+    <div class="flex items-center gap-2 no-underline text-white">
+      <a href="/">
+        <img src="/image/logo-aw.png" alt="AW" class="w-7 h-7 object-contain bg-white rounded-full border border-white/30 shrink-0">
+      </a>
+      <div>
+        <h1 class="text-lg font-bold leading-tight">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
+        <p class="text-xs -mt-0.5 font-medium">Kelola pendaftaran tim kamu.</p>
+      </div>
+    </div>
 
-<div class="hidden md:flex items-end gap-0.25 tracking-wide -mb-4.75">
-  <a href="/home"
-    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
-      <?= ($current ?? '') === 'home' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
-    <?= Icon::make()->name('home')->class('w-3.5 h-3.5') ?>
-    Beranda
-  </a>
-  <a href="/application"
-    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
-      <?= ($current ?? '') === 'application' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
-    <?= Icon::make()->name('mailbox-flag')->class('w-3.5 h-3.5') ?>
-    Pendaftaran
-  </a>
-  <a href="/payments"
-    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
-      <?= ($current ?? '') === 'payment' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
-    <?= Icon::make()->name('credit-card')->class('w-3.5 h-3.5') ?>
-    Pembayaran
-  </a>
-  <a href="/profile"
-    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
-      <?= ($current ?? '') === 'profile' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
-    <?= Icon::make()->name('user-round')->class('w-3.5 h-3.5') ?>
-    Profil
-  </a>
-</div>
+    <div class="hidden md:flex items-end gap-0.25 tracking-wide -mb-4.75">
+      <a href="/home"
+        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+          <?= ($current ?? '') === 'home' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+        <?= Icon::make()->name('home')->class('w-3.5 h-3.5') ?>
+        Beranda
+      </a>
+      <a href="/application"
+        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+          <?= ($current ?? '') === 'application' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+        <?= Icon::make()->name('mailbox-flag')->class('w-3.5 h-3.5') ?>
+        Pendaftaran
+      </a>
+      <a href="/payments"
+        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+          <?= ($current ?? '') === 'payment' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+        <?= Icon::make()->name('credit-card')->class('w-3.5 h-3.5') ?>
+        Pembayaran
+      </a>
+      <a href="/profile"
+        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors rounded-t-lg
+          <?= ($current ?? '') === 'profile' ? 'text-gray-900 font-semibold bg-gray-100 hover:bg-slate-300' : 'text-gray-500 hover:text-black bg-gray-200 hover:bg-gray-300' ?>">
+        <?= Icon::make()->name('user-round')->class('w-3.5 h-3.5') ?>
+        Profil
+      </a>
+    </div>
 
-<div class="md:hidden">
-  <button type="button" id="mobile-sheet-trigger" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white focus:outline-none transition-colors border border-white/20" aria-label="Open Navigation Drawer">
-    <?= Icon::make()->name('menu')->class('w-5 h-5') ?>
-  </button>
+    <form action="/logout" method="POST" class="m-0 hidden md:block">
+      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
+      <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+        <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>
+        Logout
+      </button>
+    </form>
+
+    <div class="md:hidden">
+      <button type="button" id="mobile-sheet-trigger" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white focus:outline-none transition-colors border border-white/20" aria-label="Open Navigation Drawer">
+        <?= Icon::make()->name('menu')->class('w-5 h-5') ?>
+      </button>
+    </div>
+  </div>
 </div>
 
 <div id="mobile-sheet-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden"></div>
@@ -77,7 +98,6 @@ use App\Components\Icon;
     </nav>
   </div>
 
-  <!-- Sheet Footer -->
   <div class="border-t border-gray-100 pt-4">
     <form action="/logout" method="POST" class="m-0">
       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">

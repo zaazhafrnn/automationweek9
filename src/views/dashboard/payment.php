@@ -12,23 +12,8 @@ $status = $payment['status'] ?? null;
 $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
 ?>
 <div class="min-h-screen bg-gray-50">
-  <div class="bg-brand border-b border-gray-200 text-white">
-    <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
-      <div>
-        <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
-        <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
-      </div>
-      <?php $current = 'payment';
-      include __DIR__ . '/partials/nav-tabs.php'; ?>
-      <form action="/logout" method="POST" class="m-0 hidden md:block">
-        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
-        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-          <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>
-          Logout
-        </button>
-      </form>
-    </div>
-  </div>
+  <?php $current = 'payment';
+  include __DIR__ . '/components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-4">
     <?php if (!$team): ?>
@@ -111,7 +96,7 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
               <div>
                 <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Ulang Bukti Transfer <span class="text-red-500">*</span></label>
                 <?= Attachment::make()
-                  
+
                   ->media($uploadIcon)
                   ->title('Upload Ulang Bukti Transfer')
                   ->description('PNG, JPG, GIF, WebP — maks 2MB')
@@ -154,7 +139,7 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
               <div>
                 <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Bukti Transfer <span class="text-red-500">*</span></label>
                 <?= Attachment::make()
-                  
+
                   ->media($uploadIcon)
                   ->title('Upload Bukti Transfer')
                   ->description('PNG, JPG, GIF, WebP — maks 2MB')

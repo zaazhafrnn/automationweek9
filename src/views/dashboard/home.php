@@ -115,23 +115,8 @@ $DIVISION_INFO = [
 ];
 ?>
 <div class="min-h-screen bg-gray-50">
-  <div class="bg-brand border-b border-gray-200 text-white">
-    <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
-      <div>
-        <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
-        <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
-      </div>
-      <?php $current = 'home';
-      include __DIR__ . '/partials/nav-tabs.php'; ?>
-      <form action="/logout" method="POST" class="m-0 hidden md:block">
-        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
-        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-          <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>
-          Logout
-        </button>
-      </form>
-    </div>
-  </div>
+  <?php $current = 'home';
+  include __DIR__ . '/components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6">
@@ -225,64 +210,64 @@ $DIVISION_INFO = [
             </div>
             <p class="text-sm text-gray-600 leading-relaxed"><?= htmlspecialchars($info['desc']) ?></p>
           </div>
+      </div>
+
+      <?php if (!empty($info['video'])): ?>
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
+          <h3 class="text-md font-bold text-gray-800 mb-4">Video Trial / Demo</h3>
+          <div class="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow">
+            <iframe class="w-full h-full" src="<?= htmlspecialchars($info['video']) ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
         </div>
+      <?php endif; ?>
 
-          <?php if (!empty($info['video'])): ?>
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
-              <h3 class="text-md font-bold text-gray-800 mb-4">Video Trial / Demo</h3>
-              <div class="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow">
-                <iframe class="w-full h-full" src="<?= htmlspecialchars($info['video']) ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </div>
+      <div class="bg-white rounded-2xl p-6 mt-6 border border-gray-100 shadow-sm">
+        <h3 class="text-md font-bold text-gray-800 mb-4">Timeline Divisi <?= htmlspecialchars($divisionUpper) ?></h3>
+        <div class="relative border-l-2 border-brand/20 ml-4 space-y-6">
+          <?php
+          // ponytail: inline Indonesian date parser, no lib
+          $parseDate = function (string $d): ?int {
+            $m = ['januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4, 'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8, 'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12];
+            if (preg_match('/(\d{1,2})\s+(\w+)\s+(\d{4})/', $d, $p)) {
+              $mon = $m[strtolower($p[2])] ?? null;
+              return $mon ? mktime(0, 0, 0, $mon, (int)$p[1], (int)$p[3]) : null;
+            }
+            return null;
+          };
+          $today = strtotime('today');
+          ?>
+          <?php foreach ($info['timeline'] as $item):
+            $ts = $parseDate($item['date']);
+            $reached = $ts !== null && $ts <= $today;
+          ?>
+            <div class="relative pl-6">
+              <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand' ?>"></div>
+              <h4 class="text-sm font-bold <?= $reached ? 'text-green-700' : 'text-gray-800' ?>"><?= htmlspecialchars($item['title']) ?></h4>
+              <p class="text-xs <?= $reached ? 'text-green-600' : 'text-gray-500' ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
             </div>
-          <?php endif; ?>
-
-          <div class="bg-white rounded-2xl p-6 mt-6 border border-gray-100 shadow-sm">
-            <h3 class="text-md font-bold text-gray-800 mb-4">Timeline Divisi <?= htmlspecialchars($divisionUpper) ?></h3>
-            <div class="relative border-l-2 border-brand/20 ml-4 space-y-6">
-              <?php
-                // ponytail: inline Indonesian date parser, no lib
-                $parseDate = function(string $d): ?int {
-                  $m = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-                  if (preg_match('/(\d{1,2})\s+(\w+)\s+(\d{4})/', $d, $p)) {
-                    $mon = $m[strtolower($p[2])] ?? null;
-                    return $mon ? mktime(0,0,0,$mon,(int)$p[1],(int)$p[3]) : null;
-                  }
-                  return null;
-                };
-                $today = strtotime('today');
-              ?>
-              <?php foreach ($info['timeline'] as $item):
-                $ts = $parseDate($item['date']);
-                $reached = $ts !== null && $ts <= $today;
-              ?>
-                <div class="relative pl-6">
-                  <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand' ?>"></div>
-                  <h4 class="text-sm font-bold <?= $reached ? 'text-green-700' : 'text-gray-800' ?>"><?= htmlspecialchars($item['title']) ?></h4>
-                  <p class="text-xs <?= $reached ? 'text-green-600' : 'text-gray-500' ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          </div>
-        <?php else: ?>
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <p class="text-sm text-gray-600">Informasi divisi belum tersedia.</p>
-          </div>
-        <?php endif; ?>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    <?php else: ?>
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <p class="text-sm text-gray-600">Informasi divisi belum tersedia.</p>
       </div>
     <?php endif; ?>
   </div>
+<?php endif; ?>
+</div>
 
-  <?php include __DIR__ . '/partials/footer.php'; ?>
-  <script>
-    var active = document.querySelector('[data-active="1"]');
-    if (active) {
-      var scroller = active.closest('.overflow-x-auto');
-      if (scroller) {
-        scroller.style.scrollBehavior = 'smooth';
-        var r = active.getBoundingClientRect();
-        var sr = scroller.getBoundingClientRect();
-        scroller.scrollLeft += r.left - sr.left - (sr.width / 2) + (r.width / 2);
-      }
+<?php include __DIR__ . '/partials/footer.php'; ?>
+<script>
+  var active = document.querySelector('[data-active="1"]');
+  if (active) {
+    var scroller = active.closest('.overflow-x-auto');
+    if (scroller) {
+      scroller.style.scrollBehavior = 'smooth';
+      var r = active.getBoundingClientRect();
+      var sr = scroller.getBoundingClientRect();
+      scroller.scrollLeft += r.left - sr.left - (sr.width / 2) + (r.width / 2);
     }
-  </script>
+  }
+</script>
 </div>
