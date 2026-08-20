@@ -322,6 +322,7 @@ class TeamController extends Controller
         $uploadLabels = ['student_card' => 'Kartu pelajar', 'ig_follow' => 'Bukti IG', 'twibbon' => 'Twibbon'];
         for ($i = 1; $i <= $need; $i++) {
             $memberLabel = $i === 1 ? 'ketua' : 'anggota ' . $i;
+            if ($i > 1 && empty($team[$nameKeys[$i]])) continue;
             if (empty($team[$nameKeys[$i]])) {
                 $missing[] = 'Data ' . $memberLabel;
                 continue;
