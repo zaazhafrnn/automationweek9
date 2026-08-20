@@ -264,8 +264,8 @@ $sectionBtn = function (): string {
   <?= Dialog::make()->id('submit-confirm-dialog')->title('Konfirmasi Submit')->width('max-w-md')->content('
     <p class="text-sm text-gray-600 mb-6">Apakah kamu yakin data sudah benar dan ingin submit pendaftaran?</p>
     <div class="flex justify-end gap-3">
-      <button onclick="closeDialog(\'submit-confirm-dialog\')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
-      <button onclick="confirmSubmit()" class="px-4 py-2 text-sm font-medium text-white bg-brand rounded-lg hover:bg-red-800 transition-colors">Ya, Submit</button>
+      <button onclick="closeDialog(\'submit-confirm-dialog\')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
+      <button onclick="confirmSubmit()" class="px-4 py-2 text-sm font-semibold text-white bg-brand rounded-lg hover:bg-red-800 transition-colors">Ya, Submit</button>
     </div>
   ') ?>
 
