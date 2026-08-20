@@ -6,7 +6,7 @@ use App\Components\Icon;
 /** @var string $user_name */
 /** @var array|null $team */
 /** @var array|null $payment */
-/** @var array|null $submission */
+/** @var bool $is_reviewed */
 /** @var array $uploads */
 
 $division = $team['division'] ?? null;
@@ -17,7 +17,7 @@ $steps = [
   1 => ['label' => 'Registrasi', 'title' => 'Registrasi Tim', 'done' => (bool) $team],
   2 => ['label' => 'Data Anggota', 'title' => 'Data Anggota', 'done' => !empty($team['leaderName'])],
   3 => ['label' => 'Media Sosial', 'title' => 'Media Sosial', 'done' => !empty($upload1['ig_follow']) && !empty($upload1['twibbon'])],
-  4 => ['label' => 'Review', 'title' => 'Review & Submit', 'done' => (bool) $submission],
+  4 => ['label' => 'Review', 'title' => 'Review & Submit', 'done' => $is_reviewed],
   5 => ['label' => 'Pembayaran', 'title' => 'Pembayaran', 'done' => !empty($payment) && ($payment['status'] ?? '') === 'verified'],
 ];
 $currentStep = null;

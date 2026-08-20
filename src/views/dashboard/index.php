@@ -7,7 +7,7 @@ use App\Utils\Session;
 /** @var string $user_name */
 /** @var array|null $team */
 /** @var array|null $payment */
-/** @var array|null $submission */
+/** @var bool $is_reviewed */
 /** @var array $uploads */
 /** @var int $activeTab */
 
@@ -27,7 +27,7 @@ $tabDone = [
   1 => (bool) $team,
   2 => !empty($team['leaderName']),
   3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
-  4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']) && (bool) $submission,
+  4 => $is_reviewed,
 ];
 
 if (!isset($activeTab)) {
@@ -164,7 +164,7 @@ if (!isset($activeTab)) {
                       'twibbon_1' => $uploads[1]['twibbon'] ?? null,
                       'twibbon_2' => $uploads[2]['twibbon'] ?? null,
                       'twibbon_3' => $uploads[3]['twibbon'] ?? null,
-                      '__submitted' => (bool) ($submission !== null),
+                      '__submitted' => $is_reviewed,
                     ]) ?>;
     window.state = _state;
     const state = _state;
@@ -192,7 +192,7 @@ if (!isset($activeTab)) {
 
     function filled(k) {
       var v = state[k];
-      if (v == null) return false;
+      if (v == null || v === false) return false;
       return v instanceof File ? true : String(v).trim() !== '';
     }
 
@@ -229,7 +229,7 @@ if (!isset($activeTab)) {
 
     function filledSaved(k) {
       var v = savedState[k];
-      if (v == null) return false;
+      if (v == null || v === false) return false;
       return String(v).trim() !== '';
     }
 
@@ -440,11 +440,7 @@ if (!isset($activeTab)) {
         if (!validateTab(current)) return;
         var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
         if (next.id === 'nextTabSubmit' && current === total) {
-          var rform = panel && panel.querySelector('#reviewForm');
-          if (rform) {
-            rform.requestSubmit();
-            return;
-          }
+          openDialog('submit-confirm-dialog');
           return;
         }
         if (!hasChanges()) {

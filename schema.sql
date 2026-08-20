@@ -43,11 +43,13 @@ CREATE TABLE IF NOT EXISTS payments (
 
 CREATE TABLE IF NOT EXISTS submissions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    team_id INT NOT NULL UNIQUE,
-    type ENUM('file', 'youtube_link', 'application') NOT NULL DEFAULT 'file',
-    value TEXT NOT NULL,
+    team_id INT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    value TEXT,
+    status VARCHAR(20) DEFAULT 'submitted',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_team_type (team_id, type),
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

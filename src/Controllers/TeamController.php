@@ -185,7 +185,7 @@ class TeamController extends Controller
             return;
         }
 
-        (new Submission())->upsert($team['id'], 'application', 'submitted');
+        (new Submission())->markReviewed($team['id']);
 
         if ($this->isAjax()) {
             $this->json(['ok' => true]);
