@@ -159,9 +159,11 @@ $DIVISION_INFO = [
             </div>
           </div>
           <div class="mt-6 mb-4 md:mb-0 flex justify-center">
-            <a href="<?= $applicationDone ? '/payments' : '/application' ?>" class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline shadow-sm">
-              <?= $applicationDone ? 'Lanjut ke Pembayaran' : 'Lanjutkan Pendaftaran' ?>
-            </a>
+            <?php if (($payment['status'] ?? '') !== 'verified'): ?>
+              <a href="<?= $applicationDone ? '/payments' : '/application' ?>" class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline shadow-sm">
+                <?= $applicationDone ? 'Lanjut ke Pembayaran' : 'Lanjutkan Pendaftaran' ?>
+              </a>
+            <?php endif; ?>
           </div>
         </div>
       </div>

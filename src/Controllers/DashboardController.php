@@ -128,8 +128,10 @@ class DashboardController extends Controller
 
         $team = (new Team())->findByUserId(Session::get('user_id'));
         $payment = null;
+        $is_reviewed = false;
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
+            $is_reviewed = (new Submission())->isReviewed($team['id']);
         }
 
         $this->view('dashboard/payment', [
@@ -137,6 +139,7 @@ class DashboardController extends Controller
             'csrf_token' => Security::generateCsrfToken(),
             'team' => $team,
             'payment' => $payment,
+            'is_reviewed' => $is_reviewed,
         ]);
     }
 

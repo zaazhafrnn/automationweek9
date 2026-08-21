@@ -1,167 +1,179 @@
 <?php
 
-use App\Components\Attachment;
+use App\Components\Dialog;
 use App\Components\Icon;
 
 /** @var string $csrf_token */
 /** @var string $user_name */
 /** @var array|null $team */
 /** @var array|null $payment */
+/** @var bool $is_reviewed */
 
 $status = $payment['status'] ?? null;
-$uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
+$locked = !$team || !$is_reviewed;
+$hasProof = !empty($payment['proofImage']);
+$verified = ($status === 'verified');
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'payment';
   include __DIR__ . '/components/nav-tabs.php'; ?>
 
-  <div class="px-4 sm:px-6 lg:px-8 py-4">
-    <?php if (!$team): ?>
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 max-w-lg">
-        <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-          <?= Icon::make()->name('alert-circle')->class('w-7 h-7 text-gray-400') ?>
-        </div>
-        <h2 class="text-lg font-bold text-gray-800 mb-1">Belum ada tim</h2>
-        <p class="text-sm text-gray-500 mb-5">Kamu perlu mendaftarkan tim terlebih dahulu sebelum melakukan pembayaran.</p>
-        <a href="/application/team-register" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline">
-          <?= Icon::make()->name('arrow-left')->class('w-4 h-4') ?>
-          Daftarkan Tim
-        </a>
-      </div>
-    <?php else: ?>
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
-        <div class="border-b border-gray-200 px-4 sm:px-6 py-3">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-sm font-bold text-gray-800">Pembayaran</h2>
-              <p class="text-xs text-gray-500">Upload bukti transfer untuk menyelesaikan pendaftaran.</p>
+  <div class="px-4 sm:px-6 lg:px-8 py-4 mx-auto">
+    <?php if ($locked): ?>
+      <div class="relative">
+        <div class="pointer-events-none select-none opacity-50">
+        <?php endif; ?>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="border-b border-gray-200 px-5 py-3.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="font-display text-xl font-bold tracking-tight text-gray-900 mt-0.5">Pembayaran</h2>
+                <p class="text-sm text-gray-500 mt-0.5">Upload bukti transfer untuk menyelesaikan pendaftaran.</p>
+              </div>
             </div>
-            <?php if ($status): ?>
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
-                <?= match ($status) {
-                  'verified' => 'bg-green-50 text-green-700 border border-green-200',
-                  'rejected' => 'bg-red-50 text-red-700 border border-red-200',
-                  default => 'bg-yellow-50 text-yellow-700 border border-yellow-200',
-                } ?>">
-                <?= Icon::make()->name(match ($status) {
-                  'verified' => 'check-circle',
-                  'rejected' => 'x-circle',
-                  default => 'clock'
-                })->class('w-3.5 h-3.5') ?>
-                <?= ucfirst(htmlspecialchars($status)) ?>
-              </span>
-            <?php endif; ?>
+          </div>
+
+          <div class="p-5 sm:p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-semibold mb-3">Metode pembayaran</label>
+                <p class="text-sm text-gray-600 leading-relaxed">Pembayaran melalui salah satu dari 2 rekening berikut</p>
+                <div class="mt-4 space-y-8">
+                  <div class="flex items-center gap-3">
+                    <img src="/image/logo-seabank.png" alt="Logo Seabank" class="h-10 w-auto shrink-0">
+                    <div>
+                      <p class="text-sm font-semibold text-gray-900 leading-none">Seabank</p>
+                      <p class="text-base font-bold tracking-wide text-gray-900 leading-none">901531540263</p>
+                      <p class="text-sm leading-none">Titis Nabila</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 mt-0.5">
+                    <img src="/image/logo-bri.png" alt="Logo BRI" class="h-10 w-auto shrink-0">
+                    <div>
+                      <p class="text-sm font-semibold text-gray-900 leading-none">BRI</p>
+                      <p class="text-base font-bold tracking-wide text-gray-900 leading-none">375701061838531</p>
+                      <p class="text-sm leading-none">Shafaatur R.</p>
+                    </div>
+                  </div>
+
+
+                </div>
+                <p class="text-xs text-gray-400 mt-5 leading-relaxed">Setelah mengupload bukti transfer, mohon tunggu beberapa saat hingga pembayaran kamu diverifikasi oleh admin.</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold mb-3">Upload bukti pembayaran<span class="text-red-500">*</span></label>
+                <form action="/payments" method="POST" enctype="multipart/form-data" novalidate id="payment-form">
+                  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                  <div class="flex flex-col sm:flex-row sm:items-end gap-5 <?= $verified ? 'pointer-events-none opacity-60 select-none' : '' ?>">
+                    <div data-slot="attachment" class="shrink-0 w-80 max-w-full">
+                      <label class="dropzone relative block w-full max-w-xs aspect-[3/4] rounded-2xl border-2 border-dashed border-gray-300 bg-transparent hover:border-brand transition-colors cursor-pointer overflow-hidden">
+
+                        <div data-slot="attachment-idle" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6 text-center <?= $hasProof ? 'hidden' : '' ?>">
+                          <?= Icon::make()->name('upload')->class('size-20 mb-4') ?>
+                          <p class="text-lg font-semibold text-gray-800">Seret & lepas file ke sini</p>
+                          <p class="text-sm text-gray-500 mt-1">atau klik untuk memilih file (PNG, JPG, maks 5MB)</p>
+                        </div>
+
+                        <div data-slot="attachment-preview" class="absolute inset-0 <?= $hasProof ? '' : 'hidden' ?> bg-white">
+                          <img src="<?= $hasProof ? '/uploads/payments/' . htmlspecialchars($payment['proofImage']) : '' ?>" class="w-full h-full object-contain" alt="Preview bukti transfer">
+                        </div>
+
+                        <button type="button" data-clear-attachment
+                          class="absolute top-4 right-4 z-20 <?= $hasProof ? 'flex' : 'hidden' ?> items-center justify-center w-10 h-10 bg-white rounded-full shadow-md border border-gray-200 hover:bg-red-50 hover:border-red-300 transition-colors">
+                          <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-red-500') ?>
+                        </button>
+
+                        <input type="file" name="proofImage" accept="image/*" required
+                          data-error="err-payment-proof" data-max-size="<?= 5 * 1024 * 1024 ?>" data-preview="true"
+                          class="absolute inset-0 opacity-0 cursor-pointer z-10">
+                      </label>
+                    </div>
+                    <div class="flex flex-col items-start min-w-0">
+                      <div data-slot="attachment-fileinfo" class="<?= $hasProof ? '' : 'hidden' ?> mb-4 max-w-[200px]">
+                        <p class="text-sm font-medium text-gray-900 truncate" data-slot="file-name"><?= $hasProof ? htmlspecialchars($payment['original_name'] ?? $payment['proofImage']) : '' ?></p>
+                        <p class="text-xs text-gray-500 mt-0.5" data-slot="file-size"></p>
+                      </div>
+                      <button type="submit" disabled id="payment-submit-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors <?= $verified ? 'hidden' : '' ?>">
+                        Upload Bukti Transfer
+                        <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
+                      </button>
+                    </div>
+                  </div>
+                  <p id="err-payment-proof" class="text-xs text-red-500 mt-1.5 hidden">Bukti transfer wajib diupload</p>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="border-t border-gray-100 p-4 sm:p-6">
-          <?php if ($status === 'verified'): ?>
-            <div class="flex items-start gap-4 py-4">
-              <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                <?= Icon::make()->name('check-circle')->class('w-7 h-7 text-green-500') ?>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Pembayaran Terverifikasi</h3>
-                <p class="text-sm text-gray-500">Bukti transfer kamu telah diterima dan diverifikasi oleh admin. Tim kamu sudah siap untuk submit karya.</p>
-                <a href="/application/review" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline">
-                  Lanjut ke Review
-                  <?= Icon::make()->name('chevron-right')->class('w-4 h-4') ?>
-                </a>
-              </div>
-              <?php if (!empty($payment['proofImage'])): ?>
-                <div class="rounded-xl overflow-hidden border border-gray-200 w-24 h-24 shrink-0">
-                  <img src="/uploads/payments/<?= htmlspecialchars($payment['proofImage']) ?>" class="w-full h-full object-cover" alt="Bukti transfer">
-                </div>
-              <?php endif; ?>
+        <?php if ($status === 'pending'): ?>
+          <div class="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-2xl mt-4">
+            <?= Icon::make()->name('clock')->class('w-5 h-5 text-yellow-500 shrink-0 mt-0.5') ?>
+            <div>
+              <p class="text-sm font-semibold text-yellow-700">Menunggu Verifikasi</p>
+              <p class="text-xs text-yellow-600 mt-0.5">Bukti pembayaran kamu sedang ditinjau oleh admin. Mohon tunggu dan kembali beberapa saat.</p>
             </div>
-
-          <?php elseif ($status === 'rejected'): ?>
-            <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl mb-6">
-              <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
-              <div>
-                <p class="text-sm font-medium text-red-700">Bukti transfer ditolak</p>
-                <p class="text-xs text-red-600 mt-0.5"><?= htmlspecialchars($payment['note'] ?? 'Silakan upload ulang bukti transfer yang valid.') ?></p>
-              </div>
+          </div>
+        <?php elseif ($status === 'verified'): ?>
+          <div class="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-2xl mt-4">
+            <?= Icon::make()->name('check')->class('w-5 h-5 text-green-500 shrink-0 mt-0.5') ?>
+            <div>
+              <p class="text-sm font-semibold text-green-700">Pembayaran Terverifikasi</p>
+              <p class="text-xs text-green-600 mt-0.5">Terimakasih sudah berpartisipasi. Selamat berkompetisi dengan jujur dan penuh semangat, semoga sukses!</p>
+              <a href="/home" class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-semibold text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition-colors no-underline">
+                Kembali ke beranda
+                <?= Icon::make()->name('chevron-right')->class('w-3.5 h-3.5') ?>
+              </a>
             </div>
-            <?php if (!empty($payment['proofImage'])): ?>
-              <div class="mb-5">
-                <p class="text-xs text-gray-500 mb-2">Bukti sebelumnya:</p>
-                <div class="rounded-xl overflow-hidden border border-gray-200 w-32 h-32 opacity-50">
-                  <img src="/uploads/payments/<?= htmlspecialchars($payment['proofImage']) ?>" class="w-full h-full object-cover" alt="Bukti sebelumnya">
-                </div>
-              </div>
-            <?php endif; ?>
-            <form action="/payments" method="POST" enctype="multipart/form-data" novalidate>
-              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-              <div>
-                <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Ulang Bukti Transfer <span class="text-red-500">*</span></label>
-                <?= Attachment::make()
-
-                  ->media($uploadIcon)
-                  ->title('Upload Ulang Bukti Transfer')
-                  ->description('PNG, JPG, GIF, WebP — maks 2MB')
-                  ->clearable()
-                  ->withPreview()
-                  ->originalMedia($uploadIcon)
-                  ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true, 'data-error' => 'err-payment-proof', 'max-size' => 5 * 1024 * 1024])
-                  ->render() ?>
-                <p id="err-payment-proof" class="text-xs text-red-500 mt-1 hidden">Bukti transfer wajib diupload</p>
-              </div>
-              <div class="flex justify-end mt-6">
-                <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors">
-                  Upload Ulang
-                  <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
-                </button>
-              </div>
-            </form>
-
-          <?php elseif ($status === 'pending'): ?>
-            <div class="flex items-start gap-4 py-4">
-              <div class="w-14 h-14 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
-                <?= Icon::make()->name('clock')->class('w-7 h-7 text-yellow-500') ?>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Menunggu Verifikasi</h3>
-                <p class="text-sm text-gray-500">Bukti transfer kamu sedang ditinjau oleh admin. Kamu akan diberitahu setelah diverifikasi.</p>
-                <p class="text-xs text-gray-400 mt-2">Biasanya diverifikasi dalam 1×24 jam.</p>
-              </div>
-              <?php if (!empty($payment['proofImage'])): ?>
-                <div class="rounded-xl overflow-hidden border border-gray-200 w-24 h-24 shrink-0">
-                  <img src="/uploads/payments/<?= htmlspecialchars($payment['proofImage']) ?>" class="w-full h-full object-cover" alt="Bukti transfer">
-                </div>
-              <?php endif; ?>
+          </div>
+        <?php elseif ($status === 'rejected'): ?>
+          <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
+            <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
+            <div>
+              <p class="text-sm font-semibold text-red-700">Bukti transfer ditolak</p>
+              <p class="text-xs text-red-600 mt-0.5"><?= htmlspecialchars($payment['note'] ?? 'Silakan upload ulang bukti transfer yang valid.') ?></p>
             </div>
+          </div>
+        <?php endif; ?>
 
-          <?php else: ?>
-            <p class="text-sm text-gray-600 mb-5">Upload bukti transfer pembayaran untuk menyelesaikan pendaftaran tim kamu.</p>
-            <form action="/payments" method="POST" enctype="multipart/form-data" novalidate>
-              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-              <div>
-                <label class="block text-sm font-semibold text-gray-800 mb-2">Upload Bukti Transfer <span class="text-red-500">*</span></label>
-                <?= Attachment::make()
+        <?php if ($locked): ?>
+        </div>
 
-                  ->media($uploadIcon)
-                  ->title('Upload Bukti Transfer')
-                  ->description('PNG, JPG, GIF, WebP — maks 2MB')
-                  ->clearable()
-                  ->withPreview()
-                  ->originalMedia($uploadIcon)
-                  ->fileInput('proofImage', ['accept' => 'image/*', 'required' => true, 'data-error' => 'err-payment-proof', 'max-size' => 5 * 1024 * 1024])
-                  ->render() ?>
-                <p id="err-payment-proof" class="text-xs text-red-500 mt-1 hidden">Bukti transfer wajib diupload</p>
-              </div>
-              <div class="flex justify-end mt-6">
-                <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors">
-                  Upload Bukti Transfer
-                  <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
-                </button>
-              </div>
-            </form>
-          <?php endif; ?>
+        <div class="absolute inset-0 flex items-center justify-center z-10">
+          <div class="w-32 h-32 rounded-full bg-white/90 shadow-xl flex items-center justify-center border border-gray-200">
+            <?= Icon::make()->name('lock')->class('w-14 h-14 text-gray-400') ?>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
+        <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
+        <div>
+          <p class="text-sm font-semibold text-amber-700">Mohon perhatian!</p>
+          <p class="text-xs text-amber-600 mt-0.5">Pembayaran belum dapat diakses. Mohon <span class="font-semibold">selesaikan</span> seluruh tahap <span class="font-semibold">pendaftaran tim</span> terlebih dahulu, lengkapi data anggota tim, upload twibbon, kemudian submit pada halaman review.</p>
+          <a href="/application" class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors no-underline">
+            <?= Icon::make()->name('arrow-left')->class('w-3.5 h-3.5') ?>
+            Selesaikan pendaftaran
+          </a>
         </div>
       </div>
     <?php endif; ?>
   </div>
+
+  <?php if ($hasProof && !$verified): ?>
+    <?= (new Dialog())->id('confirm-change-proof')->title('Apakah anda yakin?')->width('max-w-md')->content(
+      '<div class="flex items-start gap-3">'
+        . '<p class="text-sm text-gray-600">Bukti transfer yang sudah diupload akan diganti dengan file baru yang kamu pilih.</p>'
+        . '</div>'
+        . '<div class="flex justify-end gap-2 mt-5">'
+        . '<button type="button" id="confirm-change-no" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">Batal</button>'
+        . '<button type="button" id="confirm-change-yes" class="px-4 py-2 text-sm font-semibold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors">Ya, Ganti</button>'
+        . '</div>'
+    ) ?>
+  <?php endif; ?>
 
   <?php include __DIR__ . '/partials/footer.php'; ?>
 </div>
@@ -175,44 +187,102 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
       return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
     }
 
-    document.addEventListener('change', function(e) {
-      if (!e.target.matches('[data-preview]')) return;
-      var file = e.target.files && e.target.files[0];
+    var pendingInput = null;
+    var confirmed = false;
+
+    var origClose = window.closeDialog;
+    window.closeDialog = function(id) {
+      if (id === 'confirm-change-proof' && !confirmed && pendingInput) {
+        pendingInput.value = '';
+        pendingInput = null;
+      }
+      origClose(id);
+    };
+
+    function processFile(input) {
+      var file = input.files && input.files[0];
       if (!file) return;
-      var att = e.target.closest('[data-slot="attachment"]');
+
+      var att = input.closest('[data-slot="attachment"]');
       if (!att) return;
-      var maxSize = e.target.dataset.maxSize;
+
+      var maxSize = input.dataset.maxSize;
       if (maxSize && file.size > parseInt(maxSize)) {
-        e.target.value = '';
-        att.dataset.state = 'error';
-        var errEl = document.getElementById(e.target.dataset.error);
+        input.value = '';
+        var errEl = document.getElementById(input.dataset.error);
         if (errEl) {
           errEl.textContent = 'File terlalu besar. Maksimal ' + formatFileSize(parseInt(maxSize));
           errEl.classList.remove('hidden');
         }
         return;
       }
-      att.dataset.state = 'done';
-      var title = att.querySelector('[data-slot="attachment-title"]');
-      if (title) title.textContent = file.name;
-      var desc = att.querySelector('[data-slot="attachment-description"]');
-      if (desc) desc.textContent = formatFileSize(file.size);
 
-      var errId = e.target.dataset.error;
+      var errId = input.dataset.error;
       if (errId) {
         var errEl = document.getElementById(errId);
         if (errEl) errEl.classList.add('hidden');
       }
-      e.target.classList.remove('border-red-500');
-      att.classList.remove('border-red-500');
+      input.closest('.dropzone').classList.remove('border-red-500');
 
-      var media = att.querySelector('[data-slot="attachment-media"]');
-      if (!media) return;
+      var idle = att.querySelector('[data-slot="attachment-idle"]');
+      var preview = att.querySelector('[data-slot="attachment-preview"]');
+      var clearBtn = att.querySelector('[data-clear-attachment]');
+      var img = preview.querySelector('img');
+
+      if (idle) idle.classList.add('hidden');
+      if (preview) preview.classList.remove('hidden');
+      if (clearBtn) clearBtn.classList.remove('hidden');
+      if (clearBtn) clearBtn.classList.add('flex');
+
+      var fileInfo = att.parentElement.querySelector('[data-slot="attachment-fileinfo"]');
+      if (fileInfo) {
+        fileInfo.querySelector('[data-slot="file-name"]').textContent = file.name;
+        fileInfo.querySelector('[data-slot="file-size"]').textContent =
+          file.name.split('.').pop().toUpperCase() + ' \u2022 ' + formatFileSize(file.size);
+        fileInfo.classList.remove('hidden');
+      }
+
+      var submitBtn = document.getElementById('payment-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+        submitBtn.classList.add('bg-brand', 'hover:bg-red-800', 'cursor-pointer');
+      }
+
       var reader = new FileReader();
       reader.onload = function(ev) {
-        media.innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover">';
+        if (img) img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
+    }
+
+    document.addEventListener('change', function(e) {
+      if (!e.target.matches('[data-preview]')) return;
+      if (!e.target.files || !e.target.files[0]) return;
+      var att = e.target.closest('[data-slot="attachment"]');
+      if (!att) return;
+
+      var idle = att.querySelector('[data-slot="attachment-idle"]');
+      if (!confirmed && idle && idle.classList.contains('hidden')) {
+        pendingInput = e.target;
+        openDialog('confirm-change-proof');
+        return;
+      }
+      confirmed = false;
+      processFile(e.target);
+    });
+
+    var yesBtn = document.getElementById('confirm-change-yes');
+    if (yesBtn) yesBtn.addEventListener('click', function() {
+      confirmed = true;
+      closeDialog('confirm-change-proof');
+      if (pendingInput) processFile(pendingInput);
+      pendingInput = null;
+      confirmed = false;
+    });
+    var noBtn = document.getElementById('confirm-change-no');
+    if (noBtn) noBtn.addEventListener('click', function() {
+      closeDialog('confirm-change-proof');
     });
 
     document.addEventListener('click', function(e) {
@@ -220,18 +290,72 @@ $uploadIcon = Icon::make()->name('upload')->class('size-6 text-black');
       if (!clearBtn) return;
       e.preventDefault();
       e.stopPropagation();
+
       var att = clearBtn.closest('[data-slot="attachment"]');
       if (!att) return;
+
       var input = att.querySelector('input[type="file"]');
       if (input) input.value = '';
-      att.dataset.state = 'idle';
-      var title = att.querySelector('[data-slot="attachment-title"]');
-      if (title) title.textContent = att.dataset.idleTitle || att.dataset.originalTitle || '';
-      var desc = att.querySelector('[data-slot="attachment-description"]');
-      if (desc) desc.textContent = att.dataset.idleDescription || '';
-      var media = att.querySelector('[data-slot="attachment-media"]');
-      var origMedia = att.dataset.originalMedia;
-      if (media && origMedia) media.innerHTML = origMedia;
+
+      var idle = att.querySelector('[data-slot="attachment-idle"]');
+      var preview = att.querySelector('[data-slot="attachment-preview"]');
+      var img = preview.querySelector('img');
+
+      if (idle) idle.classList.remove('hidden');
+      if (preview) preview.classList.add('hidden');
+      if (img) img.src = '';
+
+      clearBtn.classList.remove('flex');
+      clearBtn.classList.add('hidden');
+
+      var fileInfo = att.parentElement.querySelector('[data-slot="attachment-fileinfo"]');
+      if (fileInfo) fileInfo.classList.add('hidden');
+
+      var submitBtn = document.getElementById('payment-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+        submitBtn.classList.remove('bg-brand', 'hover:bg-red-800', 'cursor-pointer');
+      }
     });
+
+    document.querySelectorAll('.dropzone').forEach(function(zone) {
+      zone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        zone.classList.add('border-brand', 'bg-red-50');
+      });
+      zone.addEventListener('dragleave', function() {
+        zone.classList.remove('border-brand', 'bg-red-50');
+      });
+      zone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        zone.classList.remove('border-brand', 'bg-red-50');
+        var input = zone.querySelector('input[type="file"]');
+        if (input && e.dataTransfer.files.length) {
+          input.files = e.dataTransfer.files;
+          input.dispatchEvent(new Event('change', {
+            bubbles: true
+          }));
+        }
+      });
+    });
+
+    var payForm = document.getElementById('payment-form');
+    if (payForm) {
+      payForm.addEventListener('submit', function(e) {
+        var input = payForm.querySelector('input[type="file"][name="proofImage"]');
+        if (!input || !input.files || !input.files.length) {
+          e.preventDefault();
+          var errEl = document.getElementById('err-payment-proof');
+          if (errEl) {
+            errEl.textContent = 'Bukti transfer wajib diupload';
+            errEl.classList.remove('hidden');
+          }
+          var zone = payForm.querySelector('.dropzone');
+          if (zone) zone.classList.add('border-red-400');
+          return false;
+        }
+      });
+    }
   });
 </script>
