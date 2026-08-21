@@ -213,7 +213,7 @@ $DIVISION_INFO = [
       </div>
 
       <?php if (!empty($info['video'])): ?>
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center mt-6">
           <h3 class="text-md font-bold text-gray-800 mb-4">Video Trial / Demo</h3>
           <div class="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow">
             <iframe class="w-full h-full" src="<?= htmlspecialchars($info['video']) ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -225,7 +225,6 @@ $DIVISION_INFO = [
         <h3 class="text-md font-bold text-gray-800 mb-4">Timeline Divisi <?= htmlspecialchars($divisionUpper) ?></h3>
         <div class="relative border-l-2 border-brand/20 ml-4 space-y-6">
           <?php
-          // ponytail: inline Indonesian date parser, no lib
           $parseDate = function (string $d): ?int {
             $m = ['januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4, 'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8, 'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12];
             if (preg_match('/(\d{1,2})\s+(\w+)\s+(\d{4})/', $d, $p)) {
