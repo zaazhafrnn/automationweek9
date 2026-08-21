@@ -43,7 +43,7 @@ if (!isset($activeTab)) {
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'application';
-  include __DIR__ . '/components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <?php
   $flashError = Session::flash('team_update_error') ?? Session::flash('team_register_error');
@@ -109,7 +109,7 @@ if (!isset($activeTab)) {
     </div>
   </div>
 
-  <?php include __DIR__ . '/partials/footer.php'; ?>
+  <?php include BASE_PATH . '/src/Components/footer.php'; ?>
 </div>
 
 <script>

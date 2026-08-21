@@ -460,7 +460,7 @@
         </div>
     </section>
 
-    <?php include __DIR__ . '/dashboard/partials/footer.php'; ?>
+    <?php include BASE_PATH . '/src/Components/footer.php'; ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

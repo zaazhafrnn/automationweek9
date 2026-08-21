@@ -16,7 +16,7 @@ $verified = ($status === 'verified');
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'payment';
-  include __DIR__ . '/components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-4 mx-auto">
     <?php if ($locked): ?>
@@ -41,7 +41,7 @@ $verified = ($status === 'verified');
                 <p class="text-sm text-gray-600 leading-relaxed">Pembayaran melalui salah satu dari 2 rekening berikut</p>
                 <div class="mt-4 space-y-8">
                   <div class="flex items-center gap-3">
-                    <img src="/image/logo-seabank.png" alt="Logo Seabank" class="h-10 w-auto shrink-0">
+                    <img src="/image/logo-seabank.png" alt="Logo Seabank" class="h-10 w-auto shrink-0" draggable="false" style="user-select: none;">
                     <div>
                       <p class="text-sm font-semibold text-gray-900 leading-none">Seabank</p>
                       <p class="text-base font-bold tracking-wide text-gray-900 leading-none">901531540263</p>
@@ -49,14 +49,13 @@ $verified = ($status === 'verified');
                     </div>
                   </div>
                   <div class="flex items-center gap-3 mt-0.5">
-                    <img src="/image/logo-bri.png" alt="Logo BRI" class="h-10 w-auto shrink-0">
+                    <img src="/image/logo-bri.png" alt="Logo BRI" class="h-10 p-2 w-auto shrink-0" draggable="false" style="user-select: none;">
                     <div>
                       <p class="text-sm font-semibold text-gray-900 leading-none">BRI</p>
                       <p class="text-base font-bold tracking-wide text-gray-900 leading-none">375701061838531</p>
                       <p class="text-sm leading-none">Shafaatur R.</p>
                     </div>
                   </div>
-
 
                 </div>
                 <p class="text-xs text-gray-400 mt-5 leading-relaxed">Setelah mengupload bukti transfer, mohon tunggu beberapa saat hingga pembayaran kamu diverifikasi oleh admin.</p>
@@ -175,7 +174,7 @@ $verified = ($status === 'verified');
     ) ?>
   <?php endif; ?>
 
-  <?php include __DIR__ . '/partials/footer.php'; ?>
+  <?php include BASE_PATH . '/src/Components/footer.php'; ?>
 </div>
 
 <script>

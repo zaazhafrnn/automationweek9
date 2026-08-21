@@ -14,7 +14,7 @@ $errors = $errors ?? [];
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'profile';
-  include __DIR__ . '/components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6">
     <?php if (!empty($success)): ?>
@@ -131,7 +131,7 @@ $errors = $errors ?? [];
     </div>
   </div>
 
-  <?php include __DIR__ . '/partials/footer.php'; ?>
+  <?php include BASE_PATH . '/src/Components/footer.php'; ?>
 </div>
 
 <?= Dialog::make()->id('reset-password-dialog')->title('Reset Password')->width('max-w-md')->content('
