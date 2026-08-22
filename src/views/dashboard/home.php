@@ -8,20 +8,31 @@ use App\Components\Icon;
 /** @var array|null $payment */
 /** @var bool $is_reviewed */
 /** @var array $uploads */
+/** @var array|null $abstract */
+/** @var array|null $full_paper */
 
 $division = $team['division'] ?? null;
 $divisionUpper = strtoupper((string) $division);
 $divisionNames = ['PROG' => 'Program'];
 $divisionDisplay = $divisionNames[$divisionUpper] ?? $divisionUpper;
 $upload1 = $uploads[1] ?? [];
+$isLkti = $divisionUpper === 'LKTI';
+$abstractApproved = ($abstract['status'] ?? '') === 'approved';
+$paymentVerified = ($payment['status'] ?? '') === 'verified';
 
 $steps = [
   1 => ['label' => 'Registrasi', 'title' => 'Registrasi Tim', 'done' => (bool) $team],
   2 => ['label' => 'Data Anggota', 'title' => 'Data Anggota', 'done' => !empty($team['leaderName'])],
   3 => ['label' => 'Media Sosial', 'title' => 'Media Sosial', 'done' => !empty($upload1['ig_follow']) && !empty($upload1['twibbon'])],
   4 => ['label' => 'Review', 'title' => 'Review & Submit', 'done' => $is_reviewed],
-  5 => ['label' => 'Pembayaran', 'title' => 'Pembayaran', 'done' => !empty($payment) && ($payment['status'] ?? '') === 'verified'],
 ];
+if ($isLkti) {
+  $steps[5] = ['label' => 'Abstrak', 'title' => 'Upload Abstrak', 'done' => $abstractApproved];
+  $steps[6] = ['label' => 'Pembayaran', 'title' => 'Pembayaran', 'done' => $paymentVerified];
+  $steps[7] = ['label' => 'Full Paper', 'title' => 'Upload Full Paper', 'done' => !empty($full_paper)];
+} else {
+  $steps[5] = ['label' => 'Pembayaran', 'title' => 'Pembayaran', 'done' => $paymentVerified];
+}
 $currentStep = null;
 foreach ($steps as $n => $s) {
   if (!$s['done']) {
@@ -159,9 +170,25 @@ $DIVISION_INFO = [
             </div>
           </div>
           <div class="mt-6 mb-4 md:mb-0 flex justify-center">
-            <?php if (($payment['status'] ?? '') !== 'verified'): ?>
-              <a href="<?= $applicationDone ? '/payments' : '/application' ?>" class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline shadow-sm">
-                <?= $applicationDone ? 'Lanjut ke Pembayaran' : 'Lanjutkan Pendaftaran' ?>
+            <?php
+            $allDone = $paymentVerified && (!$isLkti || !empty($full_paper));
+            if (!$allDone):
+              if (!$applicationDone) {
+                $btnUrl = '/application';
+                $btnLabel = 'Lanjutkan Pendaftaran';
+              } elseif ($isLkti && !$abstractApproved) {
+                $btnUrl = '/submission/abstract';
+                $btnLabel = 'Lanjut ke Abstrak';
+              } elseif (!$paymentVerified) {
+                $btnUrl = '/payments';
+                $btnLabel = 'Lanjut ke Pembayaran';
+              } else {
+                $btnUrl = '/submission/full-paper';
+                $btnLabel = 'Lanjut ke Full Paper';
+              }
+            ?>
+              <a href="<?= $btnUrl ?>" class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-red-800 transition-colors no-underline shadow-sm">
+                <?= $btnLabel ?>
               </a>
             <?php endif; ?>
           </div>

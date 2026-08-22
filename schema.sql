@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS submissions (
     type VARCHAR(50) NOT NULL,
     value TEXT,
     status VARCHAR(20) DEFAULT 'submitted',
+    category VARCHAR(20) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY unique_team_type (team_id, type),
@@ -84,3 +85,5 @@ CREATE TABLE IF NOT EXISTS team_documentation_uploads (
 INSERT INTO accounts (name, email, password, role)
 VALUES ('Admin', 'admin@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeMCFwG7Apa9IlJ5YnK', 'admin')
 ON DUPLICATE KEY UPDATE id=id;
+
+ALTER TABLE submissions ADD COLUMN category VARCHAR(20) NULL AFTER status;

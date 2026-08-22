@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\Team;
 use App\Models\Payment;
+use App\Models\Submission;
 use App\Utils\Session;
 use App\Utils\Security;
 
@@ -41,6 +42,14 @@ class PaymentController extends Controller
         $existingPayment = $this->paymentModel->findByTeamId($team['id']);
         if ($existingPayment && $existingPayment['status'] === 'verified') {
             $this->redirect('/payments');
+        }
+
+        if ($team['division'] === 'LKTI') {
+            $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
+            if (!$abstract || $abstract['status'] !== 'approved') {
+                Session::flash('payment_error', 'Abstrak kamu belum disetujui admin.');
+                $this->redirect('/submission/abstract');
+            }
         }
 
         if (!isset($_FILES['proofImage']) || $_FILES['proofImage']['error'] !== UPLOAD_ERR_OK) {

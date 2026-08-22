@@ -132,6 +132,10 @@ class DashboardController extends Controller
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
             $is_reviewed = (new Submission())->isReviewed($team['id']);
+            if ($team['division'] === 'LKTI') {
+                $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
+                $is_reviewed = $is_reviewed && $abstract && $abstract['status'] === 'approved';
+            }
         }
 
         $this->view('dashboard/payment', [
@@ -156,10 +160,14 @@ class DashboardController extends Controller
         $submission = null;
         $is_reviewed = false;
         $uploads = [];
+        $abstract = null;
+        $full_paper = null;
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
             $submission = (new Submission())->findByTeamId($team['id']);
             $is_reviewed = (new Submission())->isReviewed($team['id']);
+            $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
+            $full_paper = (new Submission())->findByTeamAndType($team['id'], 'full_paper');
             $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
             foreach ($rows as $r) {
                 $uploads[$r['member_number']] = [
@@ -180,6 +188,8 @@ class DashboardController extends Controller
             'payment' => $payment,
             'is_reviewed' => $is_reviewed,
             'uploads' => $uploads,
+            'abstract' => $abstract,
+            'full_paper' => $full_paper,
         ]);
     }
 

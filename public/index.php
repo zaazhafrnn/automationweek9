@@ -72,6 +72,11 @@ $router->post('/payments', 'PaymentController@upload');
 
 $router->post('/application/submission', 'SubmissionController@upload');
 
+$router->get('/submission/abstract', 'SubmissionController@abstractPage');
+$router->get('/submission/full-paper', 'SubmissionController@fullPaperPage');
+$router->post('/submission/abstract', 'SubmissionController@uploadAbstract');
+$router->post('/submission/full-paper', 'SubmissionController@uploadFullPaper');
+
 $router->post('/logout', 'AuthController@logout');
 
 try {

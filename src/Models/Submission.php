@@ -20,15 +20,15 @@ class Submission extends Model
         return $stmt->fetch();
     }
 
-    public function upsert(int $teamId, string $type, ?string $value, string $status = 'submitted'): bool
+    public function upsert(int $teamId, string $type, ?string $value, string $status = 'submitted', ?string $category = null): bool
     {
         $existing = $this->findByTeamAndType($teamId, $type);
         if ($existing) {
-            $stmt = $this->db->prepare("UPDATE submissions SET value = :value, status = :status WHERE team_id = :team_id AND type = :type");
-            return $stmt->execute([':value' => $value, ':status' => $status, ':team_id' => $teamId, ':type' => $type]);
+            $stmt = $this->db->prepare("UPDATE submissions SET value = :value, status = :status, category = :category WHERE team_id = :team_id AND type = :type");
+            return $stmt->execute([':value' => $value, ':status' => $status, ':category' => $category, ':team_id' => $teamId, ':type' => $type]);
         }
-        $stmt = $this->db->prepare("INSERT INTO submissions (team_id, type, value, status) VALUES (:team_id, :type, :value, :status)");
-        return $stmt->execute([':team_id' => $teamId, ':type' => $type, ':value' => $value, ':status' => $status]);
+        $stmt = $this->db->prepare("INSERT INTO submissions (team_id, type, value, status, category) VALUES (:team_id, :type, :value, :status, :category)");
+        return $stmt->execute([':team_id' => $teamId, ':type' => $type, ':value' => $value, ':status' => $status, ':category' => $category]);
     }
 
     public function markReviewed(int $teamId): bool
