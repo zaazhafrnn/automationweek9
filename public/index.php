@@ -63,6 +63,7 @@ $router->get('/admin/teams', 'AdminController@teams');
 $router->get('/admin/payments', 'AdminController@payments');
 $router->post('/admin/payments/process', 'AdminController@processPayment');
 $router->get('/admin/submissions', 'AdminController@submissions');
+$router->post('/admin/submissions/process', 'AdminController@processSubmission');
 
 $router->post('/application/team/register', 'TeamController@register');
 $router->post('/application/team/update', 'TeamController@update');

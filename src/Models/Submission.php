@@ -42,6 +42,26 @@ class Submission extends Model
         return !empty($row);
     }
 
+    public function getAll(): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT s.*, t.name as team_name, t.division, t.teamSchool, t.leaderName, u.email
+            FROM submissions s
+            JOIN teams t ON s.team_id = t.id
+            JOIN accounts u ON t.user_id = u.id
+            WHERE s.type != 'registration'
+            ORDER BY s.updated_at DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function updateStatus(int $id, string $status): bool
+    {
+        $stmt = $this->db->prepare("UPDATE submissions SET status = :status WHERE id = :id");
+        return $stmt->execute([':status' => $status, ':id' => $id]);
+    }
+
     public function getByDivision(string $division): array
     {
         $stmt = $this->db->prepare("

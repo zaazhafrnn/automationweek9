@@ -64,20 +64,42 @@ class AdminController extends Controller
     {
         $this->requireAdmin();
 
-        $division = $_GET['div'] ?? '';
-        $allowed = ['FFR', 'LF', 'PLC', 'LKTI', 'PROG'];
-        if (!in_array($division, $allowed)) {
-            $division = 'FFR';
-        }
-
         $submissionModel = new Submission();
-        $all = $submissionModel->getByDivision($division);
 
         $this->view('admin/submissions', [
-            'submissions' => $all,
-            'division' => $division,
-            'page_title' => "Karya $division"
+            'submissions' => $submissionModel->getAll(),
+            'csrf_token' => Security::generateCsrfToken(),
+            'page_title' => 'Karya'
         ], 'admin');
+    }
+
+    public function processSubmission()
+    {
+        $this->requireAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/submissions');
+        }
+
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect('/admin/submissions');
+        }
+
+        $id = $_POST['submission_id'] ?? null;
+        $map = [
+            'approve' => 'approved',
+            'reject' => 'rejected',
+            'qualify' => 'qualified',
+            'disqualify' => 'not_qualified',
+            'reset' => 'submitted',
+        ];
+
+        if (!$id || !isset($map[$_POST['action'] ?? ''])) {
+            $this->redirect('/admin/submissions');
+        }
+
+        (new Submission())->updateStatus((int) $id, $map[$_POST['action']]);
+        $this->redirect('/admin/submissions');
     }
 
     public function processPayment()
