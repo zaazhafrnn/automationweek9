@@ -71,6 +71,12 @@ class SubmissionController extends Controller
             $this->redirect($url);
         }
 
+        $existing = $submissionModel->findByTeamAndType($team['id'], $type);
+        if ($existing && $existing['status'] === 'approved') {
+            Session::flash('submission_error', ucfirst(str_replace('_', ' ', $type)) . ' sudah disetujui dan tidak dapat diubah.');
+            $this->redirect($url);
+        }
+
         if ($type === 'full_paper') {
             $abstract = $submissionModel->findByTeamAndType($team['id'], 'abstract');
             $payment = (new Payment())->findByTeamId($team['id']);
@@ -84,10 +90,18 @@ class SubmissionController extends Controller
             }
         }
 
-        $category = $_POST['category'] ?? '';
-        if (!in_array($category, ['gagasan', 'prototype'], true)) {
-            Session::flash('submission_error', 'Pilih kategori karya terlebih dahulu (Gagasan atau Prototype).');
-            $this->redirect($url);
+        if ($type === 'full_paper') {
+            $category = $abstract['category'] ?? '';
+            if (!in_array($category, ['gagasan', 'prototype'], true)) {
+                Session::flash('submission_error', 'Kategori karya belum tersedia pada abstrak kamu.');
+                $this->redirect($url);
+            }
+        } else {
+            $category = $_POST['category'] ?? '';
+            if (!in_array($category, ['gagasan', 'prototype'], true)) {
+                Session::flash('submission_error', 'Pilih kategori karya terlebih dahulu (Gagasan atau Prototype).');
+                $this->redirect($url);
+            }
         }
 
         $existing = $submissionModel->findByTeamAndType($team['id'], $type);
@@ -166,6 +180,7 @@ class SubmissionController extends Controller
     {
         $submissionModel = new Submission();
         $payment = (new Payment())->findByTeamId($team['id']);
+        $abstractRow = $submissionModel->findByTeamAndType($team['id'], 'abstract');
 
         return [
             'user_name' => Session::get('user_name'),
@@ -175,7 +190,8 @@ class SubmissionController extends Controller
             'is_reviewed' => $submissionModel->isReviewed($team['id']),
             'type' => $type,
             'submission' => $submissionModel->findByTeamAndType($team['id'], $type),
-            'abstract_status' => $submissionModel->findByTeamAndType($team['id'], 'abstract')['status'] ?? null,
+            'abstract_status' => $abstractRow['status'] ?? null,
+            'abstract_category' => $abstractRow['category'] ?? null,
             'success' => Session::flash('submission_success'),
             'error' => Session::flash('submission_error'),
         ];

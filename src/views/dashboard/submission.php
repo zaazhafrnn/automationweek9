@@ -12,6 +12,7 @@ use App\Components\Toast;
 /** @var string $type */
 /** @var array|null $submission */
 /** @var string|null $abstract_status */
+/** @var string|null $abstract_category */
 /** @var string|null $success */
 /** @var string|null $error */
 
@@ -52,6 +53,9 @@ if ($locked) {
     $lockReason = 'payment';
   }
 }
+
+$approved = $status === 'approved';
+$nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis';
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = $isAbstract ? 'submission-abstract' : 'submission-full-paper';
@@ -81,25 +85,26 @@ if ($locked) {
             <form action="/submission/<?= $isAbstract ? 'abstract' : 'full-paper' ?>" method="POST" enctype="multipart/form-data" novalidate id="submission-form">
               <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 <?= $approved ? 'pointer-events-none opacity-60 select-none' : '' ?>">
                 <fieldset>
                   <legend class="text-sm font-semibold text-gray-900">Kategori Karya <span class="text-red-500">*</span></legend>
-                  <p class="text-xs text-gray-500 mt-0.5">Pilih salah satu kategori Karya Tulis Ilmiah yang ingin anda ikuti.</p>
+                  <p class="text-xs text-gray-500 mt-0.5"><?= $isAbstract ? 'Pilih salah satu kategori Karya Tulis Ilmiah yang ingin anda ikuti.' : 'Kategori mengikuti pilihan pada abstrak kamu yang sudah disetujui.' ?></p>
                   <div class="grid grid-cols-1 gap-3 mt-3">
-                    <?php $chosenCategory = $submission['category'] ?? null;
+                    <?php $chosenCategory = $isAbstract ? ($submission['category'] ?? null) : ($abstract_category ?? null);
                     foreach (
                       [
                         'gagasan' => ['Gagasan', 'Menyelesaikan sebuah permasalahan dengan memberikan sebuah ide atau inovasi.', 'lightbulb'],
                         'prototype' => ['Prototype', 'Menyelesaikan sebuah permasalahan dengan menciptakan atau mengembangkan suatu alat.', 'wrench'],
                       ] as $value => [$label, $catDesc, $icon]
                     ): ?>
-                      <label class="relative flex items-start gap-3 p-4 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-transparent cursor-pointer transition-colors has-[:checked]:border-brand has-[:checked]:bg-red-50/60">
+                      <label class="relative flex items-start gap-3 p-4 rounded-xl border-2 <?= $isAbstract ? 'border-gray-200 hover:border-gray-300 bg-transparent cursor-pointer transition-colors' : 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-75' ?> has-[:checked]:border-brand has-[:checked]:bg-red-50/60">
                         <?= Icon::make()->name($icon)->class('w-6 h-6 shrink-0 mt-0.5 text-brand') ?>
                         <span class="flex flex-col">
                           <span class="flex items-center gap-2">
                             <input type="radio" name="category" value="<?= $value ?>" required
                               <?= $chosenCategory === $value ? 'checked' : '' ?>
-                              class="size-4 accent-[var(--color-brand)] shrink-0">
+                              <?= $isAbstract ? '' : 'disabled' ?>
+                              class="size-4 accent-[var(--color-brand)] shrink-0 <?= $isAbstract ? 'cursor-pointer' : 'cursor-not-allowed' ?>">
                             <span class="text-sm font-semibold text-gray-900"><?= $label ?></span>
                           </span>
                           <span class="text-sm mt-1 leading-relaxed"><?= $catDesc ?></span>
@@ -112,6 +117,7 @@ if ($locked) {
 
                 <div>
                   <label class="block text-sm font-semibold mb-1">File <?= $title ?><span class="text-red-500">*</span></label>
+                  <p class="text-xs text-gray-500 mb-2">Unggah file dengan format nama (<?= $nameFormat ?>)</p>
                   <div data-slot="attachment" class="w-full" data-has-file="<?= $hasFile ? '1' : '0' ?>">
                     <label class="dropzone relative block w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-gray-300 bg-transparent hover:border-brand transition-colors cursor-pointer overflow-hidden">
 
@@ -138,7 +144,7 @@ if ($locked) {
                   </div>
 
                   <p id="err-submission-file" class="text-xs text-red-500 mt-1.5 hidden">File wajib diupload</p>
-                  <button type="submit" disabled id="submission-submit-btn" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors">
+                  <button type="submit" disabled id="submission-submit-btn" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors <?= $approved ? 'hidden' : '' ?>">
                     Simpan & upload <?= $title ?>
                     <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
                   </button>
@@ -151,9 +157,9 @@ if ($locked) {
         <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl mt-4">
           <?= Icon::make()->name('megaphone')->class('w-5 h-5 text-blue-500 shrink-0 mt-0.5') ?>
           <div class="min-w-0">
-            <p class="text-sm font-semibold text-blue-700">Format Penamaan File</p>
+            <p class="text-sm font-semibold text-blue-700">Harap perhatikan!</p>
             <p class="text-xs text-blue-600 mt-0.5">Unggah file dengan format penamaan berikut agar mempermudah proses review:</p>
-            <p class="text-sm font-semibold text-blue-700 mt-1 break-all">ABSTRAK_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis</p>
+            <p class="text-sm font-semibold text-blue-700 mt-1 break-all"><?= $nameFormat ?></p>
           </div>
         </div>
 
@@ -215,10 +221,10 @@ if ($locked) {
         </div>
       <?php elseif ($status === 'approved'): ?>
         <div class="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-2xl mt-4">
-          <?= Icon::make()->name('check-circle')->class('w-5 h-5 text-green-500 shrink-0 mt-0.5') ?>
+          <?= Icon::make()->name('check')->class('w-5 h-5 text-green-500 shrink-0 mt-0.5') ?>
           <div>
-            <p class="text-sm font-semibold text-green-700"><?= $title ?> Disetujui</p>
-            <p class="text-xs text-green-600 mt-0.5"><?= $isAbstract ? 'Kamu dapat melanjutkan ke pembayaran.' : 'Terima kasih, full paper kamu sudah diterima.' ?></p>
+            <p class="text-sm font-semibold text-green-700">Selamat! Anda lolos tahap seleksi <?= $title ?>!</p>
+            <p class="text-xs text-green-600 mt-0.5"><?= $isAbstract ? 'Kamu dapat melanjutkan ke pembayaran' : 'Terima kasih, full paper kamu sudah diterima.' ?></p>
             <?php if ($isAbstract && !$paymentVerified): ?>
               <a href="/payments" class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-semibold text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition-colors no-underline">
                 Lanjut ke Pembayaran
