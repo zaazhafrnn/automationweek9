@@ -7,7 +7,7 @@ use App\Utils\Session;
 /** @var string $user_name */
 /** @var array|null $team */
 /** @var array|null $payment */
-/** @var array|null $submission */
+/** @var bool $is_reviewed */
 /** @var array $uploads */
 /** @var int $activeTab */
 
@@ -27,7 +27,7 @@ $tabDone = [
   1 => (bool) $team,
   2 => !empty($team['leaderName']),
   3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
-  4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']) && (bool) $submission,
+  4 => $is_reviewed,
 ];
 
 if (!isset($activeTab)) {
@@ -42,37 +42,18 @@ if (!isset($activeTab)) {
 }
 ?>
 <div class="min-h-screen bg-gray-50">
-  <div class="bg-brand border-b border-gray-200 text-white">
-    <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
-      <div>
-        <h1 class="text-lg font-bold">Hi, <?= htmlspecialchars(explode(' ', $user_name ?? '')[0]) ?>!</h1>
-        <p class="text-xs -mt-0.5">Kelola pendaftaran tim kamu.</p>
-      </div>
-      <?php $current = 'application';
-      include __DIR__ . '/partials/nav-tabs.php'; ?>
-      <form action="/logout" method="POST" class="m-0 hidden md:block">
-        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
-        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-black bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-          <?= Icon::make()->name('log-out')->class('w-3.5 h-3.5') ?>
-          Logout
-        </button>
-      </form>
-    </div>
-  </div>
+  <?php $current = 'application';
+  include BASE_PATH . '/src/Components/page-loading.php'; ?>
+  <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <?php
   $flashError = Session::flash('team_update_error') ?? Session::flash('team_register_error');
   $flashSuccess = Session::flash('team_update_success');
   if ($flashError || $flashSuccess):
-    $isError = (bool) $flashError;
-    $msg = $isError ? $flashError : $flashSuccess;
+    $variant = $flashError ? 'error' : 'success';
+    $msg = $flashError ?: $flashSuccess;
   ?>
-    <div class="px-4 sm:px-6 lg:px-8 mt-4">
-      <div class="flex items-start gap-3 p-4 rounded-xl border <?= $isError ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200' ?>">
-        <?= Icon::make()->name($isError ? 'alert-circle' : 'check-circle')->class($isError ? 'w-5 h-5 text-red-500 shrink-0' : 'w-5 h-5 text-green-500 shrink-0') ?>
-        <p class="text-sm <?= $isError ? 'text-red-700' : 'text-green-700' ?>"><?= $msg ?></p>
-      </div>
-    </div>
+    <?= \App\Components\Toast::make()->variant($variant)->message($msg)->render() ?>
   <?php endif; ?>
 
   <div>
@@ -129,7 +110,7 @@ if (!isset($activeTab)) {
     </div>
   </div>
 
-  <?php include __DIR__ . '/partials/footer.php'; ?>
+  <?php include BASE_PATH . '/src/Components/footer.php'; ?>
 </div>
 
 <script>
@@ -164,7 +145,7 @@ if (!isset($activeTab)) {
                       'twibbon_1' => $uploads[1]['twibbon'] ?? null,
                       'twibbon_2' => $uploads[2]['twibbon'] ?? null,
                       'twibbon_3' => $uploads[3]['twibbon'] ?? null,
-                      '__submitted' => (bool) ($submission !== null),
+                      '__submitted' => $is_reviewed,
                     ]) ?>;
     window.state = _state;
     const state = _state;
@@ -192,7 +173,7 @@ if (!isset($activeTab)) {
 
     function filled(k) {
       var v = state[k];
-      if (v == null) return false;
+      if (v == null || v === false) return false;
       return v instanceof File ? true : String(v).trim() !== '';
     }
 
@@ -229,12 +210,12 @@ if (!isset($activeTab)) {
 
     function filledSaved(k) {
       var v = savedState[k];
-      if (v == null) return false;
+      if (v == null || v === false) return false;
       return String(v).trim() !== '';
     }
 
     function isTabLocked(num) {
-      if (num <= 2) return false;
+      if (num <= 1) return false;
       for (var i = 1; i < num; i++) {
         if (!savedTabDone(i)) return true;
       }
@@ -257,8 +238,8 @@ if (!isset($activeTab)) {
       }
     }
 
-    function resetTab() {
-      var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
+    function resetTab(tabNum) {
+      var panel = document.querySelector('.tab-panel[data-tab="' + tabNum + '"]');
       if (!panel) return;
       panel.querySelectorAll('input, textarea, select').forEach(function(el) {
         if (!el.name || !state.hasOwnProperty(el.name)) return;
@@ -415,7 +396,10 @@ if (!isset($activeTab)) {
       if (link && link.getAttribute('aria-disabled') !== 'true') {
         e.preventDefault();
         var target = parseInt(link.dataset.tabNum);
-        if (target !== current) resetTab();
+        if (target !== current) {
+          resetTab(current);
+          resetTab(target);
+        }
         goTo(target);
       }
     });
@@ -425,7 +409,10 @@ if (!isset($activeTab)) {
       if (prev) {
         e.preventDefault();
         var target = parseInt(prev.dataset.goto);
-        if (target !== current) resetTab();
+        if (target !== current) {
+          resetTab(current);
+          resetTab(target);
+        }
         goTo(target);
         return;
       }
@@ -434,11 +421,7 @@ if (!isset($activeTab)) {
         if (!validateTab(current)) return;
         var panel = document.querySelector('.tab-panel[data-tab="' + current + '"]');
         if (next.id === 'nextTabSubmit' && current === total) {
-          var rform = panel && panel.querySelector('#reviewForm');
-          if (rform) {
-            rform.requestSubmit();
-            return;
-          }
+          openDialog('submit-confirm-dialog');
           return;
         }
         if (!hasChanges()) {
@@ -452,6 +435,7 @@ if (!isset($activeTab)) {
             btn.click();
             return;
           }
+          __showLoading();
           form.submit();
           return;
         }
@@ -598,7 +582,7 @@ if (!isset($activeTab)) {
           const p = el.closest('.division-card');
           const rb = p?.querySelector('input[type="radio"]');
           if (!rb) return;
-          el.textContent = rb.value === 'FFR' || rb.value === 'LKTI' ? 'max 3 org' : 'max 2 org';
+          el.textContent = rb.value === 'FFR' || rb.value === 'LKTI' ? 'max 3 siswa' : 'max 2 siswa';
         });
       }
       radios.forEach(r => r.addEventListener('change', () => upd(r.value)));
@@ -608,7 +592,7 @@ if (!isset($activeTab)) {
         const p = el.closest('.division-card');
         const rb = p?.querySelector('input[type="radio"]');
         if (!rb) return;
-        el.textContent = rb.value === 'LF' || rb.value === 'PLC' ? 'max 2 org' : 'max 3 org';
+        el.textContent = rb.value === 'LF' || rb.value === 'PLC' ? 'max 2 siswa' : 'max 3 siswa';
       });
     }
   });

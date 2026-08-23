@@ -40,7 +40,7 @@ class Dialog extends Component
         if ($this->title) {
             $html .= '<div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">';
             $html .= '<h3 class="text-lg font-semibold text-gray-900">' . htmlspecialchars($this->title) . '</h3>';
-            $html .= '<button onclick="closeDialog(\'' . $this->id . '\')" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">&times;</button>';
+            $html .= '<button onclick="closeDialog(\'' . $this->id . '\')" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">' . Icon::make()->name('x')->class('w-5 h-5') . '</button>';
             $html .= '</div>';
         }
 

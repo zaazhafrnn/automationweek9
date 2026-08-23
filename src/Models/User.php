@@ -44,6 +44,11 @@ class User extends Model
         return $stmt->fetchAll();
     }
 
+    public function countMembers(): int
+    {
+        return (int) $this->db->query("SELECT COUNT(*) FROM accounts WHERE role = 'member'")->fetchColumn();
+    }
+
     public function storeResetToken(int $userId, string $token): bool
     {
         $stmt = $this->db->prepare(

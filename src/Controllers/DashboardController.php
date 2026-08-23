@@ -37,11 +37,11 @@ class DashboardController extends Controller
         $team = (new Team())->findByUserId(Session::get('user_id'));
 
         $payment = null;
-        $submission = null;
+        $is_reviewed = false;
         $uploads = [];
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
-            $submission = (new Submission())->findByTeamId($team['id']);
+            $is_reviewed = (new Submission())->isReviewed($team['id']);
             $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
             foreach ($rows as $r) {
                 $uploads[$r['member_number']] = [
@@ -60,7 +60,7 @@ class DashboardController extends Controller
             1 => (bool) $team,
             2 => !empty($team['leaderName']),
             3 => !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
-            4 => (bool) $team && !empty($team['leaderName']) && !empty($upload1['ig_follow']) && !empty($upload1['twibbon']),
+            4 => $is_reviewed,
         ];
 
         $activeTab = 1;
@@ -89,10 +89,12 @@ class DashboardController extends Controller
 
         $payment = null;
         $submission = null;
+        $is_reviewed = false;
         $uploads = [];
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
             $submission = (new Submission())->findByTeamId($team['id']);
+            $is_reviewed = (new Submission())->isReviewed($team['id']);
             $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
             foreach ($rows as $r) {
                 $uploads[$r['member_number']] = [
@@ -111,7 +113,7 @@ class DashboardController extends Controller
             'csrf_token' => Security::generateCsrfToken(),
             'team' => $team,
             'payment' => $payment,
-            'submission' => $submission,
+            'is_reviewed' => $is_reviewed,
             'uploads' => $uploads,
             'activeTab' => $activeTab,
         ]);
@@ -126,8 +128,14 @@ class DashboardController extends Controller
 
         $team = (new Team())->findByUserId(Session::get('user_id'));
         $payment = null;
+        $is_reviewed = false;
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
+            $is_reviewed = (new Submission())->isReviewed($team['id']);
+            if ($team['division'] === 'LKTI') {
+                $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
+                $is_reviewed = $is_reviewed && $abstract && $abstract['status'] === 'approved';
+            }
         }
 
         $this->view('dashboard/payment', [
@@ -135,6 +143,7 @@ class DashboardController extends Controller
             'csrf_token' => Security::generateCsrfToken(),
             'team' => $team,
             'payment' => $payment,
+            'is_reviewed' => $is_reviewed,
         ]);
     }
 
@@ -149,10 +158,16 @@ class DashboardController extends Controller
 
         $payment = null;
         $submission = null;
+        $is_reviewed = false;
         $uploads = [];
+        $abstract = null;
+        $full_paper = null;
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
             $submission = (new Submission())->findByTeamId($team['id']);
+            $is_reviewed = (new Submission())->isReviewed($team['id']);
+            $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
+            $full_paper = (new Submission())->findByTeamAndType($team['id'], 'full_paper');
             $rows = (new TeamDocumentationUpload())->findByTeam($team['id']);
             foreach ($rows as $r) {
                 $uploads[$r['member_number']] = [
@@ -171,8 +186,10 @@ class DashboardController extends Controller
             'csrf_token' => Security::generateCsrfToken(),
             'team' => $team,
             'payment' => $payment,
-            'submission' => $submission,
+            'is_reviewed' => $is_reviewed,
             'uploads' => $uploads,
+            'abstract' => $abstract,
+            'full_paper' => $full_paper,
         ]);
     }
 

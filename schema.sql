@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS automationweek_9 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE automationweek_9;
-
 CREATE TABLE IF NOT EXISTS accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -47,11 +43,14 @@ CREATE TABLE IF NOT EXISTS payments (
 
 CREATE TABLE IF NOT EXISTS submissions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    team_id INT NOT NULL UNIQUE,
-    type ENUM('file', 'youtube_link', 'application') NOT NULL DEFAULT 'file',
-    value TEXT NOT NULL,
+    team_id INT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    value TEXT,
+    status VARCHAR(20) DEFAULT 'submitted',
+    category VARCHAR(20) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_team_type (team_id, type),
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -86,3 +85,5 @@ CREATE TABLE IF NOT EXISTS team_documentation_uploads (
 INSERT INTO accounts (name, email, password, role)
 VALUES ('Admin', 'admin@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeMCFwG7Apa9IlJ5YnK', 'admin')
 ON DUPLICATE KEY UPDATE id=id;
+
+ALTER TABLE submissions ADD COLUMN category VARCHAR(20) NULL AFTER status;

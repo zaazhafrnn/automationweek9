@@ -1,13 +1,15 @@
 <?php
 
 use App\Components\Attachment;
+use App\Components\Dialog;
 use App\Components\Icon;
 
 /** @var array|null $team */
 /** @var string $csrf_token */
 /** @var array $uploads */
 
-$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Program'];
+$DIVISION_LABELS = ['LF' => 'Line Follower', 'PLC' => 'Programmable Logic Controller', 'FFR' => 'Fire Fighting Robot', 'LKTI' => 'Lomba Karya Tulis Ilmiah', 'PROG' => 'Algoritma Program'];
+$DIVISION_ICONS = ['LF' => '/image/lf_icon.png', 'PLC' => '/image/plc_icon.png', 'FFR' => '/image/ffr_icon.png', 'LKTI' => '/image/lkti_icon.png', 'PROG' => '/image/program_icon.png'];
 $UPLOAD_URL = '/uploads/teams/';
 
 $sectionBtn = function (): string {
@@ -35,36 +37,32 @@ $sectionBtn = function (): string {
     <input type="hidden" name="next_tab" value="review">
     <input type="hidden" name="current_tab" value="review">
 
-    <div id="reviewFormError" class="hidden flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 mb-6">
-      <p class="text-sm text-red-700"></p>
-    </div>
-
     <div class="space-y-6">
       <section data-section="team" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-        <label class="block text-sm font-semibold text-gray-900 mb-3">Pilih Divisi Lomba<span class="text-red-500">*</span></label>
+        <label class="block text-sm font-semibold mb-3">Pilih Divisi Lomba<span class="text-red-500">*</span></label>
         <div class="flex flex-wrap justify-center gap-3">
           <?php foreach ($DIVISION_LABELS as $k => $v):
             $isDiv = $team['division'] === $k;
           ?>
-            <label class="division-card relative block w-[calc(50%-0.375rem)] rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20">
+            <label class="division-card relative block w-[calc(50%-0.375rem)] rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:border-brand/50 hover:bg-brand/5 transition-all has-[:checked]:border-brand has-[:checked]:bg-brand/5 has-[:checked]:ring-2 has-[:checked]:ring-brand/20 text-center">
               <input type="radio" name="division" value="<?= $k ?>" class="hidden" <?= $isDiv ? 'checked' : '' ?>>
-              <div class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center mb-2 text-xs font-bold text-gray-600"><?= $k ?></div>
-              <p class="text-sm font-medium text-gray-900"><?= htmlspecialchars($v) ?></p>
+              <div class="w-18 h-18 md:w-28 md:h-28 rounded-xl flex items-center justify-center mb-2 mx-auto"><img src="<?= $DIVISION_ICONS[$k] ?? '' ?>" alt="<?= htmlspecialchars($v) ?>" class="w-28 h-28 object-contain"></div>
+              <p class="text-sm font-medium "><?= htmlspecialchars($v) ?></p>
             </label>
           <?php endforeach; ?>
         </div>
         <div class="mt-4">
-          <label class="block text-sm font-semibold text-gray-900 mb-3">Informasi Tim</label>
+          <label class="block text-sm font-semibold mb-3">Informasi Tim</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium  mb-1.5">Nama Tim<span class="text-red-500">*</span></label>
+              <label class="block text-sm font-medium mb-1.5">Nama Tim<span class="text-red-500">*</span></label>
               <input type="text" name="name" required value="<?= htmlspecialchars($team['name'] ?? '') ?>" data-error="err-review-name" placeholder="Masukkan nama tim"
                 class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
                 oninput="this.classList.remove('border-red-500'); document.getElementById('err-review-name')?.classList.add('hidden')">
               <p id="err-review-name" class="text-xs text-red-500 mt-1 hidden">Nama tim wajib diisi</p>
             </div>
             <div>
-              <label class="block text-sm font-medium  mb-1.5">Asal Sekolah<span class="text-red-500">*</span></label>
+              <label class="block text-sm font-medium a mb-1.5">Asal Sekolah<span class="text-red-500">*</span></label>
               <input type="text" name="teamSchool" required value="<?= htmlspecialchars($team['teamSchool'] ?? '') ?>" data-error="err-review-school" placeholder="Masukkan nama sekolah"
                 class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
                 oninput="this.classList.remove('border-red-500'); document.getElementById('err-review-school')?.classList.add('hidden')">
@@ -76,7 +74,7 @@ $sectionBtn = function (): string {
       </section>
 
       <section data-section="members" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-        <h3 class="text-sm font-semibold text-gray-900 mb-4">Data Anggota</h3>
+        <h3 class="text-sm font-semibold a mb-4">Data Anggota</h3>
         <div class="space-y-4">
           <?php foreach ($members as $m):
             $p = $m['num'];
@@ -94,13 +92,13 @@ $sectionBtn = function (): string {
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
                 <div>
-                  <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($m['label']) ?></p>
+                  <p class="text-sm font-semibold"><?= htmlspecialchars($m['label']) ?></p>
                   <?php if ($m['role']): ?><p class="text-xs text-gray-400"><?= htmlspecialchars($m['role']) ?></p><?php endif; ?>
                 </div>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium  mb-1.5">Nama Lengkap<span class="text-red-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1.5">Nama Lengkap<span class="text-red-500">*</span></label>
                   <input type="text" name="<?= $m['nameKey'] ?>" value="<?= htmlspecialchars($name) ?>" placeholder="Masukkan nama lengkap" required
                     data-error="err-review-<?= $p ?>-name"
                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
@@ -108,7 +106,7 @@ $sectionBtn = function (): string {
                   <p id="err-review-<?= $p ?>-name" class="text-xs text-red-500 mt-1 hidden">Nama lengkap wajib diisi</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium  mb-1.5">No. Telepon / WA<span class="text-red-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1.5">No. Telepon / WA<span class="text-red-500">*</span></label>
                   <input type="text" name="<?= $m['phoneKey'] ?>" value="<?= htmlspecialchars($phone) ?>" placeholder="Masukkan nomor telepon" required inputmode="numeric" pattern="08[0-9]{6,}"
                     data-error="err-review-<?= $p ?>-phone"
                     data-format-error="err-review-<?= $p ?>-phone-format"
@@ -118,7 +116,7 @@ $sectionBtn = function (): string {
                   <p id="err-review-<?= $p ?>-phone-format" class="text-xs text-red-500 mt-1 hidden">Nomer harus berawalan 08xx & minimal 8 digit</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium  mb-1.5">Jenis Kelamin</label>
+                  <label class="block text-sm font-medium mb-1.5">Jenis Kelamin</label>
                   <div class="flex gap-3">
                     <label class="flex items-center gap-2 px-4 py-1 cursor-pointer transition-all">
                       <input type="radio" name="<?= $m['genderKey'] ?>" value="Laki-laki" class="member-radio accent-brand cursor-pointer" <?= $p === 1 ? 'required' : '' ?> data-error="err-review-<?= $p ?>-gender" <?= $gender === 'Laki-laki' ? 'checked' : '' ?>>
@@ -132,7 +130,7 @@ $sectionBtn = function (): string {
                   <p id="err-review-<?= $p ?>-gender" class="text-xs text-red-500 mt-1 hidden">Jenis kelamin wajib dipilih</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium  mb-1.5">Kartu Pelajar<span class="text-red-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1.5">Kartu Pelajar<span class="text-red-500">*</span></label>
                   <?php if ($existingCard): ?>
                     <?= Attachment::make()
                       ->mediaVariant('image')
@@ -168,7 +166,7 @@ $sectionBtn = function (): string {
       </section>
 
       <section data-section="social" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-        <h3 class="text-sm font-semibold text-gray-900 mb-4">Media Sosial</h3>
+        <h3 class="text-sm font-semibold mb-4">Media Sosial</h3>
         <div class="space-y-4">
           <?php foreach ($members as $m):
             $p = $m['num'];
@@ -176,8 +174,8 @@ $sectionBtn = function (): string {
             $twibbon = $uploads[$p]['twibbon'] ?? null;
             $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
             $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
-            $igIcon = Icon::make()->name('image')->class('size-5 text-black');
-            $twibbonIcon = Icon::make()->name('image')->class('size-5 text-black');
+            $igIcon = Icon::make()->name('instagram')->class('size-5 text-black');
+            $twibbonIcon = Icon::make()->name('user-round')->class('size-5 text-black');
             $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-review-' . $p . '-ig', 'max-size' => 10 * 1024 * 1024];
             if (!$ig) $igAttrs['required'] = true;
             $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-review-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];
@@ -187,13 +185,13 @@ $sectionBtn = function (): string {
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-xs font-bold text-brand"><?= $p ?></div>
                 <div>
-                  <p class="text-sm font-semibold text-gray-900"><?= htmlspecialchars($team[$m['nameKey']] ?? $m['label']) ?></p>
+                  <p class="text-sm font-semibold"><?= htmlspecialchars($team[$m['nameKey']] ?? $m['label']) ?></p>
                   <p class="text-xs text-gray-400"><?= htmlspecialchars($m['role'] ? ($m['label'] . ' (' . $m['role'] . ')') : $m['label']) ?></p>
                 </div>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium  mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
                   <?php if ($ig): ?>
                     <?= Attachment::make()
                       ->mediaVariant('image')
@@ -222,7 +220,7 @@ $sectionBtn = function (): string {
                   <p id="err-review-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium  mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
                   <?php if ($twibbon): ?>
                     <?= Attachment::make()
                       ->mediaVariant('image')
@@ -258,6 +256,14 @@ $sectionBtn = function (): string {
       </section>
     </div>
   </form>
+
+  <?= Dialog::make()->id('submit-confirm-dialog')->title('Konfirmasi Submit')->width('max-w-md')->content('
+    <p class="text-sm text-gray-600 mb-6">Apakah kamu yakin data sudah benar dan ingin submit pendaftaran?</p>
+    <div class="flex justify-end gap-3">
+      <button onclick="closeDialog(\'submit-confirm-dialog\')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
+      <button onclick="confirmSubmit()" class="px-4 py-2 text-sm font-semibold text-white bg-brand rounded-lg hover:bg-red-800 transition-colors">Ya, Submit</button>
+    </div>
+  ') ?>
 
   <script>
     (function() {
@@ -352,13 +358,10 @@ $sectionBtn = function (): string {
         }, 1500);
       }
 
-      function showError(msg) {
-        var box = document.getElementById('reviewFormError');
-        if (!box) return;
-        var p = box.querySelector('p');
-        if (p) p.innerHTML = msg;
-        box.classList.remove('hidden');
-      }
+      window.confirmSubmit = function() {
+        closeDialog('submit-confirm-dialog');
+        form.requestSubmit();
+      };
 
       form.addEventListener('submit', function(e) {
         var t = e.submitter || document.activeElement;
@@ -375,7 +378,6 @@ $sectionBtn = function (): string {
 
         e.preventDefault();
         if (btn) btn.disabled = true;
-        document.getElementById('reviewFormError')?.classList.add('hidden');
 
         fetch((btn && btn.formAction) || form.action, {
             method: 'POST',
@@ -390,18 +392,23 @@ $sectionBtn = function (): string {
             });
           })
           .then(function(data) {
-            if (btn) btn.disabled = false;
             if (data && data.ok) {
-              if (btn && !isSubmit) flashSaved(btn);
+              if (isSubmit) {
+                window.location.href = '/home';
+                return;
+              }
+              if (btn) btn.disabled = false;
+              if (btn) flashSaved(btn);
               sectionSaved(section);
-              if (window.__syncSavedState) window.__syncSavedState(isSubmit);
+              if (window.__syncSavedState) window.__syncSavedState(false);
             } else {
-              showError((data && data.error) || 'Terjadi kesalahan. Silakan coba lagi.');
+              if (btn) btn.disabled = false;
+              showToast((data && data.error) || 'Terjadi kesalahan. Silakan coba lagi.', 'error');
             }
           })
           .catch(function() {
             if (btn) btn.disabled = false;
-            showError('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            showToast('Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
           });
       });
 

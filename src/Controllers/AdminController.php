@@ -16,6 +16,9 @@ class AdminController extends Controller
 
         $this->view('admin/dashboard', [
             'user_name' => Session::get('user_name'),
+            'total_users' => (new \App\Models\User())->countMembers(),
+            'total_teams' => (new \App\Models\Team())->countAll(),
+            'divisions' => (new \App\Models\Team())->countByDivision(),
             'page_title' => 'Dasbor'
         ], 'admin');
     }
@@ -27,8 +30,34 @@ class AdminController extends Controller
         $userModel = new \App\Models\User();
         $members = $userModel->getAllMembers();
 
+        $teamsByUser = [];
+        foreach ((new \App\Models\Team())->getAllTeams() as $t) {
+            $teamsByUser[$t['user_id']] = $t;
+        }
+
+        $paymentsByTeam = [];
+        foreach ((new \App\Models\Payment())->getAllPayments() as $p) {
+            $paymentsByTeam[$p['teamId']] = $p;
+        }
+
+        $subsByTeam = [];
+        foreach ((new Submission())->getAll() as $s) {
+            $subsByTeam[$s['team_id']][$s['type']] = $s;
+        }
+
+        $progress = [];
+        foreach ($members as $m) {
+            $team = $teamsByUser[$m['id']] ?? null;
+            $progress[$m['id']] = [
+                'team' => $team,
+                'payment' => $team ? ($paymentsByTeam[$team['id']] ?? null) : null,
+                'submissions' => $team ? ($subsByTeam[$team['id']] ?? []) : [],
+            ];
+        }
+
         $this->view('admin/accounts', [
             'members' => $members,
+            'progress' => $progress,
             'page_title' => 'Akun'
         ], 'admin');
     }
@@ -64,20 +93,42 @@ class AdminController extends Controller
     {
         $this->requireAdmin();
 
-        $division = $_GET['div'] ?? '';
-        $allowed = ['FFR', 'LF', 'PLC', 'LKTI', 'PROG'];
-        if (!in_array($division, $allowed)) {
-            $division = 'FFR';
-        }
-
         $submissionModel = new Submission();
-        $all = $submissionModel->getByDivision($division);
 
         $this->view('admin/submissions', [
-            'submissions' => $all,
-            'division' => $division,
-            'page_title' => "Karya $division"
+            'submissions' => $submissionModel->getAll(),
+            'csrf_token' => Security::generateCsrfToken(),
+            'page_title' => 'Karya'
         ], 'admin');
+    }
+
+    public function processSubmission()
+    {
+        $this->requireAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/submissions');
+        }
+
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect('/admin/submissions');
+        }
+
+        $id = $_POST['submission_id'] ?? null;
+        $map = [
+            'approve' => 'approved',
+            'reject' => 'rejected',
+            'qualify' => 'qualified',
+            'disqualify' => 'not_qualified',
+            'reset' => 'submitted',
+        ];
+
+        if (!$id || !isset($map[$_POST['action'] ?? ''])) {
+            $this->redirect('/admin/submissions');
+        }
+
+        (new Submission())->updateStatus((int) $id, $map[$_POST['action']]);
+        $this->redirect('/admin/submissions');
     }
 
     public function processPayment()

@@ -1,6 +1,11 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../config/config.php';
+
 
 if (php_sapi_name() === 'cli-server') {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -58,6 +63,7 @@ $router->get('/admin/teams', 'AdminController@teams');
 $router->get('/admin/payments', 'AdminController@payments');
 $router->post('/admin/payments/process', 'AdminController@processPayment');
 $router->get('/admin/submissions', 'AdminController@submissions');
+$router->post('/admin/submissions/process', 'AdminController@processSubmission');
 
 $router->post('/application/team/register', 'TeamController@register');
 $router->post('/application/team/update', 'TeamController@update');
@@ -67,6 +73,22 @@ $router->post('/payments', 'PaymentController@upload');
 
 $router->post('/application/submission', 'SubmissionController@upload');
 
+$router->get('/submission/abstract', 'SubmissionController@abstractPage');
+$router->get('/submission/full-paper', 'SubmissionController@fullPaperPage');
+$router->post('/submission/abstract', 'SubmissionController@uploadAbstract');
+$router->post('/submission/full-paper', 'SubmissionController@uploadFullPaper');
+
 $router->post('/logout', 'AuthController@logout');
 
-$router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+try {
+    $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo '<div style="padding:2rem; background:#fee2e2; border:2px solid #ef4444; font-family:sans-serif; color:#991b1b; margin:2rem; border-radius:1rem;">';
+    echo '<h2 style="margin-top:0;">PHP Fatal Exception / Error</h2>';
+    echo '<p><strong>Message:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
+    echo '<p><strong>File:</strong> ' . htmlspecialchars($e->getFile()) . ' on line ' . $e->getLine() . '</p>';
+    echo '<pre style="background:#fff; padding:1rem; overflow:auto;">' . htmlspecialchars($e->getTraceAsString()) . '</pre>';
+    echo '</div>';
+}
+

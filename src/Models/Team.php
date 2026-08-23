@@ -79,4 +79,16 @@ class Team extends Model
 
         return $stmt->fetchAll();
     }
+
+    public function countAll(): int
+    {
+        return (int) $this->db->query("SELECT COUNT(*) FROM teams")->fetchColumn();
+    }
+
+    public function countByDivision(): array
+    {
+        $rows = $this->db->query("SELECT division, COUNT(*) c FROM teams GROUP BY division")->fetchAll();
+
+        return array_column($rows, 'c', 'division');
+    }
 }

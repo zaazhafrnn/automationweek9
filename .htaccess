@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If file exists in public/ (e.g. css/app.css, image/logo.png), serve it from public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # For all other requests, send to public/index.php
+    RewriteCond %{REQUEST_URI} !^/public/index\.php
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
+</IfModule>
+
+
+
+
+
+
+
+

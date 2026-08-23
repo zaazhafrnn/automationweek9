@@ -37,8 +37,8 @@ $UPLOAD_URL = '/uploads/teams/';
         $existingTwibbon = $uploads[$p]['twibbon'] ?? null;
         $originalIg = $uploads[$p]['original_ig_follow'] ?? null;
         $originalTwibbon = $uploads[$p]['original_twibbon'] ?? null;
-        $igIcon = Icon::make()->name('image')->class('size-5 text-black');
-        $twibbonIcon = Icon::make()->name('image')->class('size-5 text-black');
+        $igIcon = Icon::make()->name('instagram')->class('size-5 text-black');
+        $twibbonIcon = Icon::make()->name('user-round')->class('size-5 text-black');
       ?>
         <div class="member-group relative bg-white rounded-xl border border-gray-200 p-4 sm:p-5" data-member="<?= $p ?>">
           <div class="flex items-center gap-3 mb-4">
@@ -51,7 +51,7 @@ $UPLOAD_URL = '/uploads/teams/';
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium  mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span> <a href="https://instagram.com/automationweek" target="_blank" class="text-sm text-brand font-semibold hover:underline ml-1">@automationweek</a></label>
                 <?php
                 $igRequired = !$disabled && !$existingIg;
                 $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-ig', 'max-size' => 10 * 1024 * 1024];
@@ -87,7 +87,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
               </div>
               <div>
-                <label class="block text-sm font-medium  mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium mb-1.5">Upload Twibbon<span class="text-red-500">*</span> <a href="#" target="_blank" class="text-sm text-brand font-semibold hover:underline ml-1">Download Twibbon</a></label>
                 <?php
                 $twibbonRequired = !$disabled && !$existingTwibbon;
                 $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];
