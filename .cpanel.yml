@@ -1,9 +1,9 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/autg6277/public_html/staging.automationweek-ppns.org
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -Rf config public src schema.sql .htaccess $DEPLOYPATH/
+    - export BRANCH=$(git branch --show-current || echo dev)
+    - if [ "$BRANCH" = "main" ]; then export DEST=/home/autg6277/public_html; else export DEST=/home/autg6277/public_html/staging.automationweek-ppns.org; fi
+    - /bin/cp -Rf config public src schema.sql .htaccess $DEST/
 
 
 
