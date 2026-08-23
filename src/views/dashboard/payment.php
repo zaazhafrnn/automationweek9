@@ -46,7 +46,7 @@ $verified = ($status === 'verified');
                     <div>
                       <p class="text-sm font-semibold text-gray-900 leading-none">Seabank</p>
                       <p class="text-base font-bold tracking-wide text-gray-900 leading-none">901531540263</p>
-                      <p class="text-sm leading-none">Titis Nabila</p>
+                      <p class="text-sm leading-none">Titis Nabila (CP. 085755184808)</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3 mt-0.5">
@@ -54,7 +54,7 @@ $verified = ($status === 'verified');
                     <div>
                       <p class="text-sm font-semibold text-gray-900 leading-none">BRI</p>
                       <p class="text-base font-bold tracking-wide text-gray-900 leading-none">375701061838531</p>
-                      <p class="text-sm leading-none">Shafaatur R.</p>
+                      <p class="text-sm leading-none">Shafaatur R. (CP. 0895396129215 )</p>
                     </div>
                   </div>
 
