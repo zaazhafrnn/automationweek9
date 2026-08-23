@@ -24,7 +24,7 @@
         }
 
         @media (max-width: 640px) {
-            .curved-marquee text {
+            .flat-marquee text {
                 font-size: 2.5rem;
             }
         }
@@ -126,14 +126,14 @@
                 <a href="#competitions" class="flex-1 px-4 py-2 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm text-white font-bold text-foreground border border-border hover:text-black hover:bg-card transition-all no-underline text-center">Lihat Lomba</a>
             </div>
         </div>
-        <div class="absolute left-0 right-0 bottom-0 z-0">
-            <div class="curved-marquee w-full overflow-hidden">
-                <svg class="w-full block" viewBox="0 0 1440 200" preserveAspectRatio="none" style="transform: rotate(2deg); transform-origin: center;">
+        <div class="absolute left-0 right-0 -bottom-4 md:-bottom-8 z-0">
+            <div class="flat-marquee w-full overflow-hidden">
+                <svg id="marquee-svg" class="w-full block" viewBox="0 0 1440 140" preserveAspectRatio="none">
                     <defs>
-                        <path id="marquee-curve" d="M-100,40 Q500,280 1540,40" fill="none" />
+                        <path id="marquee-line" d="M0,90 H1440" fill="none" />
                     </defs>
                     <text class="fill-white font-bold uppercase select-none" style="font-size: 2rem; letter-spacing: 0.08em;" xml:space="preserve">
-                        <textPath href="#marquee-curve" id="curved-marquee-text"></textPath>
+                        <textPath href="#marquee-line" id="marquee-text"></textPath>
                     </text>
                 </svg>
             </div>
@@ -503,7 +503,7 @@
         });
 
         (function() {
-            var textPath = document.getElementById('curved-marquee-text');
+            var textPath = document.getElementById('marquee-text');
             if (!textPath) return;
 
             var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 24 Agustus – 1 Oktober 2026 ✦ Total hadiah puluhan juta rupiah + Free pass Teknik Otomasi + trophy + e-sertifikat ✦ 5 kategori lomba: LF · PLC · FFR · LKTI · PROGRAM ';
@@ -525,10 +525,8 @@
             measureEl.remove();
 
             if (window.innerWidth < 640) {
-                svg.setAttribute('viewBox', '0 0 600 200');
-                var scale = 600 / 1440;
-                svg.querySelector('#marquee-curve').setAttribute('d',
-                    'M' + (-100 * scale) + ',40 Q' + (500 * scale) + ',280 ' + (1540 * scale) + ',40');
+                svg.setAttribute('viewBox', '0 0 600 140');
+                svg.querySelector('#marquee-line').setAttribute('d', 'M0,90 H600');
             }
 
             var repeat = Math.ceil(1800 / spacing) + 2;
