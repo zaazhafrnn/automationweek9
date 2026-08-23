@@ -59,7 +59,8 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = $isAbstract ? 'submission-abstract' : 'submission-full-paper';
-  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/page-loading.php'; ?>
+  <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-4 mx-auto">
     <?php if ($success || $error): ?>
@@ -453,6 +454,7 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
     if (catYesBtn) catYesBtn.addEventListener('click', function() {
       catConfirmed = true;
       closeDialog('confirm-change-category');
+      __showLoading();
       form.submit();
     });
     var catNoBtn = document.getElementById('confirm-category-no');

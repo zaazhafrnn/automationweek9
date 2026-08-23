@@ -43,7 +43,8 @@ if (!isset($activeTab)) {
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'application';
-  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/page-loading.php'; ?>
+  <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <?php
   $flashError = Session::flash('team_update_error') ?? Session::flash('team_register_error');
@@ -434,6 +435,7 @@ if (!isset($activeTab)) {
             btn.click();
             return;
           }
+          __showLoading();
           form.submit();
           return;
         }

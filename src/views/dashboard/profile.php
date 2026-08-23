@@ -14,7 +14,8 @@ $errors = $errors ?? [];
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'profile';
-  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/page-loading.php'; ?>
+  <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6">
     <?php if (!empty($success)): ?>

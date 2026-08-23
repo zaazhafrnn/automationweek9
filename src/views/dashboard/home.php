@@ -127,7 +127,8 @@ $DIVISION_INFO = [
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'home';
-  include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
+  include BASE_PATH . '/src/Components/page-loading.php'; ?>
+  <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6">
