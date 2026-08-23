@@ -30,8 +30,34 @@ class AdminController extends Controller
         $userModel = new \App\Models\User();
         $members = $userModel->getAllMembers();
 
+        $teamsByUser = [];
+        foreach ((new \App\Models\Team())->getAllTeams() as $t) {
+            $teamsByUser[$t['user_id']] = $t;
+        }
+
+        $paymentsByTeam = [];
+        foreach ((new \App\Models\Payment())->getAllPayments() as $p) {
+            $paymentsByTeam[$p['teamId']] = $p;
+        }
+
+        $subsByTeam = [];
+        foreach ((new Submission())->getAll() as $s) {
+            $subsByTeam[$s['team_id']][$s['type']] = $s;
+        }
+
+        $progress = [];
+        foreach ($members as $m) {
+            $team = $teamsByUser[$m['id']] ?? null;
+            $progress[$m['id']] = [
+                'team' => $team,
+                'payment' => $team ? ($paymentsByTeam[$team['id']] ?? null) : null,
+                'submissions' => $team ? ($subsByTeam[$team['id']] ?? []) : [],
+            ];
+        }
+
         $this->view('admin/accounts', [
             'members' => $members,
+            'progress' => $progress,
             'page_title' => 'Akun'
         ], 'admin');
     }
