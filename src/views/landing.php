@@ -446,7 +446,11 @@
                     </div>
                     <h4 class="font-bold text-foreground tracking-tight text-lg">Hubungi Kami</h4>
                     <p class="text-sm text-muted mt-2 leading-relaxed">Hubungi panitia via WhatsApp untuk bantuan dan pertanyaan pendaftaran:</p>
-                    <span class="text-foreground font-semibold text-sm mt-3">+62 819-9828-2954</span>
+                    <span class="text-foreground font-semibold text-sm mt-3 flex items-center">
+                        +62 819-9828-2954
+                        <span class="text-muted font-normal ml-1"> (Abel)</span>
+                    </span>
+               
                 </div>
                 <div class="p-6 rounded-2xl border border-border bg-card shadow-md flex flex-col items-start hover:border-accent transition-colors">
                     <div class="p-2.5 bg-accent/10 border border-accent/20 rounded-xl mb-4 text-accent">
