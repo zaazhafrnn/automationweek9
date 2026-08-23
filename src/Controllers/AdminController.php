@@ -16,6 +16,9 @@ class AdminController extends Controller
 
         $this->view('admin/dashboard', [
             'user_name' => Session::get('user_name'),
+            'total_users' => (new \App\Models\User())->countMembers(),
+            'total_teams' => (new \App\Models\Team())->countAll(),
+            'divisions' => (new \App\Models\Team())->countByDivision(),
             'page_title' => 'Dasbor'
         ], 'admin');
     }
