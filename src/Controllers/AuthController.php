@@ -186,7 +186,7 @@ class AuthController extends Controller
         $this->validateCsrf();
 
         Session::destroy();
-        $this->redirect('/login');
+        $this->redirect('/');
     }
 
     public function forgotPasswordForm()
