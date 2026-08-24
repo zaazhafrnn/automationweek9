@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 24 Agustus hingga 1 Oktober 2026 Daftarkan tim Anda sekarang!">
     <title>Automation Week 9</title>
     <link rel="icon" href="/image/faveicon.png">
     <link rel="apple-touch-icon" href="/image/faveicon.png">
     <link rel="stylesheet" href="/css/app.css">
     <style>
         .hero-bg {
-            background: url('/image/hero-landing.png') left center/cover no-repeat;
+            background: url('/image/hero-landing.webp') left center/cover no-repeat;
         }
 
         @media (min-width: 640px) {
@@ -450,7 +451,7 @@
                         +62 819-9828-2954
                         <span class="text-muted font-normal ml-1"> (Abel)</span>
                     </span>
-               
+
                 </div>
                 <div class="p-6 rounded-2xl border border-border bg-card shadow-md flex flex-col items-start hover:border-accent transition-colors">
                     <div class="p-2.5 bg-accent/10 border border-accent/20 rounded-xl mb-4 text-accent">
