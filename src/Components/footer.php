@@ -1,11 +1,11 @@
 <?php
 
 $DIVISION_CONTACTS = [
-  'LF' => ['name' => 'Line Follower', 'wa' => '08xxxxxxxxxx'],
-  'PLC' => ['name' => 'Programmable Logic Controller', 'wa' => '08xxxxxxxxxx'],
-  'FFR' => ['name' => 'Fire Fighting Robot', 'wa' => '08xxxxxxxxxx'],
-  'LKTI' => ['name' => 'Lomba Karya Tulis Ilmiah', 'wa' => '08xxxxxxxxxx'],
-  'PROG' => ['name' => 'Algoritma Program', 'wa' => '08xxxxxxxxxx'],
+  'LF' => ['name' => 'Line Follower', 'wa' => '0889-8936-7418', 'pic' => 'Ahwa'],
+  'PLC' => ['name' => 'Programmable Logic Controller', 'wa' => '0856-0714-9600', 'pic' => 'Pradana'],
+  'FFR' => ['name' => 'Fire Fighting Robot', 'wa' => '0815-5650-8105', 'pic' => 'Bintang'],
+  'LKTI' => ['name' => 'Lomba Karya Tulis Ilmiah', 'wa' => '0823-3755-2845', 'pic' => 'Rizal'],
+  'PROG' => ['name' => 'Algoritma Program', 'wa' => '0858-1558-7476', 'pic' => 'Anang'],
 ];
 $MAPS_URL = 'https://www.google.com/maps/search/Jl.+Teknik+Kimia+Kampus+ITS+Sukolilo+Keputih+Sukolilo+Surabaya+60111';
 ?>
@@ -68,7 +68,9 @@ $MAPS_URL = 'https://www.google.com/maps/search/Jl.+Teknik+Kimia+Kampus+ITS+Suko
                 <li class="">
                   <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $div['wa']) ?>" target="_blank" class="flex items-center justify-between sm:flex-col sm:items-start sm:justify-start gap-0.5 hover:text-brand transition-colors no-underline">
                     <span class="text-xs"><?= htmlspecialchars($div['name']) ?></span>
-                    <?= htmlspecialchars($div['wa']) ?>
+                    <span>
+                      <?= htmlspecialchars($div['wa']) ?> <span class="text-xs italic text-gray-600 ml-0">(<?= htmlspecialchars($div['pic']) ?>)</span>
+                    </span>
                   </a>
                 </li>
               <?php endforeach; ?>
