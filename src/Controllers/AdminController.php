@@ -28,12 +28,20 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $userModel = new \App\Models\User();
-        $isSuperAdmin = str_contains((string) Session::get('user_name'), 'superadmin');
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        $isLkti = stripos((string) Session::get('user_name'), 'lkti') !== false;
         $members = $userModel->getAllMembers($isSuperAdmin);
 
         $teamsByUser = [];
         foreach ((new \App\Models\Team())->getAllTeams() as $t) {
             $teamsByUser[$t['user_id']] = $t;
+        }
+
+        if ($isLkti) {
+            $members = array_values(array_filter(
+                $members,
+                fn($m) => strtoupper($teamsByUser[$m['id']]['division'] ?? '') === 'LKTI'
+            ));
         }
 
         $paymentsByTeam = [];
@@ -69,6 +77,13 @@ class AdminController extends Controller
 
         $teamModel = new \App\Models\Team();
         $teams = $teamModel->getAllTeams();
+
+        if (stripos((string) Session::get('user_name'), 'lkti') !== false) {
+            $teams = array_values(array_filter(
+                $teams,
+                fn($t) => strtoupper($t['division'] ?? '') === 'LKTI'
+            ));
+        }
 
         $this->view('admin/teams', [
             'teams' => $teams,

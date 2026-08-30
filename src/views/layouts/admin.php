@@ -7,14 +7,25 @@ $body_class = $body_class ?? 'antialiased';
 $uri = $_SERVER['REQUEST_URI'];
 $div = $_GET['div'] ?? '';
 
+$user_name = (string) \App\Utils\Session::get('user_name');
+$isLkti = stripos($user_name, 'lkti') !== false;
+
 $sidebarItems = [];
-$sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];
+if (!$isLkti) {
+    $sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];
+}
 $sidebarItems[] = ['label' => 'Akun', 'icon' => 'users', 'route' => '/admin/accounts', 'active' => $uri === '/admin/accounts'];
 $sidebarItems[] = ['label' => 'Tim', 'icon' => 'trophy', 'route' => '/admin/teams', 'active' => $uri === '/admin/teams'];
-$sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
+if (!$isLkti) {
+    $sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
+}
 $sidebarItems[] = ['label' => 'Upload karya', 'header' => true];
 
-foreach (['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' => 'file', 'PROG' => 'settings'] as $d => $icon) {
+$divisionItems = $isLkti
+    ? ['LKTI' => 'file']
+    : ['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' => 'file', 'PROG' => 'settings'];
+
+foreach ($divisionItems as $d => $icon) {
     $sidebarItems[] = [
         'label' => $d,
         'icon' => $icon,
