@@ -86,4 +86,14 @@ INSERT INTO accounts (name, email, password, role)
 VALUES ('Admin', 'admin@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeMCFwG7Apa9IlJ5YnK', 'admin')
 ON DUPLICATE KEY UPDATE id=id;
 
+-- Superadmin sees dummy accounts; name must contain 'superadmin'
+INSERT INTO accounts (name, email, password, role)
+VALUES ('superadmin', 'superadmin@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeMCFwG7Apa9IlJ5YnK', 'admin')
+ON DUPLICATE KEY UPDATE id=id;
+
+-- Dummy account: hidden from non-superadmin admins
+INSERT INTO accounts (name, email, password, role)
+VALUES ('Dummy', 'dummy@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeMCFwG7Apa9IlJ5YnK', 'dummy')
+ON DUPLICATE KEY UPDATE id=id;
+
 ALTER TABLE submissions ADD COLUMN category VARCHAR(20) NULL AFTER status;

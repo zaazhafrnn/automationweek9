@@ -28,7 +28,8 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $userModel = new \App\Models\User();
-        $members = $userModel->getAllMembers();
+        $isSuperAdmin = str_contains((string) Session::get('user_name'), 'superadmin');
+        $members = $userModel->getAllMembers($isSuperAdmin);
 
         $teamsByUser = [];
         foreach ((new \App\Models\Team())->getAllTeams() as $t) {

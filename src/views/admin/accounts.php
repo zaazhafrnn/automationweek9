@@ -147,7 +147,12 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
     <div class="p-6 pt-0">
         <?= DataTable::make()
             ->columns([
-                ['key' => 'name', 'label' => 'Nama'],
+                ['key' => 'name', 'label' => 'Nama', 'render' => function ($m) {
+                    return htmlspecialchars($m['name'])
+                        . ($m['role'] === 'dummy'
+                            ? ' <span class="ml-1 inline-block rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 align-middle">Dummy</span>'
+                            : '');
+                }],
                 ['key' => 'email', 'label' => 'Email'],
                 [
                     'key' => 'aksi',
@@ -172,7 +177,7 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
                     },
                 ],
             ])
-            ->rows(array_map(fn($m) => ['name' => $m['name'], 'email' => $m['email'], 'id' => $m['id']], $members))
+            ->rows(array_map(fn($m) => ['name' => $m['name'], 'email' => $m['email'], 'role' => $m['role'], 'id' => $m['id']], $members))
             ->searchable()
             ->columnSelectable()
             ->pageable()
