@@ -66,7 +66,7 @@ $MAPS_URL = 'https://www.google.com/maps/search/Jl.+Teknik+Kimia+Kampus+ITS+Suko
             <ul class="space-y-2 text-sm">
               <?php foreach ($DIVISION_CONTACTS as $code => $div): ?>
                 <li class="">
-                  <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $div['wa']) ?>" target="_blank" class="flex items-center justify-between sm:flex-col sm:items-start sm:justify-start gap-0.5 hover:text-brand transition-colors no-underline">
+                  <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $div['wa']) ?>" target="_blank" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 hover:text-brand transition-colors no-underline">
                     <span class="text-xs"><?= htmlspecialchars($div['name']) ?></span>
                     <span>
                       <?= htmlspecialchars($div['wa']) ?> <span class="text-xs italic text-gray-600 ml-0">(<?= htmlspecialchars($div['pic']) ?>)</span>
