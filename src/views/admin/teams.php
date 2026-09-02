@@ -19,25 +19,42 @@ use App\Components\DataTable; ?>
                 [
                     'key' => 'leader',
                     'label' => 'Ketua',
-                    'render' => fn($row) =>
-                    '<div class="font-medium">' . htmlspecialchars($row['leaderName']) . '</div>' .
-                        ($row['leaderPhone'] ? '<div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['leaderPhone']) . '</div>' : '')
+                    'render' => fn($row) => htmlspecialchars($row['leaderName']),
+                ],
+                [
+                    'key' => 'leaderPhone',
+                    'label' => 'No. HP Ketua',
+                    'render' => fn($row) => $row['leaderPhone']
+                        ? htmlspecialchars($row['leaderPhone'])
+                        : '<span class="text-muted-foreground">-</span>',
                 ],
                 [
                     'key' => 'm1',
                     'label' => 'Anggota 1',
-                    'render' => fn($row) =>
-                    $row['m1Name']
-                        ? '<div class="font-medium">' . htmlspecialchars($row['m1Name']) . '</div><div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['m1Phone'] ?? '') . '</div>'
-                        : '<span class="text-muted-foreground">-</span>'
+                    'render' => fn($row) => $row['m1Name']
+                        ? htmlspecialchars($row['m1Name'])
+                        : '<span class="text-muted-foreground">-</span>',
+                ],
+                [
+                    'key' => 'm1Phone',
+                    'label' => 'No. HP Anggota 1',
+                    'render' => fn($row) => $row['m1Name'] && $row['m1Phone']
+                        ? htmlspecialchars($row['m1Phone'])
+                        : '<span class="text-muted-foreground">-</span>',
                 ],
                 [
                     'key' => 'm2',
                     'label' => 'Anggota 2',
-                    'render' => fn($row) =>
-                    $row['m2Name']
-                        ? '<div class="font-medium">' . htmlspecialchars($row['m2Name']) . '</div><div class="mt-1 text-sm text-muted-foreground">' . htmlspecialchars($row['m2Phone'] ?? '') . '</div>'
-                        : '<span class="text-muted-foreground">-</span>'
+                    'render' => fn($row) => $row['m2Name']
+                        ? htmlspecialchars($row['m2Name'])
+                        : '<span class="text-muted-foreground">-</span>',
+                ],
+                [
+                    'key' => 'm2Phone',
+                    'label' => 'No. HP Anggota 2',
+                    'render' => fn($row) => $row['m2Name'] && $row['m2Phone']
+                        ? htmlspecialchars($row['m2Phone'])
+                        : '<span class="text-muted-foreground">-</span>',
                 ],
             ])
             ->rows(array_map(fn($t) => [
