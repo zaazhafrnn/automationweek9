@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Utils\Session;
 
 use App\Utils\Security;
+use App\Models\TeamDocumentationUpload;
 use App\Models\Submission;
 
 class AdminController extends Controller
@@ -55,10 +56,24 @@ class AdminController extends Controller
         }
 
         $progress = [];
+
+
         foreach ($members as $m) {
             $team = $teamsByUser[$m['id']] ?? null;
+            $docRows = [];
+            if ($team && $team['id']) {
+                $docRows = (new TeamDocumentationUpload())
+                    ->findByTeam($team['id']);
+                foreach ($docRows as $row) {
+                    $num = $row['member_number'];
+                    $team["twibbon_$num"] = $row['twibbon'] ?? null;
+                    $team["student_card_$num"] = $row['student_card'] ?? null;
+                    $team["ig_follow_$num"] = $row['ig_follow'] ?? null;
+                }
+            }
             $progress[$m['id']] = [
                 'team' => $team,
+                'docs' => $docRows,
                 'payment' => $team ? ($paymentsByTeam[$team['id']] ?? null) : null,
                 'submissions' => $team ? ($subsByTeam[$team['id']] ?? []) : [],
             ];

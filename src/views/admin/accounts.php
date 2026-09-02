@@ -48,8 +48,8 @@ $cardClose = '</div>';
 $field = function (string $label, string $valueHtml, bool $ok = false, bool $showCheck = true, ?string $badgeHtml = null) use ($done): string {
     return '<div class="flex items-start justify-between gap-3 px-3 py-2.5">'
         . '<div class="min-w-0">'
-        . '<div class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">' . htmlspecialchars($label) . '</div>'
-        . '<div class="text-sm font-medium mt-0.5">' . ($valueHtml !== '' ? $valueHtml : '<span class="text-muted-foreground italic font-normal">Belum diisi</span>') . '</div>'
+        . ($label !== '' ? '<div class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">' . htmlspecialchars($label) . '</div>' : '')
+        . '<div class="text-sm font-medium' . ($label !== '' ? ' mt-0.5' : '') . '">' . ($valueHtml !== '' ? $valueHtml : '<span class="text-muted-foreground italic font-normal">Belum diisi</span>') . '</div>'
         . '</div>'
         . ($showCheck || $badgeHtml ? '<div class="flex items-center gap-2 shrink-0 pt-2">' . $badgeHtml . ($showCheck ? $done($ok) : '') . '</div>' : '')
         . '</div>';
@@ -69,6 +69,8 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
         return $html . $sectionWrap('<div class="rounded-lg border bg-secondary/20 px-3 py-2.5 text-sm text-muted-foreground italic">Akun ini belum mendaftarkan tim.</div>');
     }
     $t = $p['team'];
+    $doc = $t;
+    $UPLOAD_URL = '/uploads/teams/';
     $metaKey = array_key_exists($t['division'], $divisionMeta) ? $t['division'] : strtoupper(trim($t['division']));
     [$divName, $divImg] = $divisionMeta[$metaKey] ?? [$t['division'], null];
 
@@ -82,18 +84,86 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
         . $field('Divisi', $divHtml, true)
         . $cardClose);
 
-    $membersList = [
-        'Ketua' => [$t['leaderName'], $t['leaderPhoneNumber']],
-        'Anggota 1' => [$t['firstMemberName'] ?? null, $t['firstMemberPhoneNumber'] ?? null],
-        'Anggota 2' => [$t['secondMemberName'] ?? null, $t['secondMemberPhoneNumber'] ?? null],
-    ];
     $rows = '';
-    foreach ($membersList as $role => [$name, $phone]) {
-        $valueHtml = ($name ? htmlspecialchars($name) : '')
-            . ($phone ? '<div class="text-xs text-gray-700 font-normal mt-0.5">No. HP: ' . htmlspecialchars($phone) . '</div>' : '');
-        $rows .= $field($role, $valueHtml, !empty($name));
+    $memberData = [
+        ['label' => 'Ketua', 'name' => $t['leaderName'], 'phone' => $t['leaderPhoneNumber'], 'gender' => $t['leaderGender'], 'card' => $doc['student_card_1'] ?? null, 'ig' => $doc['ig_follow_1'] ?? null, 'twibbon' => $doc['twibbon_1'] ?? null],
+        ['label' => 'Anggota 1', 'name' => $t['firstMemberName'] ?? null, 'phone' => $t['firstMemberPhoneNumber'] ?? null, 'gender' => $t['firstMemberGender'] ?? null, 'card' => $doc['student_card_2'] ?? null, 'ig' => $doc['ig_follow_2'] ?? null, 'twibbon' => $doc['twibbon_2'] ?? null],
+        ['label' => 'Anggota 2', 'name' => $t['secondMemberName'] ?? null, 'phone' => $t['secondMemberPhoneNumber'] ?? null, 'gender' => $t['secondMemberGender'] ?? null, 'card' => $doc['student_card_3'] ?? null, 'ig' => $doc['ig_follow_3'] ?? null, 'twibbon' => $doc['twibbon_3'] ?? null],
+    ];
+    foreach ($memberData as $m) {
+        if (empty($m['name'])) continue;
+        $valueHtml = (
+            ($m['name'] ? htmlspecialchars($m['name']) : '') .
+            ($m['phone'] ? '<div class="text-xs text-gray-700 font-normal mt-0.5">No. HP: ' . htmlspecialchars($m['phone']) . '</div>' : '') .
+            ($m['gender'] ? '<div class="text-xs text-gray-700 font-normal mt-0.5">Gender: ' . htmlspecialchars($m['gender']) . '</div>' : '') .
+            ($m['card'] ? '<div class="text-xs text-gray-700 font-normal mt-0.5">Kartu Pelajar: <a href="' . $UPLOAD_URL . htmlspecialchars($m['card']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($m['card']) . '</a></div>' : '')
+        );
+        $rows .= $field($m['label'], $valueHtml, !empty($m['name']));
     }
     $html .= $sectionWrap($sectionTitle('Anggota') . $cardOpen . $rows . $cardClose);
+
+    $hasMemberDocs = false;
+    for ($i = 1; $i <= 3; $i++) {
+        if (!empty($doc["ig_follow_$i"]) || !empty($doc["twibbon_$i"])) {
+            $hasMemberDocs = true;
+            break;
+        }
+    }
+
+    $buktiHtml = '';
+    if ($hasMemberDocs) {
+        $hasIg = array_filter($memberData, fn($m) => !empty($m['ig']));
+        if ($hasIg) {
+            $followRows = '';
+            foreach ($memberData as $m) {
+                if (empty($m['name'])) continue;
+                $valueHtml = htmlspecialchars($m['name']) . ' <span class="text-muted-foreground font-normal">(' . htmlspecialchars($m['label']) . ')</span>';
+                if ($m['ig']) {
+                    $valueHtml .= '<div class="text-xs text-gray-700 font-normal mt-0.5"><a href="' . $UPLOAD_URL . htmlspecialchars($m['ig']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($m['ig']) . '</a></div>';
+                }
+                $followRows .= $field('', $valueHtml, !empty($m['ig']));
+            }
+            $buktiHtml .= $sectionWrap($sectionTitle('Bukti Follow IG') . $cardOpen . $followRows . $cardClose);
+        }
+
+        $hasTwibbon = array_filter($memberData, fn($m) => !empty($m['twibbon']));
+        if ($hasTwibbon) {
+            $twibbonRows = '';
+            foreach ($memberData as $m) {
+                if (empty($m['name'])) continue;
+                $valueHtml = htmlspecialchars($m['name']) . ' <span class="text-muted-foreground font-normal">(' . htmlspecialchars($m['label']) . ')</span>';
+                if ($m['twibbon']) {
+                    $valueHtml .= '<div class="text-xs text-gray-700 font-normal mt-0.5"><a href="' . $UPLOAD_URL . htmlspecialchars($m['twibbon']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($m['twibbon']) . '</a></div>';
+                }
+                $twibbonRows .= $field('', $valueHtml, !empty($m['twibbon']));
+            }
+            $buktiHtml .= $sectionWrap($sectionTitle('Bukti Twibbon') . $cardOpen . $twibbonRows . $cardClose);
+        }
+    } else {
+        $tw = $doc['twibbon'] ?? null;
+        $card = $doc['student_card'] ?? null;
+        $ig = $doc['ig_follow'] ?? null;
+        $buktiHtml = $sectionTitle('Bukti')
+            . $cardOpen
+            . $field(
+                'Twibbon',
+                $tw ? '<a href="' . $UPLOAD_URL . htmlspecialchars($tw) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($tw) . '</a>' : '<span class="text-muted-foreground italic">-</span>',
+                !empty($tw)
+            )
+            . $field(
+                'Kartu Pelajar',
+                $card ? '<a href="' . $UPLOAD_URL . htmlspecialchars($card) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($card) . '</a>' : '<span class="text-muted-foreground italic">-</span>',
+                !empty($card)
+            )
+            . $field(
+                'Follow IG',
+                $ig ? '<a href="' . $UPLOAD_URL . htmlspecialchars($ig) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars($ig) . '</a>' : '<span class="text-muted-foreground italic">-</span>',
+                !empty($ig)
+            )
+            . $cardClose;
+        $buktiHtml = $sectionWrap($buktiHtml);
+    }
+    $html .= $buktiHtml;
 
     $pay = $p['payment'];
     if ($pay) {
@@ -164,11 +234,11 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
                             return '<span class="text-muted-foreground">-</span>';
                         }
                         return '<div id="account-progress-' . $m['id'] . '" class="hidden">' . $renderProgress($m, $p) . '</div>'
-                            . '<details class="relative inline-block" data-kebab-menu>'
+                            . '<details class="relative inline-block overflow-visible" data-kebab-menu>'
                             . '<summary class="list-none cursor-pointer inline-flex items-center justify-center w-8 h-8 rounded-lg border border-gray-400 bg-card hover:bg-secondary/40 transition-colors [&::-webkit-details-marker]:hidden">'
                             . Icon::make()->name('more-horizontal')->class('w-4 h-4')
                             . '</summary>'
-                            . '<div class="absolute right-0 z-50 mt-1 min-w-[170px] overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-lg text-sm">'
+                            . '<div class="absolute right-10 z-50 top-10 -translate-y-full min-w-[170px] overflow-visible rounded-xl border border-border bg-card p-1.5 shadow-lg text-sm">'
                             . '<button type="button" onclick="this.closest(\'details\').removeAttribute(\'open\'); showAccountProgress(' . $m['id'] . ')"'
                             . ' class="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-secondary/50 text-left font-medium cursor-pointer whitespace-nowrap">'
                             . Icon::make()->name('eye')->class('w-4 h-4')
@@ -187,7 +257,7 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
 </div>
 
 <?= Dialog::make()->id('accountProgressDialog')->title('Progres Akun')
-    ->content('<div id="account-progress-body" class="max-h-[65vh] overflow-y-auto"></div>')
+    ->content('<div id="account-progress-body" class="max-h-[70vh] overflow-y-auto p-4"></div>')
     ->render() ?>
 
 <script>
