@@ -93,6 +93,17 @@ class AdminController extends Controller
         $teamModel = new \App\Models\Team();
         $teams = $teamModel->getAllTeams();
 
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teams = array_values(array_filter($teams, fn($t) => ($roleByUserId[$t['user_id']] ?? '') !== 'dummy'));
+        }
+
         if (stripos((string) Session::get('user_name'), 'lkti') !== false) {
             $teams = array_values(array_filter(
                 $teams,
@@ -113,6 +124,26 @@ class AdminController extends Controller
         $paymentModel = new \App\Models\Payment();
         $payments = $paymentModel->getAllPayments();
 
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teamModelTmp = new \App\Models\Team();
+            $teamsTmp = $teamModelTmp->getAllTeams();
+            $teamUser = [];
+            foreach ($teamsTmp as $t) {
+                $teamUser[$t['id']] = $t['user_id'];
+            }
+            $payments = array_values(array_filter($payments, function ($p) use ($roleByUserId, $teamUser) {
+                $uid = $teamUser[$p['teamId']] ?? null;
+                return $uid === null || ($roleByUserId[$uid] ?? '') !== 'dummy';
+            }));
+        }
+
         $this->view('admin/payments', [
             'payments' => $payments,
             'csrf_token' => Security::generateCsrfToken(),
@@ -125,9 +156,30 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $submissionModel = new Submission();
+        $submissions = $submissionModel->getAll();
+
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teamModelTmp = new \App\Models\Team();
+            $teamsTmp = $teamModelTmp->getAllTeams();
+            $teamUser = [];
+            foreach ($teamsTmp as $t) {
+                $teamUser[$t['id']] = $t['user_id'];
+            }
+            $submissions = array_values(array_filter($submissions, function ($s) use ($roleByUserId, $teamUser) {
+                $uid = $teamUser[$s['team_id']] ?? null;
+                return $uid === null || ($roleByUserId[$uid] ?? '') !== 'dummy';
+            }));
+        }
 
         $this->view('admin/submissions', [
-            'submissions' => $submissionModel->getAll(),
+            'submissions' => $submissions,
             'csrf_token' => Security::generateCsrfToken(),
             'page_title' => 'Karya'
         ], 'admin');
