@@ -220,12 +220,10 @@ $DIVISION_INFO = [
               <p class="text-sm text-gray-500 mt-1">Sekolah: <span class="font-semibold text-gray-700"><?= htmlspecialchars($team['teamSchool']) ?></span></p>
               <span class="inline-block mt-2 px-2.5 py-1 text-xs font-bold text-brand bg-brand/10 rounded-lg">Divisi <?= htmlspecialchars($divisionDisplay) ?></span>
             </div>
-            <?php if ($info && !empty($info['guide_book'])): ?>
-              <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
-                <?= Icon::make()->name('download')->class('w-4 h-4') ?>
-                Download Guide Book
-              </a>
-            <?php endif; ?>
+               <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-gray-400 rounded-xl cursor-default" disabled>
+                 <?= Icon::make()->name('download')->class('w-4 h-4') ?>
+                 Guide Book (Segera hadir)
+               </button>
           </div>
         </div>
 
