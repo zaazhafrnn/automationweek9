@@ -86,9 +86,9 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
 
     $rows = '';
     $memberData = [
-        ['label' => 'Ketua', 'name' => $t['leaderName'], 'phone' => $t['leaderPhoneNumber'], 'gender' => $t['leaderGender'], 'card' => $doc['student_card_1'] ?? null, 'ig' => $doc['ig_follow_1'] ?? null, 'twibbon' => $doc['twibbon_1'] ?? null],
-        ['label' => 'Anggota 1', 'name' => $t['firstMemberName'] ?? null, 'phone' => $t['firstMemberPhoneNumber'] ?? null, 'gender' => $t['firstMemberGender'] ?? null, 'card' => $doc['student_card_2'] ?? null, 'ig' => $doc['ig_follow_2'] ?? null, 'twibbon' => $doc['twibbon_2'] ?? null],
-        ['label' => 'Anggota 2', 'name' => $t['secondMemberName'] ?? null, 'phone' => $t['secondMemberPhoneNumber'] ?? null, 'gender' => $t['secondMemberGender'] ?? null, 'card' => $doc['student_card_3'] ?? null, 'ig' => $doc['ig_follow_3'] ?? null, 'twibbon' => $doc['twibbon_3'] ?? null],
+        ['label' => 'Anggota 1 (Ketua)', 'name' => $t['leaderName'], 'phone' => $t['leaderPhoneNumber'], 'gender' => $t['leaderGender'], 'card' => $doc['student_card_1'] ?? null, 'ig' => $doc['ig_follow_1'] ?? null, 'twibbon' => $doc['twibbon_1'] ?? null],
+        ['label' => 'Anggota 2', 'name' => $t['firstMemberName'] ?? null, 'phone' => $t['firstMemberPhoneNumber'] ?? null, 'gender' => $t['firstMemberGender'] ?? null, 'card' => $doc['student_card_2'] ?? null, 'ig' => $doc['ig_follow_2'] ?? null, 'twibbon' => $doc['twibbon_2'] ?? null],
+        ['label' => 'Anggota 3', 'name' => $t['secondMemberName'] ?? null, 'phone' => $t['secondMemberPhoneNumber'] ?? null, 'gender' => $t['secondMemberGender'] ?? null, 'card' => $doc['student_card_3'] ?? null, 'ig' => $doc['ig_follow_3'] ?? null, 'twibbon' => $doc['twibbon_3'] ?? null],
     ];
     foreach ($memberData as $m) {
         if (empty($m['name'])) continue;

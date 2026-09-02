@@ -18,7 +18,7 @@ use App\Components\DataTable; ?>
                 ['key' => 'divisi', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . htmlspecialchars($row['divisi']) . '</span>'],
                 [
                     'key' => 'leader',
-                    'label' => 'Ketua',
+                    'label' => 'Anggota 1 (Ketua)',
                     'render' => fn($row) => htmlspecialchars($row['leaderName']),
                 ],
                 [
@@ -30,28 +30,28 @@ use App\Components\DataTable; ?>
                 ],
                 [
                     'key' => 'm1',
-                    'label' => 'Anggota 1',
+                    'label' => 'Anggota 2',
                     'render' => fn($row) => $row['m1Name']
                         ? htmlspecialchars($row['m1Name'])
                         : '<span class="text-muted-foreground">-</span>',
                 ],
                 [
                     'key' => 'm1Phone',
-                    'label' => 'No. HP Anggota 1',
+                    'label' => 'No. HP Anggota 2',
                     'render' => fn($row) => $row['m1Name'] && $row['m1Phone']
                         ? htmlspecialchars($row['m1Phone'])
                         : '<span class="text-muted-foreground">-</span>',
                 ],
                 [
                     'key' => 'm2',
-                    'label' => 'Anggota 2',
+                    'label' => 'Anggota 3',
                     'render' => fn($row) => $row['m2Name']
                         ? htmlspecialchars($row['m2Name'])
                         : '<span class="text-muted-foreground">-</span>',
                 ],
                 [
                     'key' => 'm2Phone',
-                    'label' => 'No. HP Anggota 2',
+                    'label' => 'No. HP Anggota 3',
                     'render' => fn($row) => $row['m2Name'] && $row['m2Phone']
                         ? htmlspecialchars($row['m2Phone'])
                         : '<span class="text-muted-foreground">-</span>',

@@ -122,7 +122,7 @@ foreach ($submissions as $s) {
         <?= DataTable::make()
             ->columns([
                 ['key' => 'team_name', 'label' => 'Tim'],
-                ['key' => 'leader', 'label' => 'Ketua'],
+                ['key' => 'leader', 'label' => 'Anggota 1 (Ketua)'],
                 ['key' => 'school', 'label' => 'Asal Sekolah'],
                 ['key' => 'kategori', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['kategori'] . '</span>'],
                 ['key' => 'karya', 'label' => 'Karya', 'sortable' => false, 'render' => fn($row) => $row['karya']],

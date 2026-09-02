@@ -75,7 +75,7 @@ foreach ($payments as $p) {
             ->columns([
                 ['key' => 'team', 'label' => 'Tim', 'render' => fn($row) => '<div class="font-medium">' . $row['team_name'] . '</div><div class="text-sm text-muted-foreground">' . ($row['school'] ?? '-') . '</div>'],
                 ['key' => 'divisi', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['divisi'] . '</span>'],
-                ['key' => 'ketua', 'label' => 'Ketua', 'render' => fn($row) => '<div class="font-medium">' . $row['leader'] . '</div><div class="text-sm text-muted-foreground">' . $row['leaderPhone'] . '</div>'],
+                ['key' => 'ketua', 'label' => 'Anggota 1 (Ketua)', 'render' => fn($row) => '<div class="font-medium">' . $row['leader'] . '</div><div class="text-sm text-muted-foreground">' . $row['leaderPhone'] . '</div>'],
                 ['key' => 'status', 'label' => 'Status', 'sortable' => false, 'render' => fn($row) => $row['status']],
                 ['key' => 'bukti', 'label' => 'Bukti', 'sortable' => false, 'render' => fn($row) => $row['bukti']],
                 ['key' => 'submitted', 'label' => 'Dikirim', 'tdClass' => 'text-muted-foreground'],
