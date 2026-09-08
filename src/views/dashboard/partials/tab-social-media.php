@@ -16,6 +16,14 @@ if ($team) {
   if ($three) $members[] = ['num' => 3, 'name' => $team['secondMemberName'] ?? 'Anggota 3', 'active' => !empty($team['secondMemberName'])];
 }
 $UPLOAD_URL = '/uploads/teams/';
+$twibbonLinks = [
+  'PROG' => 'https://twb.nz/awixalogaritmaprogram',
+  'LKTI' => 'https://twb.nz/awixlkti',
+  'PLC'  => 'https://twb.nz/awixplc',
+  'LF'   => 'https://twb.nz/awixlfm',
+  'FFR'  => 'https://twb.nz/awixffr',
+];
+$twibbonLink = $twibbonLinks[$team['division']] ?? '#';
 ?>
 <?php if (!$team): ?>
   <div class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl">
@@ -87,7 +95,7 @@ $UPLOAD_URL = '/uploads/teams/';
                 <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1.5">Upload Twibbon<span class="text-red-500">*</span> <a href="#" target="_blank" class="text-sm text-brand font-semibold hover:underline ml-1">Download Twibbon</a></label>
+                <label class="block text-sm font-medium mb-1.5">Upload Twibbon<span class="text-red-500">*</span> <a href="<?= htmlspecialchars($twibbonLink) ?>" target="_blank" class="text-sm text-brand font-semibold hover:underline ml-1">Download Twibbon</a></label>
                 <?php
                 $twibbonRequired = !$disabled && !$existingTwibbon;
                 $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];
