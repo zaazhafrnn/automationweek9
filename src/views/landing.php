@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 24 Agustus hingga 1 Oktober 2026 Daftarkan tim Anda sekarang!">
+    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 8 September hingga 1 Oktober 2026 Daftarkan tim Anda sekarang!">
     <title>Automation Week 9</title>
     <link rel="icon" href="/image/faveicon.png">
     <link rel="apple-touch-icon" href="/image/faveicon.png">
@@ -164,7 +164,7 @@
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pendaftaran & Pengumpulan Abstrak</span>
-                                <span class="font-semibold">24 Agustus 2026</span>
+                                <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Close Registration</span>
@@ -217,7 +217,7 @@
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Open Registration</span>
-                                <span class="font-semibold">24 Agustus 2026</span>
+                                <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Close Registration</span>
@@ -270,7 +270,7 @@
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pendaftaran</span>
-                                <span class="font-semibold">26 Agustus 2026</span>
+                                <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">TM FFR & Test Track</span>
@@ -303,7 +303,7 @@
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Open Registration</span>
-                                <span class="font-semibold">17 Agustus 2026</span>
+                                <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Close Registration</span>
@@ -345,7 +345,7 @@
                             <ul class="w-full mb-8 text-xs">
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Open Registrasi</span>
-                                    <span class="font-semibold">24 Agustus 2026</span>
+                                    <span class="font-semibold">8 September 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Close Registrasi</span>
@@ -510,7 +510,7 @@
             var textPath = document.getElementById('marquee-text');
             if (!textPath) return;
 
-            var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 24 Agustus – 1 Oktober 2026 ✦ Total hadiah puluhan juta rupiah + Free pass Teknik Otomasi + trophy + e-sertifikat ✦ 5 kategori lomba: LF · PLC · FFR · LKTI · PROGRAM ';
+            var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 8 September – 1 Oktober 2026 ✦ Total hadiah puluhan juta rupiah + Free pass Teknik Otomasi + trophy + e-sertifikat ✦ 5 kategori lomba: LF · PLC · FFR · LKTI · PROGRAM ';
             var speed = 1.5;
             var spacing = 0;
             var svg = textPath.closest('svg');

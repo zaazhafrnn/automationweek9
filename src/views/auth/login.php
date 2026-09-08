@@ -35,7 +35,7 @@ $main_class = 'mx-auto flex w-full grow flex-col justify-center max-w-3xl min-[1
                 <div class="flex justify-center bg-red-600/30 -mb-6 pb-6 rounded-t-4xl border border-red-500">
                     <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 px-3 py-2 sm:py-4 text-xs">
                         <span class="text-brand font-semibold">Pendaftaran lomba dibuka</span>
-                        <span>24 Agustus - 1 Oktober 2026</span>
+                        <span>8 September - 1 Oktober 2026</span>
                     </div>
                 </div>
 

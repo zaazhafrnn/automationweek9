@@ -8,7 +8,7 @@ $main_class = $main_class ?? 'flex-grow w-full';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 24 Agustus hingga 1 Oktober 2026 Daftarkan tim Anda sekarang!">
+    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 8 September hingga 1 Oktober 2026 Daftarkan tim Anda sekarang!">
     <title><?= htmlspecialchars(APP_NAME) ?></title>
     <link rel="icon" type="image/png" href="/image/faveicon.png">
     <link rel="stylesheet" href="/css/app.css">

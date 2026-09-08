@@ -50,7 +50,7 @@ $DIVISION_INFO = [
     'desc' => 'Lomba Karya Tulis Ilmiah merupakan sebuah perlombaan yang bertujuan untuk mengembangkan ide kreatif dan inovatif siswa dalam memecahkan masalah yang ada di lingkungan sekitar.',
     'guide_book' => 'https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb',
     'timeline' => [
-      ['title' => 'Pendaftaran & Pengumpulan Abstrak', 'date' => '24 Agustus 2026'],
+      ['title' => 'Pendaftaran & Pengumpulan Abstrak', 'date' => '8 September 2026'],
       ['title' => 'Close Registration', 'date' => '1 Oktober 2026'],
       ['title' => 'Pengumuman Lolos Abstrak', 'date' => '3 Oktober 2026'],
       ['title' => 'Pengumpulan Full Paper', 'date' => '4 – 26 Oktober 2026'],
@@ -68,7 +68,7 @@ $DIVISION_INFO = [
     'desc' => 'Fire Fighting Roboboat merupakan perlombaan kapal tanpa awak yang bergerak secara otomatis dan memiliki misi untuk memadamkan api.',
     'guide_book' => 'https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0',
     'timeline' => [
-      ['title' => 'Pendaftaran', 'date' => '26 Agustus 2026'],
+      ['title' => 'Pendaftaran', 'date' => '8 September 2026'],
       ['title' => 'TM FFR & Test Track', 'date' => '13 November 2026'],
       ['title' => 'Penyisihan', 'date' => '14 November 2026'],
       ['title' => 'Semifinal & Final', 'date' => '15 November 2026'],
@@ -81,7 +81,7 @@ $DIVISION_INFO = [
     'desc' => 'Programmable Logic Controller merupakan jenis lomba yang bertujuan untuk mengasah logika dan kemampuan siswa dalam bidang pemrograman PLC.',
     'guide_book' => 'https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO',
     'timeline' => [
-      ['title' => 'Open Registration', 'date' => '24 Agustus 2026'],
+      ['title' => 'Open Registration', 'date' => '8 September 2026'],
       ['title' => 'Close Registration', 'date' => '30 September 2026'],
       ['title' => 'Plan Contest', 'date' => '11 Oktober 2026'],
       ['title' => 'Pelatihan Sesi 1', 'date' => '17 Oktober 2026'],
@@ -99,7 +99,7 @@ $DIVISION_INFO = [
     'desc' => 'Lomba Line Follower Mikrokontroler, Kompetisi robot berbasis mikrokontroler yang ditantang untuk mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.',
     'guide_book' => 'https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq',
     'timeline' => [
-      ['title' => 'Open Registration', 'date' => '17 Agustus 2026'],
+      ['title' => 'Open Registration', 'date' => '8 September 2026'],
       ['title' => 'Close Registration', 'date' => '2 November 2026'],
       ['title' => 'Technical Meeting', 'date' => '7 November 2026'],
       ['title' => 'Uji Lintasan / Track', 'date' => '13 November 2026'],
@@ -114,7 +114,7 @@ $DIVISION_INFO = [
     'desc' => 'Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.',
     'guide_book' => '#',
     'timeline' => [
-      ['title' => 'Open Registrasi', 'date' => '24 Agustus 2026'],
+      ['title' => 'Open Registrasi', 'date' => '8 September 2026'],
       ['title' => 'Close Registrasi', 'date' => '1 Oktober 2026'],
       ['title' => 'Technical Meeting', 'date' => '4 Oktober 2026'],
       ['title' => 'Pelatihan', 'date' => '13 November 2026'],
