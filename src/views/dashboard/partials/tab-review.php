@@ -220,7 +220,7 @@ $sectionBtn = function (): string {
                   <p id="err-review-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium mb-1.5">Upload Twibbon<span class="text-red-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1.5">Unggah Twibbon<span class="text-red-500">*</span></label>
                   <?php if ($twibbon): ?>
                     <?= Attachment::make()
                       ->mediaVariant('image')
@@ -232,13 +232,13 @@ $sectionBtn = function (): string {
                       ->fileUrl($UPLOAD_URL . htmlspecialchars($twibbon))
                       ->originalMedia($twibbonIcon)
                       ->originalSrc($UPLOAD_URL . htmlspecialchars($twibbon))
-                      ->idleTitle('Upload Twibbon')
+                      ->idleTitle('Unggah Twibbon')
                       ->fileInput('twibbon_' . $p, $twibbonAttrs)
                       ->render() ?>
                   <?php else: ?>
                     <?= Attachment::make()
                       ->media($twibbonIcon)
-                      ->title('Upload Twibbon')
+                      ->title('Unggah Twibbon')
                       ->description('Foto profil dengan twibbon')
                       ->clearable()
                       ->withPreview()

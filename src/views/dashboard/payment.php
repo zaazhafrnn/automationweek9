@@ -153,7 +153,7 @@ $verified = ($status === 'verified');
         <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
         <div>
           <p class="text-sm font-semibold text-amber-700">Mohon perhatian!</p>
-          <p class="text-xs text-amber-600 mt-0.5">Pembayaran belum dapat diakses. Mohon <span class="font-semibold">selesaikan</span> seluruh tahap <span class="font-semibold">pendaftaran tim</span> terlebih dahulu, lengkapi data anggota tim, upload twibbon, kemudian submit pada halaman review.</p>
+          <p class="text-xs text-amber-600 mt-0.5">Pembayaran belum dapat diakses. Mohon <span class="font-semibold">selesaikan</span> seluruh tahap <span class="font-semibold">pendaftaran tim</span> terlebih dahulu, lengkapi data anggota tim, unggah twibbon, kemudian submit pada halaman review.</p>
           <a href="/application" class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors no-underline">
             <?= Icon::make()->name('arrow-left')->class('w-3.5 h-3.5') ?>
             Selesaikan pendaftaran

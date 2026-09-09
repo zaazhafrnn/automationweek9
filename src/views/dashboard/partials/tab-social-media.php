@@ -24,6 +24,41 @@ $twibbonLinks = [
   'FFR'  => 'https://twb.nz/awixffr',
 ];
 $twibbonLink = $twibbonLinks[$team['division']] ?? '#';
+$TWIBBON_CAPTION = <<<'CAP'
+🚀 I'M READY FOR AUTOMATION WEEK 9!🚀
+
+“Success is not given, it is earned through hard work, creativity, and determination."✨
+
+Halo, Automation Enthusiasts! 👋
+
+Saya, [Nama Lengkap] dari [Asal Sekolah], siap menjadi bagian dari Automation Week 9!🤖⚡
+
+Melalui kegiatan ini, saya ingin mengembangkan kemampuan, menambah pengalaman, memperluas relasi, serta mengasah kreativitas dan semangat kompetitif dalam menghadapi berbagai tantangan di dunia teknologi dan otomasi.
+
+🏆 Kategori Lomba Automation Week 9:
+🔥 Fire Fighting Roboboat
+⚙️ Programmable Logic Controller
+📚 Lomba Karya Tulis Ilmiah
+💻 Algoritma Program
+🤖 Line Follower Microcontroller
+
+💬 Motivasi saya mengikuti Automation Week 9:
+(Tuliskan motivasi di sini.)
+
+Saya percaya bahwa setiap tantangan adalah kesempatan untuk belajar, berkembang, dan menjadi versi terbaik dari diri sendiri. Mari bersama-sama berkompetisi dengan penuh semangat, menjunjung sportivitas, dan menciptakan inovasi yang luar biasa! 🔥🤖
+
+Let's Compete, Innovate, and Create! 🚀
+
+AUTOMATION WEEK 9 — Unleash Your Potential! ⚡
+
+#AutomationWeek
+#AutomationWeek9
+#PPNSSUCCES
+#HIMATO
+#SadhnaMahesvara
+#AbreTuCorazon
+#SatuPanjiOtomasi
+CAP;
 ?>
 <?php if (!$team): ?>
   <div class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl">
@@ -59,7 +94,7 @@ $twibbonLink = $twibbonLinks[$team['division']] ?? '#';
           <div class="member-fields <?= $disabled ? 'opacity-30 pointer-events-none' : '' ?>">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span> <a href="https://instagram.com/automationweek" target="_blank" class="text-sm text-brand font-semibold hover:underline ml-1">@automationweek</a></label>
+                <label class="block text-sm font-medium mb-1.5">Bukti Follow Instagram<span class="text-red-500">*</span> <a href="https://instagram.com/automationweek" target="_blank" data-tooltip="Buka Instagram Automation Week" class="text-sm text-brand font-semibold hover:underline ml-1">@automationweek</a></label>
                 <?php
                 $igRequired = !$disabled && !$existingIg;
                 $igAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-ig', 'max-size' => 10 * 1024 * 1024];
@@ -95,7 +130,12 @@ $twibbonLink = $twibbonLinks[$team['division']] ?? '#';
                 <p id="err-sosmed-<?= $p ?>-ig" class="text-xs text-red-500 mt-1 hidden">Bukti follow wajib diupload</p>
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1.5">Upload Twibbon<span class="text-red-500">*</span> <a href="<?= htmlspecialchars($twibbonLink) ?>" target="_blank" class="text-sm text-brand font-semibold hover:underline ml-1">Download Twibbon</a></label>
+                <div class="flex flex-wrap items-center gap-x-1 text-sm mb-1.5">
+                  <label class="text-sm font-medium">Unggah Twibbon<span class="text-red-500">*</span></label>
+                  <a href="<?= htmlspecialchars($twibbonLink) ?>" target="_blank" data-tooltip="Unduh template twibbon" class="text-brand font-semibold hover:underline">Unduh Twibbon</a>
+                  <span class="">serta dengan caption</span>
+                  <button type="button" data-copy-caption data-tooltip="Salin caption untuk postingan" class="text-brand font-semibold hover:underline cursor-pointer">Salin Caption</button>
+                </div>
                 <?php
                 $twibbonRequired = !$disabled && !$existingTwibbon;
                 $twibbonAttrs = ['accept' => 'image/*,.pdf,application/pdf', 'data-error' => 'err-sosmed-' . $p . '-twibbon', 'max-size' => 10 * 1024 * 1024];
@@ -113,14 +153,14 @@ $twibbonLink = $twibbonLinks[$team['division']] ?? '#';
                     ->fileUrl($UPLOAD_URL . htmlspecialchars($existingTwibbon))
                     ->originalMedia($twibbonIcon)
                     ->originalSrc($UPLOAD_URL . htmlspecialchars($existingTwibbon))
-                    ->idleTitle('Upload Twibbon')
+                    ->idleTitle('Unggah Twibbon')
                     ->fileInput('twibbon_' . $p, $twibbonAttrs)
                     ->render() ?>
                 <?php else: ?>
                   <?= Attachment::make()
 
                     ->media($twibbonIcon)
-                    ->title('Upload Twibbon')
+                    ->title('Unggah Twibbon')
                     ->description('Foto profil dengan twibbon')
                     ->clearable()
                     ->withPreview()
@@ -141,3 +181,30 @@ $twibbonLink = $twibbonLinks[$team['division']] ?? '#';
     </div>
   </form>
 <?php endif; ?>
+<script>
+  const TWIBBON_CAPTION = <?= json_encode(rtrim($TWIBBON_CAPTION), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-copy-caption]');
+    if (!btn) return;
+    const done = () => {
+      btn.dataset.original = btn.dataset.original || btn.innerHTML;
+      btn.innerHTML = 'Tersalin!';
+      setTimeout(() => {
+        btn.innerHTML = btn.dataset.original;
+      }, 1500);
+    };
+    const fallback = () => {
+      const ta = document.createElement('textarea');
+      ta.value = TWIBBON_CAPTION;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      done();
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(TWIBBON_CAPTION).then(done).catch(fallback);
+    else fallback();
+  });
+</script>
