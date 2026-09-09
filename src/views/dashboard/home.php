@@ -48,7 +48,7 @@ $DIVISION_INFO = [
     'title' => 'LKTI (Lomba Karya Tulis Ilmiah)',
     'logo' => '/image/lkti_icon.png',
     'desc' => 'Lomba Karya Tulis Ilmiah merupakan sebuah perlombaan yang bertujuan untuk mengembangkan ide kreatif dan inovatif siswa dalam memecahkan masalah yang ada di lingkungan sekitar.',
-    'guide_book' => 'https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb',
+    'guide_book' => '/guidebook/guidebook-lkti.pdf',
     'timeline' => [
       ['title' => 'Pendaftaran & Pengumpulan Abstrak', 'date' => '8 September 2026'],
       ['title' => 'Close Registration', 'date' => '1 Oktober 2026'],
@@ -66,7 +66,7 @@ $DIVISION_INFO = [
     'title' => 'FFR (Fire Fighting Roboboat)',
     'logo' => '/image/ffr_icon.png',
     'desc' => 'Fire Fighting Roboboat merupakan perlombaan kapal tanpa awak yang bergerak secara otomatis dan memiliki misi untuk memadamkan api.',
-    'guide_book' => 'https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0',
+    'guide_book' => '/guidebook/guidebook-ffr.pdf',
     'timeline' => [
       ['title' => 'Pendaftaran', 'date' => '8 September 2026'],
       ['title' => 'TM FFR & Test Track', 'date' => '13 November 2026'],
@@ -79,7 +79,7 @@ $DIVISION_INFO = [
     'title' => 'PLC (Programmable Logic Controller)',
     'logo' => '/image/plc_icon.png',
     'desc' => 'Programmable Logic Controller merupakan jenis lomba yang bertujuan untuk mengasah logika dan kemampuan siswa dalam bidang pemrograman PLC.',
-    'guide_book' => 'https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO',
+    'guide_book' => '/guidebook/guidebook-plc.pdf',
     'timeline' => [
       ['title' => 'Open Registration', 'date' => '8 September 2026'],
       ['title' => 'Close Registration', 'date' => '30 September 2026'],
@@ -97,7 +97,7 @@ $DIVISION_INFO = [
     'title' => 'Line Follower',
     'logo' => '/image/lf_icon.png',
     'desc' => 'Lomba Line Follower Mikrokontroler, Kompetisi robot berbasis mikrokontroler yang ditantang untuk mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.',
-    'guide_book' => 'https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq',
+    'guide_book' => '/guidebook/guidebook-lfm.pdf',
     'timeline' => [
       ['title' => 'Open Registration', 'date' => '8 September 2026'],
       ['title' => 'Close Registration', 'date' => '2 November 2026'],
@@ -112,7 +112,7 @@ $DIVISION_INFO = [
     'title' => 'Algoritma Program',
     'logo' => '/image/program_icon.png',
     'desc' => 'Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.',
-    'guide_book' => '#',
+    'guide_book' => '/guidebook/guidebook-program.pdf',
     'timeline' => [
       ['title' => 'Open Registrasi', 'date' => '8 September 2026'],
       ['title' => 'Close Registrasi', 'date' => '1 Oktober 2026'],
@@ -220,10 +220,12 @@ $DIVISION_INFO = [
               <p class="text-sm text-gray-500 mt-1">Sekolah: <span class="font-semibold text-gray-700"><?= htmlspecialchars($team['teamSchool']) ?></span></p>
               <span class="inline-block mt-2 px-2.5 py-1 text-xs font-bold text-brand bg-brand/10 rounded-lg">Divisi <?= htmlspecialchars($divisionDisplay) ?></span>
             </div>
-               <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-gray-400 rounded-xl cursor-default" disabled>
-                 <?= Icon::make()->name('download')->class('w-4 h-4') ?>
-                 Guide Book (Segera hadir)
-               </button>
+               <?php if ($info && !empty($info['guide_book']) && $info['guide_book'] !== '#'): ?>
+                 <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
+                   <?= Icon::make()->name('download')->class('w-4 h-4') ?>
+                   Download Guide Book
+                 </a>
+               <?php endif; ?>
           </div>
         </div>
 

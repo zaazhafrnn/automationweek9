@@ -199,10 +199,10 @@
                                 <span class="text-yellow-500 font-bold">15 November 2026</span>
                             </li>
                         </ul>
-                        <button type="button" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-gray-400 cursor-default" disabled>
+                        <a href="/guidebook/guidebook-lkti.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-yellow-500 hover:bg-yellow-600/90 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>
-                            Guide Book (Segera hadir)
-                        </button>
+                            Guide Book
+                        </a>
                     </div>
                 </div>
 
@@ -252,10 +252,10 @@
                                 <span class="text-primary font-bold">15 November 2026</span>
                             </li>
                         </ul>
-                        <button type="button" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-gray-400 cursor-default" disabled>
+                        <a href="/guidebook/guidebook-plc.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-accent hover:bg-red-600/90 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>
-                            Guide Book (Segera hadir)
-                        </button>
+                            Guide Book
+                        </a>
                     </div>
                 </div>
 
@@ -285,10 +285,10 @@
                                 <span class="text-cyan-600 font-bold">15 November 2026</span>
                             </li>
                         </ul>
-                        <button type="button" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-gray-400 cursor-default" disabled>
+                        <a href="/guidebook/guidebook-ffr.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-cyan-600 hover:bg-cyan-500 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>
-                            Guide Book (Segera hadir)
-                        </button>
+                            Guide Book
+                        </a>
                     </div>
                 </div>
 
@@ -326,10 +326,10 @@
                                 <span class="text-emerald-600 font-bold">15 November 2026</span>
                             </li>
                         </ul>
-                        <button type="button" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-gray-400 cursor-default" disabled>
+                        <a href="/guidebook/guidebook-lfm.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
                             <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>
-                            Guide Book (Segera hadir)
-                        </button>
+                            Guide Book
+                        </a>
                     </div>
                 </div>
 
@@ -369,9 +369,9 @@
 
                                 </li>
                             </ul>
-                            <button type="button" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-gray-400 cursor-default" disabled>
-                                <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book (Segera hadir)
-                            </button>
+                            <a href="/guidebook/guidebook-program.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-amber-600 hover:bg-amber-500 transition-all no-underline shadow">
+                                <?= \App\Components\Icon::make()->name('download')->class('w-4 h-4') ?>Guide Book
+                            </a>
                         </div>
                     </div>
                 </div>
