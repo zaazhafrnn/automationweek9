@@ -51,9 +51,10 @@ $abstractFormat = 'ABSTRAK_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis
 $originalityFormat = 'SURAT ORISINALITAS_AW9_Nama Lengkap Ketua_Nama Sekolah';
 $approvalFormat = 'LEMBAR PENGESAHAN_AW9_Nama Lengkap Ketua_Nama Sekolah';
 $nameFormat = ($isAbstract ? $abstractFormat : 'FULLPAPER_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis');
+$formatTemplateLink = 'https://drive.google.com/drive/folders/1ZqorKKptIvz1DxWnEhuq3WUZZEsV1igr?usp=sharing';
 
 if (!function_exists('submission_slot')) {
-  function submission_slot(string $inputName, string $label, string $format, array|false $row, string $errId): string
+  function submission_slot(string $inputName, string $label, string $format, array|false $row, string $errId, ?string $templateLink = null): string
   {
     $hasFile = !empty($row['value']);
     $storedSize = '';
@@ -68,7 +69,7 @@ if (!function_exists('submission_slot')) {
     }
     ob_start(); ?>
     <div>
-      <label class="block text-sm font-semibold mb-1">File <?= $label ?><span class="text-red-500">*</span></label>
+      <label class="block text-sm font-semibold mb-1">File <?= $label ?><span class="text-red-500">*</span><?php if ($templateLink): ?> <a href="<?= htmlspecialchars($templateLink) ?>" target="_blank" data-tooltip="Unduh template <?= htmlspecialchars(strtolower($label)) ?>" class="text-brand font-semibold hover:underline">Unduh Template</a><?php endif; ?></label>
       <p class="text-xs text-gray-500 mb-2">Unggah file dengan format nama <strong class="font-semibold text-gray-700"><?= $format ?></strong></p>
       <div data-slot="attachment" class="w-full" data-has-file="<?= $hasFile ? '1' : '0' ?>">
         <label class="dropzone relative block w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-gray-300 bg-transparent hover:border-brand transition-colors cursor-pointer overflow-hidden">
@@ -166,10 +167,10 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
 
                 <?php if ($isAbstract): ?>
                   <div>
-                    <?= submission_slot('doc_originality', 'Lembar Pernyataan Orisinalitas Karya', $originalityFormat, $originality, 'err-submission-originality') ?>
+                    <?= submission_slot('doc_originality', 'Lembar Pernyataan Orisinalitas Karya', $originalityFormat, $originality, 'err-submission-originality', $formatTemplateLink) ?>
                   </div>
                   <div>
-                    <?= submission_slot('doc_approval', 'Lembar Pengesahan Karya', $approvalFormat, $approval, 'err-submission-approval') ?>
+                    <?= submission_slot('doc_approval', 'Lembar Pengesahan Karya', $approvalFormat, $approval, 'err-submission-approval', $formatTemplateLink) ?>
                   </div>
                 <?php endif; ?>
               </div>
