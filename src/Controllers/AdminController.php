@@ -156,7 +156,7 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $submissionModel = new Submission();
-        $submissions = $submissionModel->getAll();
+        $submissions = array_values(array_filter($submissionModel->getAll(), fn($s) => in_array($s['type'], ['abstract', 'full_paper'], true)));
 
         $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
         if (!$isSuperAdmin) {
@@ -176,6 +176,13 @@ class AdminController extends Controller
                 $uid = $teamUser[$s['team_id']] ?? null;
                 return $uid === null || ($roleByUserId[$uid] ?? '') !== 'dummy';
             }));
+        }
+
+        if (stripos((string) Session::get('user_name'), 'lkti') !== false) {
+            $submissions = array_values(array_filter(
+                $submissions,
+                fn($s) => strtoupper($s['division'] ?? '') === 'LKTI'
+            ));
         }
 
         $this->view('admin/submissions', [

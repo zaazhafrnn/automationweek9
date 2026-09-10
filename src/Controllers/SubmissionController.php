@@ -14,6 +14,17 @@ class SubmissionController extends Controller
     private const DOC_TYPES = ['abstract', 'full_paper'];
     private const ALLOWED_EXT = ['pdf'];
     private const MAX_SIZE = 100 * 1024 * 1024;
+    private const TYPE_LABELS = [
+        'abstract' => 'Abstrak',
+        'full_paper' => 'Full Paper',
+        'originality' => 'Lembar Pernyataan Orisinalitas Karya',
+        'approval' => 'Lembar Pengesahan Karya',
+    ];
+
+    private static function label(string $type): string
+    {
+        return self::TYPE_LABELS[$type] ?? ucfirst(str_replace('_', ' ', $type));
+    }
 
     public function abstractPage()
     {
@@ -71,10 +82,9 @@ class SubmissionController extends Controller
             $this->redirect($url);
         }
 
-        $existing = $submissionModel->findByTeamAndType($team['id'], $type);
-        if ($existing && $existing['status'] === 'approved') {
-            Session::flash('submission_error', ucfirst(str_replace('_', ' ', $type)) . ' sudah disetujui dan tidak dapat diubah.');
-            $this->redirect($url);
+        $files = ['abstract' => 'doc_file', 'originality' => 'doc_originality', 'approval' => 'doc_approval'];
+        if ($type === 'full_paper') {
+            $files = ['full_paper' => 'doc_file'];
         }
 
         if ($type === 'full_paper') {
@@ -88,9 +98,6 @@ class SubmissionController extends Controller
                 Session::flash('submission_error', 'Selesaikan pembayaran terlebih dahulu.');
                 $this->redirect($url);
             }
-        }
-
-        if ($type === 'full_paper') {
             $category = $abstract['category'] ?? '';
             if (!in_array($category, ['gagasan', 'prototype'], true)) {
                 Session::flash('submission_error', 'Kategori karya belum tersedia pada abstrak kamu.');
@@ -104,28 +111,32 @@ class SubmissionController extends Controller
             }
         }
 
-        $existing = $submissionModel->findByTeamAndType($team['id'], $type);
-        $file = $_FILES['doc_file'] ?? [];
-        $hasNewFile = isset($file['error']) && $file['error'] === UPLOAD_ERR_OK;
-
-        if (!$hasNewFile) {
-            if (!$existing || $existing['category'] === $category) {
-                Session::flash('submission_error', 'Pilih file untuk diupload.');
+        foreach ($files as $fileType => $inputName) {
+            $existing = $submissionModel->findByTeamAndType($team['id'], $fileType);
+            if (in_array($fileType, ['abstract', 'full_paper'], true) && $existing && $existing['status'] === 'approved') {
+                Session::flash('submission_error', self::label($fileType) . ' sudah disetujui dan tidak dapat diubah.');
                 $this->redirect($url);
             }
-            $submissionModel->upsert($team['id'], $type, $existing['value'], $existing['status'], $category);
-            Session::flash('submission_success', 'Kategori karya berhasil diperbarui.');
-            $this->redirect($url);
+
+            $file = $_FILES[$inputName] ?? [];
+            $cat = $fileType === 'abstract' ? $category : null;
+
+            if (isset($file['error']) && $file['error'] === UPLOAD_ERR_OK) {
+                $filename = $this->storeDoc($file, $team, $fileType);
+                if ($filename === null) {
+                    $this->redirect($url);
+                }
+                $submissionModel->upsert($team['id'], $fileType, $filename, 'submitted', $cat);
+            } elseif (!$existing) {
+                Session::flash('submission_error', 'Lengkapi seluruh file tahap ini sebelum menyimpan.');
+                $this->redirect($url);
+            } elseif ($fileType === 'abstract' && $existing['category'] !== $category) {
+                $submissionModel->upsert($team['id'], $fileType, $existing['value'], 'submitted', $category);
+            }
         }
 
-        $filename = $this->storeDoc($file, $team, $type);
-        if ($filename === null) {
-            $this->redirect($url);
-        }
-
-        $submissionModel->upsert($team['id'], $type, $filename, 'submitted', $category);
-        Session::flash('submission_success', ucfirst(str_replace('_', ' ', $type)) . ' berhasil diupload!');
-        $this->redirect($url);
+        Session::flash('submission_success', self::label($type) . ' berhasil diupload!');
+        $this->redirect('/home');
     }
 
     private function storeDoc(array $file, array $team, string $type): ?string
@@ -190,6 +201,8 @@ class SubmissionController extends Controller
             'is_reviewed' => $submissionModel->isReviewed($team['id']),
             'type' => $type,
             'submission' => $submissionModel->findByTeamAndType($team['id'], $type),
+            'originality' => $submissionModel->findByTeamAndType($team['id'], 'originality'),
+            'approval' => $submissionModel->findByTeamAndType($team['id'], 'approval'),
             'abstract_status' => $abstractRow['status'] ?? null,
             'abstract_category' => $abstractRow['category'] ?? null,
             'success' => Session::flash('submission_success'),

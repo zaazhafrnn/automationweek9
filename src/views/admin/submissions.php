@@ -14,7 +14,11 @@ $typeLabels = [
     'full_paper' => 'Full Paper',
     'file' => 'Karya',
     'youtube_link' => 'Video YouTube',
+    'originality' => 'Surat Orisinalitas',
+    'approval' => 'Lembar Pengesahan',
 ];
+
+$reviewableTypes = ['abstract', 'full_paper', 'file'];
 
 $statusMap = [
     'submitted' => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-yellow-100 text-yellow-800">Menunggu</span>',
@@ -51,7 +55,7 @@ foreach ($submissions as $s) {
         . '</form>';
 
     $dialogHtml = '';
-    if (!$isPlc && $type !== 'youtube_link' && $s['status'] === 'submitted') {
+    if (!$isPlc && $type !== 'youtube_link' && in_array($type, $reviewableTypes, true) && $s['status'] === 'submitted') {
         $typeLabel = $typeLabels[$type] ?? ucfirst(str_replace('_', ' ', $type));
         $submissionTitle = isset($s['title']) && $s['title'] ? $s['title'] : $s['value'];
         $teamName = $s['team_name'];
@@ -92,7 +96,7 @@ foreach ($submissions as $s) {
     if ($isPlc && $s['status'] === 'submitted') {
         $aksi .= $form('qualify', 'Lolos', 'default', 'Loloskan tim ini ke babak berikutnya?')
             . $form('disqualify', 'Tidak Lolos', 'destructive', 'Tandai tim ini tidak lolos?');
-    } elseif (!$isPlc && $type !== 'youtube_link' && $s['status'] === 'submitted') {
+    } elseif (!$isPlc && $type !== 'youtube_link' && in_array($type, $reviewableTypes, true) && $s['status'] === 'submitted') {
         $aksi .= '<button type="button" ' . Dialog::make()->id('dialog-approve-' . $s['id'])->getOpenAttr() . ' class="text-green-600 bg-gray-100 rounded p-1" data-tooltip="Terima">' . Icon::make()->name('check')->class('w-5 h-5') . '</button>'
             . '<button type="button" ' . Dialog::make()->id('dialog-reject-' . $s['id'])->getOpenAttr() . ' class="text-red-600 bg-gray-100 rounded p-1" data-tooltip="Tolak">' . Icon::make()->name('x')->class('w-5 h-5') . '</button>';
     } elseif ($s['status'] !== 'submitted') {

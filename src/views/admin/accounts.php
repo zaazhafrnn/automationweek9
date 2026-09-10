@@ -29,6 +29,8 @@ $done = fn(bool $ok): string => $ok
 $typeLabels = [
     'abstract' => 'Abstrak (LKTI)',
     'full_paper' => 'Full Paper (LKTI)',
+    'originality' => 'Surat Orisinalitas',
+    'approval' => 'Lembar Pengesahan',
     'youtube_link' => 'Video YouTube',
 ];
 
@@ -200,7 +202,14 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
                 . (!empty($s['category']) ? 'Kategori: ' . htmlspecialchars($s['category']) . ' · ' : '')
                 . 'Diupload: ' . date('d M Y H:i', strtotime($s['updated_at'] ?: $s['created_at']))
                 . '</div>';
-            $rows .= $field($label, $valueHtml, in_array($s['status'], ['approved', 'qualified']), true, $badge($s['status']));
+            $needsConfirmation = in_array($type, ['abstract', 'full_paper'], true);
+            $rows .= $field(
+                $label,
+                $valueHtml,
+                $needsConfirmation ? in_array($s['status'], ['approved', 'qualified']) : !empty($s['value']),
+                true,
+                $needsConfirmation ? $badge($s['status']) : null
+            );
         }
     }
     $html .= $sectionWrap($sectionTitle('Berkas & Karya') . $cardOpen . $rows . $cardClose);

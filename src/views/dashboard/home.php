@@ -1,6 +1,7 @@
 <?php
 
 use App\Components\Icon;
+use App\Components\Toast;
 
 /** @var string $csrf_token */
 /** @var string $user_name */
@@ -10,6 +11,8 @@ use App\Components\Icon;
 /** @var array $uploads */
 /** @var array|null $abstract */
 /** @var array|null $full_paper */
+/** @var string|null $success */
+/** @var string|null $error */
 
 $division = $team['division'] ?? null;
 $divisionUpper = strtoupper((string) $division);
@@ -131,6 +134,9 @@ $DIVISION_INFO = [
   <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6">
+    <?php if ($success || $error): ?>
+      <?= Toast::make()->variant($error ? 'error' : 'success')->message($error ?: $success)->render() ?>
+    <?php endif; ?>
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6">
       <div class="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
         <div class="md:w-64 shrink-0">
@@ -220,12 +226,12 @@ $DIVISION_INFO = [
               <p class="text-sm text-gray-500 mt-1">Sekolah: <span class="font-semibold text-gray-700"><?= htmlspecialchars($team['teamSchool']) ?></span></p>
               <span class="inline-block mt-2 px-2.5 py-1 text-xs font-bold text-brand bg-brand/10 rounded-lg">Divisi <?= htmlspecialchars($divisionDisplay) ?></span>
             </div>
-               <?php if ($info && !empty($info['guide_book']) && $info['guide_book'] !== '#'): ?>
-                 <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
-                   <?= Icon::make()->name('download')->class('w-4 h-4') ?>
-                   Download Guide Book
-                 </a>
-               <?php endif; ?>
+            <?php if ($info && !empty($info['guide_book']) && $info['guide_book'] !== '#'): ?>
+              <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
+                <?= Icon::make()->name('download')->class('w-4 h-4') ?>
+                Download Guide Book
+              </a>
+            <?php endif; ?>
           </div>
         </div>
 

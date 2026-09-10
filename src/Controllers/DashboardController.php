@@ -190,6 +190,8 @@ class DashboardController extends Controller
             'uploads' => $uploads,
             'abstract' => $abstract,
             'full_paper' => $full_paper,
+            'success' => Session::flash('submission_success'),
+            'error' => Session::flash('submission_error'),
         ]);
     }
 
