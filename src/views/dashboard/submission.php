@@ -47,14 +47,10 @@ if ($locked) {
 }
 
 $approved = $status === 'approved';
-$abstractFormat = 'ABSTRAK_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis';
-$originalityFormat = 'SURAT ORISINALITAS_AW9_Nama Lengkap Ketua_Nama Sekolah';
-$approvalFormat = 'LEMBAR PENGESAHAN_AW9_Nama Lengkap Ketua_Nama Sekolah';
-$nameFormat = ($isAbstract ? $abstractFormat : 'FULLPAPER_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis');
 $formatTemplateLink = 'https://drive.google.com/drive/folders/1ZqorKKptIvz1DxWnEhuq3WUZZEsV1igr?usp=sharing';
 
 if (!function_exists('submission_slot')) {
-  function submission_slot(string $inputName, string $label, string $format, array|false $row, string $errId, ?string $templateLink = null): string
+  function submission_slot(string $inputName, string $label, array|false $row, string $errId, ?string $templateLink = null): string
   {
     $hasFile = !empty($row['value']);
     $storedSize = '';
@@ -70,7 +66,6 @@ if (!function_exists('submission_slot')) {
     ob_start(); ?>
     <div>
       <label class="block text-sm font-semibold mb-1">File <?= $label ?><span class="text-red-500">*</span><?php if ($templateLink): ?> <a href="<?= htmlspecialchars($templateLink) ?>" target="_blank" data-tooltip="Unduh template <?= htmlspecialchars(strtolower($label)) ?>" class="text-brand font-semibold hover:underline">Unduh Template</a><?php endif; ?></label>
-      <p class="text-xs text-gray-500 mb-2">Unggah file dengan format nama <strong class="font-semibold text-gray-700"><?= $format ?></strong></p>
       <div data-slot="attachment" class="w-full" data-has-file="<?= $hasFile ? '1' : '0' ?>">
         <label class="dropzone relative block w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-gray-300 bg-transparent hover:border-brand transition-colors cursor-pointer overflow-hidden">
 
@@ -162,15 +157,15 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
                 </fieldset>
 
                 <div>
-                  <?= submission_slot('doc_file', $title, $nameFormat, $submission, 'err-submission-file') ?>
+                  <?= submission_slot('doc_file', $title, $submission, 'err-submission-file') ?>
                 </div>
 
                 <?php if ($isAbstract): ?>
                   <div>
-                    <?= submission_slot('doc_originality', 'Lembar Pernyataan Orisinalitas Karya', $originalityFormat, $originality, 'err-submission-originality', $formatTemplateLink) ?>
+                    <?= submission_slot('doc_originality', 'Lembar Pernyataan Orisinalitas Karya', $originality, 'err-submission-originality', $formatTemplateLink) ?>
                   </div>
                   <div>
-                    <?= submission_slot('doc_approval', 'Lembar Pengesahan Karya', $approvalFormat, $approval, 'err-submission-approval', $formatTemplateLink) ?>
+                    <?= submission_slot('doc_approval', 'Lembar Pengesahan Karya', $approval, 'err-submission-approval', $formatTemplateLink) ?>
                   </div>
                 <?php endif; ?>
               </div>
@@ -182,14 +177,6 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl mt-4">
-          <?= Icon::make()->name('megaphone')->class('w-5 h-5 text-blue-500 shrink-0 mt-0.5') ?>
-          <div class="min-w-0">
-            <p class="text-sm font-semibold text-blue-700">Harap perhatikan!</p>
-            <p class="text-xs text-blue-600 mt-0.5">Ikuti format penamaan file yang tertera di masing-masing kolom agar mempermudah proses review.</p>
           </div>
         </div>
 
