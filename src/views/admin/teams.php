@@ -3,7 +3,9 @@
 /** @var array $teams */
 /** @var string $page_title */
 
-use App\Components\DataTable; ?>
+use App\Components\DataTable;
+use App\Components\Dialog;
+use App\Components\Icon; ?>
 
 <div class="rounded-xl border bg-card text-card-foreground shadow-sm">
     <div class="flex flex-col space-y-1.5 p-6">
@@ -70,8 +72,30 @@ use App\Components\DataTable; ?>
             ], $teams))
             ->searchable()
             ->columnSelectable()
+            ->toolbarActions('<button type="button" onclick="openDialog(\'export-csv-dialog\')" class="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-green-700 px-3 py-2 text-xs font-semibold shadow-sm transition-all hover:bg-green-800 hover:text-white text-white"><span class="inline-block">' . Icon::make()->name('file-spreadsheet')->class('w-4 h-4') . '</span>Export CSV</button>')
             ->pageable()
             ->emptyText('Belum ada tim yang terdaftar.')
             ->render() ?>
     </div>
 </div>
+
+<?= (new Dialog())->id('export-csv-dialog')->title('Ekspor Data Tim')->width('max-w-md')->content(
+    '<div>'
+        . '<p class="text-sm text-gray-500">File akan berupa <strong class="font-semibold text-gray-700">.csv</strong> pastikan anda lakukan konversi ke <strong class="font-semibold text-green-700">Excel / Spreadsheet</strong></p>'
+        . '<div class="flex items-center justify-center gap-4 mt-5">'
+        . '<div class="flex flex-col items-center gap-2">'
+        . '<span class="flex items-center justify-center w-16 h-16 rounded-2xl border border-gray-200 bg-gray-50">' . Icon::make()->name('file-text')->class('w-8 h-8 text-gray-500') . '</span>'
+        . '<span class="text-xs font-bold text-gray-700">.csv</span>'
+        . '</div>'
+        . '<span class="text-gray-400">' . Icon::make()->name('arrow-right')->class('w-6 h-6') . '</span>'
+        . '<div class="flex flex-col items-center gap-2">'
+        . '<span class="flex items-center justify-center w-16 h-16 rounded-2xl border border-green-200 bg-green-50">' . Icon::make()->name('file-spreadsheet')->class('w-8 h-8 text-green-700') . '</span>'
+        . '<span class="text-xs font-bold text-green-700">Excel / Spreadsheet</span>'
+        . '</div>'
+        . '</div>'
+        . '<div class="flex justify-end gap-2 mt-6">'
+        . '<button type="button" onclick="closeDialog(\'export-csv-dialog\')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">Batal</button>'
+        . '<a href="/admin/teams/export" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-700 hover:bg-green-800 rounded-xl transition-colors">' . Icon::make()->name('download')->class('w-4 h-4') . 'Download</a>'
+        . '</div>'
+        . '</div>'
+) ?>

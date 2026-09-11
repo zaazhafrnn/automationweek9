@@ -39,6 +39,34 @@ class AdminController extends Controller
         }
     }
 
+    private function filteredTeams(): array
+    {
+        $teamModel = new \App\Models\Team();
+        $teams = $teamModel->getAllTeams();
+
+        $division = $this->adminDivision();
+
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teams = array_values(array_filter($teams, fn($t) => ($roleByUserId[$t['user_id']] ?? '') !== 'dummy'));
+        }
+
+        if ($division !== null) {
+            $teams = array_values(array_filter(
+                $teams,
+                fn($t) => strtoupper($t['division'] ?? '') === $division
+            ));
+        }
+
+        return $teams;
+    }
+
     public function dashboard()
     {
         $this->requireAdmin();
@@ -134,33 +162,69 @@ class AdminController extends Controller
     {
         $this->requireAdmin();
 
-        $teamModel = new \App\Models\Team();
-        $teams = $teamModel->getAllTeams();
-
-        $division = $this->adminDivision();
-
-        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
-        if (!$isSuperAdmin) {
-            $userModelTmp = new \App\Models\User();
-            $allMembersTmp = $userModelTmp->getAllMembers(true);
-            $roleByUserId = [];
-            foreach ($allMembersTmp as $m) {
-                $roleByUserId[$m['id']] = $m['role'] ?? '';
-            }
-            $teams = array_values(array_filter($teams, fn($t) => ($roleByUserId[$t['user_id']] ?? '') !== 'dummy'));
-        }
-
-        if ($division !== null) {
-            $teams = array_values(array_filter(
-                $teams,
-                fn($t) => strtoupper($t['division'] ?? '') === $division
-            ));
-        }
-
         $this->view('admin/teams', [
-            'teams' => $teams,
+            'teams' => $this->filteredTeams(),
             'page_title' => 'Tim'
         ], 'admin');
+    }
+
+    public function exportTeams()
+    {
+        $this->requireAdmin();
+
+        $teams = $this->filteredTeams();
+
+        $division = $this->adminDivision();
+        $slug = $division ? strtolower($division) : 'semua';
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="daftar_tim_' . $slug . '_' . date('Y-m-d_H-i') . '.csv"');
+        echo "\xEF\xBB\xBF";
+
+        $out = fopen('php://output', 'w');
+        fputcsv($out, ['No.', 'Nama Tim', 'Asal Sekolah', 'Email', 'Nama Anggota', 'No. HP', 'Jenis Kelamin'], ',', '"', '');
+
+        $no = 1;
+        foreach ($teams as $t) {
+            $firstRow = true;
+            foreach (self::teamCsvRows($t) as $row) {
+                array_unshift($row, $firstRow ? $no++ : '');
+                $firstRow = false;
+                fputcsv($out, $row, ',', '"', '');
+            }
+        }
+
+        fclose($out);
+        exit();
+    }
+
+    public static function teamCsvRows(array $t): array
+    {
+        $school = $t['teamSchool'] ?? '-';
+        $email = $t['user_email'] ?? '-';
+        $rows = [];
+
+        $members = [
+            [$t['leaderName'], $t['leaderPhoneNumber'] ?? '', $t['leaderGender'] ?? ''],
+            [$t['firstMemberName'] ?? '', $t['firstMemberPhoneNumber'] ?? '', $t['firstMemberGender'] ?? ''],
+            [$t['secondMemberName'] ?? '', $t['secondMemberPhoneNumber'] ?? '', $t['secondMemberGender'] ?? ''],
+        ];
+
+        $first = true;
+        foreach ($members as [$name, $phone, $gender]) {
+            if ($name === '') continue;
+            $rows[] = [
+                $first ? $t['name'] : '',
+                $first ? $school : '',
+                $first ? $email : '',
+                $name,
+                $phone,
+                $gender,
+            ];
+            $first = false;
+        }
+
+        return $rows;
     }
 
     public function payments()

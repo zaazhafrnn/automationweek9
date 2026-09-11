@@ -60,6 +60,7 @@ $router->post('/profile/update-password', 'DashboardController@updatePassword');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
 $router->get('/admin/accounts', 'AdminController@accounts');
 $router->get('/admin/teams', 'AdminController@teams');
+$router->get('/admin/teams/export', 'AdminController@exportTeams');
 $router->get('/admin/payments', 'AdminController@payments');
 $router->post('/admin/payments/process', 'AdminController@processPayment');
 $router->get('/admin/submissions', 'AdminController@submissions');
