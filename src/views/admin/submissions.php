@@ -18,6 +18,11 @@ $typeLabels = [
     'approval' => 'Lembar Pengesahan',
 ];
 
+$categoryLabels = [
+    'gagasan' => 'Gagasan',
+    'prototype' => 'Prototype',
+];
+
 $reviewableTypes = ['abstract', 'full_paper', 'file'];
 
 $statusMap = [
@@ -35,7 +40,8 @@ foreach ($submissions as $s) {
         $kategori = 'PLC ' . trim(str_replace(['plc_', '_'], ['', ' '], $type));
         $isPlc = true;
     } else {
-        $kategori = $typeLabels[$type] ?? ucfirst(str_replace('_', ' ', $type));
+        $kategori = $categoryLabels[$s['category'] ?? ''] ?? '-';
+        $jenis = $typeLabels[$type] ?? ucfirst(str_replace('_', ' ', $type));
         $isPlc = false;
     }
 
@@ -109,6 +115,7 @@ foreach ($submissions as $s) {
         'leader' => htmlspecialchars($s['leaderName']),
         'school' => htmlspecialchars($s['teamSchool'] ?? '-'),
         'kategori' => $kategori,
+        'jenis' => $jenis,
         'karya' => $karya,
         'status' => $statusBadge,
         'uploaded' => date('d M Y H:i', strtotime($s['updated_at'] ?: $s['created_at'])),
@@ -129,6 +136,7 @@ foreach ($submissions as $s) {
                 ['key' => 'leader', 'label' => 'Anggota 1 (Ketua)'],
                 ['key' => 'school', 'label' => 'Asal Sekolah'],
                 ['key' => 'kategori', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['kategori'] . '</span>'],
+                ['key' => 'jenis', 'label' => 'Jenis', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['jenis'] . '</span>'],
                 ['key' => 'karya', 'label' => 'Karya', 'sortable' => false, 'render' => fn($row) => $row['karya']],
                 ['key' => 'status', 'label' => 'Status', 'render' => fn($row) => $row['status']],
                 ['key' => 'uploaded', 'label' => 'Diupload', 'tdClass' => 'text-muted-foreground'],
