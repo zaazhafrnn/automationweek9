@@ -9,21 +9,20 @@ $div = $_GET['div'] ?? '';
 
 $user_name = (string) \App\Utils\Session::get('user_name');
 $isLkti = stripos($user_name, 'lkti') !== false;
+$isBendahara = stripos($user_name, 'bendahara') !== false || stripos($user_name, 'keuangan') !== false;
 
 $sidebarItems = [];
-if (!$isLkti) {
-    $sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];
-}
+$sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];
 $sidebarItems[] = ['label' => 'Akun', 'icon' => 'users', 'route' => '/admin/accounts', 'active' => $uri === '/admin/accounts'];
 $sidebarItems[] = ['label' => 'Tim', 'icon' => 'trophy', 'route' => '/admin/teams', 'active' => $uri === '/admin/teams'];
-if (!$isLkti) {
+if ($isBendahara) {
     $sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
 }
-$sidebarItems[] = ['label' => 'Upload karya', 'header' => true];
 
-$divisionItems = $isLkti
-    ? ['LKTI' => 'file']
-    : ['FFR' => 'settings', 'LF' => 'settings', 'PLC' => 'settings', 'LKTI' => 'file', 'PROG' => 'settings'];
+$divisionItems = $isLkti ? ['LKTI' => 'file'] : [];
+if ($isLkti) {
+    $sidebarItems[] = ['label' => 'Upload karya', 'header' => true];
+}
 
 foreach ($divisionItems as $d => $icon) {
     $sidebarItems[] = [

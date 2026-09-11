@@ -11,15 +11,59 @@ use App\Models\Submission;
 
 class AdminController extends Controller
 {
+    private function adminDivision(): ?string
+    {
+        $userName = (string) Session::get('user_name');
+        if (stripos($userName, 'superadmin') !== false) {
+            return null;
+        }
+        foreach (['LF', 'PLC', 'FFR', 'LKTI', 'PROG'] as $code) {
+            if (stripos($userName, $code) !== false) {
+                return $code;
+            }
+        }
+
+        return null;
+    }
+
+    private function isBendahara(): bool
+    {
+        $userName = (string) Session::get('user_name');
+        return stripos($userName, 'bendahara') !== false || stripos($userName, 'keuangan') !== false;
+    }
+
+    private function requirePaymentsAccess(): void
+    {
+        if (!($this->isBendahara() || stripos((string) Session::get('user_name'), 'superadmin') !== false)) {
+            $this->redirect('/admin/dashboard');
+        }
+    }
+
     public function dashboard()
     {
         $this->requireAdmin();
 
+        $division = $this->adminDivision();
+
+        $teamModel = new \App\Models\Team();
+        $allTeams = $teamModel->getAllTeams();
+        $teams = ($division === null)
+            ? $allTeams
+            : array_values(array_filter($allTeams, fn($t) => strtoupper($t['division'] ?? '') === $division));
+
+        $total_participants = 0;
+        foreach ($teams as $t) {
+            $total_participants += 1;
+            if (!empty($t['firstMemberName'])) $total_participants += 1;
+            if (!empty($t['secondMemberName'])) $total_participants += 1;
+        }
+
         $this->view('admin/dashboard', [
             'user_name' => Session::get('user_name'),
-            'total_users' => (new \App\Models\User())->countMembers(),
-            'total_teams' => (new \App\Models\Team())->countAll(),
-            'divisions' => (new \App\Models\Team())->countByDivision(),
+            'division' => $division,
+            'total_users' => $total_participants,
+            'total_teams' => count($teams),
+            'all_divisions' => ($division === null) ? $teamModel->countByDivision() : [],
             'page_title' => 'Dasbor'
         ], 'admin');
     }
@@ -30,7 +74,7 @@ class AdminController extends Controller
 
         $userModel = new \App\Models\User();
         $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
-        $isLkti = stripos((string) Session::get('user_name'), 'lkti') !== false;
+        $division = $this->adminDivision();
         $members = $userModel->getAllMembers($isSuperAdmin);
 
         $teamsByUser = [];
@@ -38,10 +82,10 @@ class AdminController extends Controller
             $teamsByUser[$t['user_id']] = $t;
         }
 
-        if ($isLkti) {
+        if ($division !== null) {
             $members = array_values(array_filter(
                 $members,
-                fn($m) => strtoupper($teamsByUser[$m['id']]['division'] ?? '') === 'LKTI'
+                fn($m) => strtoupper($teamsByUser[$m['id']]['division'] ?? '') === $division
             ));
         }
 
@@ -93,6 +137,8 @@ class AdminController extends Controller
         $teamModel = new \App\Models\Team();
         $teams = $teamModel->getAllTeams();
 
+        $division = $this->adminDivision();
+
         $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
         if (!$isSuperAdmin) {
             $userModelTmp = new \App\Models\User();
@@ -104,10 +150,10 @@ class AdminController extends Controller
             $teams = array_values(array_filter($teams, fn($t) => ($roleByUserId[$t['user_id']] ?? '') !== 'dummy'));
         }
 
-        if (stripos((string) Session::get('user_name'), 'lkti') !== false) {
+        if ($division !== null) {
             $teams = array_values(array_filter(
                 $teams,
-                fn($t) => strtoupper($t['division'] ?? '') === 'LKTI'
+                fn($t) => strtoupper($t['division'] ?? '') === $division
             ));
         }
 
@@ -120,6 +166,7 @@ class AdminController extends Controller
     public function payments()
     {
         $this->requireAdmin();
+        $this->requirePaymentsAccess();
 
         $paymentModel = new \App\Models\Payment();
         $payments = $paymentModel->getAllPayments();
@@ -158,6 +205,8 @@ class AdminController extends Controller
         $submissionModel = new Submission();
         $submissions = array_values(array_filter($submissionModel->getAll(), fn($s) => in_array($s['type'], ['abstract', 'full_paper'], true)));
 
+        $division = $this->adminDivision();
+
         $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
         if (!$isSuperAdmin) {
             $userModelTmp = new \App\Models\User();
@@ -178,10 +227,10 @@ class AdminController extends Controller
             }));
         }
 
-        if (stripos((string) Session::get('user_name'), 'lkti') !== false) {
+        if ($division !== null) {
             $submissions = array_values(array_filter(
                 $submissions,
-                fn($s) => strtoupper($s['division'] ?? '') === 'LKTI'
+                fn($s) => strtoupper($s['division'] ?? '') === $division
             ));
         }
 
@@ -224,6 +273,7 @@ class AdminController extends Controller
     public function processPayment()
     {
         $this->requireAdmin();
+        $this->requirePaymentsAccess();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/admin/payments');
