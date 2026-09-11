@@ -76,7 +76,7 @@ if (!function_exists('submission_slot')) {
 
           <div data-slot="attachment-idle" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6 text-center">
             <?= Icon::make()->name('file-text')->class('size-14 mb-3') ?>
-            <p class="text-base font-semibold text-gray-800" data-slot="idle-title"><?= $hasFile ? htmlspecialchars($row['value']) : 'Seret & lepas file ke sini' ?></p>
+            <p class="text-base font-semibold text-gray-800" data-slot="idle-title"><?= $hasFile ? htmlspecialchars($row['original_name'] ?? $row['value']) : 'Seret & lepas file ke sini' ?></p>
             <p class="text-xs text-gray-500 mt-1" data-slot="idle-desc">
               <?= $hasFile
                 ? ($storedSize ? ('PDF &#8226; ' . $storedSize) : 'PDF')

@@ -8,8 +8,9 @@ $uri = $_SERVER['REQUEST_URI'];
 $div = $_GET['div'] ?? '';
 
 $user_name = (string) \App\Utils\Session::get('user_name');
-$isLkti = stripos($user_name, 'lkti') !== false;
-$isBendahara = stripos($user_name, 'bendahara') !== false || stripos($user_name, 'keuangan') !== false;
+$isSuperAdmin = stripos($user_name, 'superadmin') !== false;
+$isLkti = stripos($user_name, 'lkti') !== false || $isSuperAdmin;
+$isBendahara = stripos($user_name, 'bendahara') !== false || stripos($user_name, 'keuangan') !== false || $isSuperAdmin;
 
 $sidebarItems = [];
 $sidebarItems[] = ['label' => 'Dasbor', 'icon' => 'home', 'route' => '/admin/dashboard', 'active' => $uri === '/admin/dashboard'];

@@ -48,7 +48,7 @@ foreach ($submissions as $s) {
     if ($type === 'youtube_link') {
         $karya = '<span data-tooltip="klik untuk melihat"><a href="' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars((string) $s['value']) . '</a></span>';
     } else {
-        $karya = '<span data-tooltip="klik untuk melihat"><a href="/uploads/submissions/' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars((string) $s['value']) . '</a></span>';
+        $karya = '<span data-tooltip="klik untuk melihat"><a href="/uploads/submissions/' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a></span>';
     }
     $statusBadge = $statusMap[$s['status']] ?? htmlspecialchars($s['status']);
 

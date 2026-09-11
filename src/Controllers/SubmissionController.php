@@ -120,18 +120,23 @@ class SubmissionController extends Controller
 
             $file = $_FILES[$inputName] ?? [];
             $cat = $fileType === 'abstract' ? $category : null;
+            $uploadDir = BASE_PATH . '/public/uploads/submissions';
 
             if (isset($file['error']) && $file['error'] === UPLOAD_ERR_OK) {
-                $filename = $this->storeDoc($file, $team, $fileType);
-                if ($filename === null) {
+                $result = $this->storeDoc($file, $team, $fileType);
+                if ($result === null) {
                     $this->redirect($url);
                 }
-                $submissionModel->upsert($team['id'], $fileType, $filename, 'submitted', $cat);
+                [$newFileName, $origName] = $result;
+                if ($existing && $existing['value'] && $existing['value'] !== $newFileName && file_exists($uploadDir . '/' . $existing['value'])) {
+                    unlink($uploadDir . '/' . $existing['value']);
+                }
+                $submissionModel->upsert($team['id'], $fileType, $newFileName, 'submitted', $cat, $origName);
             } elseif (!$existing) {
                 Session::flash('submission_error', 'Lengkapi seluruh file tahap ini sebelum menyimpan.');
                 $this->redirect($url);
             } elseif ($fileType === 'abstract' && $existing['category'] !== $category) {
-                $submissionModel->upsert($team['id'], $fileType, $existing['value'], 'submitted', $category);
+                $submissionModel->upsert($team['id'], $fileType, $existing['value'], 'submitted', $category, $existing['original_name'] ?? '');
             }
         }
 
@@ -139,7 +144,7 @@ class SubmissionController extends Controller
         $this->redirect('/home');
     }
 
-    private function storeDoc(array $file, array $team, string $type): ?string
+    private function storeDoc(array $file, array $team, string $type): ?array
     {
         if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
             Session::flash('submission_error', 'Pilih file untuk diupload.');
@@ -160,21 +165,15 @@ class SubmissionController extends Controller
             mkdir($uploadDir, 0755, true);
         }
 
-        $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', $team['name']), '-'));
-
-        $filename = trim(preg_replace('/[\x00-\x1F\/\\\\]+/', '', basename($file['name'])));
-        if ($filename === '') {
-            $filename = $slug . '_' . $type . '_' . date('Ymd_Hi') . '.' . $ext;
-        } elseif (file_exists($uploadDir . '/' . $filename)) {
-            $filename = $slug . '_' . $filename;
-        }
+        $slug = preg_replace('/[^a-z0-9]/i', '-', $team['name']);
+        $filename = $slug . '_' . $type . '_' . date('Ymd_His') . '.' . $ext;
 
         if (!move_uploaded_file($file['tmp_name'], $uploadDir . '/' . $filename)) {
             Session::flash('submission_error', 'Gagal menyimpan file.');
             return null;
         }
 
-        return $filename;
+        return [$filename, $file['name']];
     }
 
     private function lktiTeam(): array|false

@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS submissions (
     team_id INT NOT NULL,
     type VARCHAR(50) NOT NULL,
     value TEXT,
+    original_name VARCHAR(255) NULL,
     status VARCHAR(20) DEFAULT 'submitted',
     category VARCHAR(20) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -97,3 +98,4 @@ VALUES ('Dummy', 'dummy@mail.com', '$2y$12$0SLglUc0aZWmC6Q46E8XE.Wwe43O2afPTnAeM
 ON DUPLICATE KEY UPDATE id=id;
 
 ALTER TABLE submissions ADD COLUMN category VARCHAR(20) NULL AFTER status;
+ALTER TABLE submissions ADD COLUMN original_name VARCHAR(255) NULL AFTER value;

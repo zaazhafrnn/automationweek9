@@ -197,7 +197,7 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
             $link = $type === 'youtube_link'
                 ? htmlspecialchars((string) $s['value'])
                 : '/uploads/submissions/' . htmlspecialchars((string) $s['value']);
-            $valueHtml = '<a href="' . $link . '" target="_blank" class="text-primary underline-offset-4 hover:underline break-all">' . htmlspecialchars((string) $s['value']) . '</a>'
+            $valueHtml = '<a href="' . $link . '" target="_blank" class="text-primary underline-offset-4 hover:underline break-all">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a>'
                 . '<div class="text-xs text-gray-700 font-normal mt-0.5">'
                 . (!empty($s['category']) ? 'Kategori: ' . htmlspecialchars($s['category']) . ' · ' : '')
                 . 'Diupload: ' . date('d M Y H:i', strtotime($s['updated_at'] ?: $s['created_at']))
