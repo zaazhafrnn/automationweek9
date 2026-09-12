@@ -422,18 +422,24 @@
         </div>
     </section>
 
-    <!-- <section class="py-24 px-4 bg-background border-t border-border">
+    <section class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-3xl font-bold text-foreground mb-4 tracking-tight">Sponsor</h2>
-            <p class="text-muted mb-12 text-sm max-w-sm mx-auto">Didukung oleh berbagai mitra industri dan sponsor terpercaya.</p>
-            <div class="flex flex-wrap justify-center gap-8 items-center opacity-75">
-                <div class="w-32 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-muted text-xs font-semibold shadow-sm">Logo Sponsor</div>
-                <div class="w-32 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-muted text-xs font-semibold shadow-sm">Logo Sponsor</div>
-                <div class="w-32 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-muted text-xs font-semibold shadow-sm">Logo Sponsor</div>
-                <div class="w-32 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-muted text-xs font-semibold shadow-sm">Logo Sponsor</div>
+            <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Sponsor</h2>
+            <p class="text-muted mb-12 text-sm max-w-sm mx-auto">Apresiasi khusus Wecon Indonesia dan Bersol Indonesia mendukung penuh AutomationWeek 9</p>
+            <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-8">
+                <div class="flex items-center justify-center gap-3 md:gap-4 p-6 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors">
+                    <img src="/image/logo-bersol.png" alt="Bersol" class="h-14 md:h-16 object-contain">
+                    <span class="text-lg text-black md:text-2xl font-extrabold tracking-tight leading-none">PT BERKAT SOLUSINDO</span>
+                </div>
+                <div class="flex flex-col items-center p-6 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors w-64">
+                    <img src="/image/logo-wecon.png" alt="Wecon" class="h-12 object-contain mb-1 mx-auto">
+                    <span
+                        class="w-full text-base font-bold -mt-3 text-center block"
+                        style="letter-spacing: .6em; padding-left: .6em;">INDONESIA</span>
+                </div>
             </div>
         </div>
-    </section> -->
+    </section>
 
     <section id="contact" class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-4xl mx-auto text-center">
