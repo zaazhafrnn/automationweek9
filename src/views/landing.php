@@ -163,20 +163,20 @@
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Lomba Karya Tulis Ilmiah — mengembangkan ide kreatif dan inovatif dalam memecahkan masalah lingkungan sekitar.</p>
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Pendaftaran & Pengumpulan Abstrak</span>
-                                <span class="font-semibold">8 September 2026</span>
+                                <span class="text-muted">Pembukaan Pendaftaran &amp; Pengumpulan Abstrak</span>
+                                <span class="font-semibold text-right shrink-0 whitespace-nowrap pl-3">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Close Registration</span>
-                                <span class="font-semibold">1 Oktober 2026</span>
+                                <span class="text-muted">Penutupan Pendaftaran &amp; Pengumpulan Abstrak</span>
+                                <span class="font-semibold text-right shrink-0 whitespace-nowrap pl-3">1 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Lolos Abstrak</span>
                                 <span class="font-semibold">3 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Pengumpulan Full Paper</span>
-                                <span class="font-semibold">4 – 26 Oktober 2026</span>
+                                <span class="text-muted">Pembayaran &amp; Pengumpulan Full Paper</span>
+                                <span class="font-semibold text-right shrink-0 whitespace-nowrap pl-3">4 – 26 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Finalis</span>
@@ -187,11 +187,7 @@
                                 <span class="font-semibold">6 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Pembukaan & Persiapan Prototype</span>
-                                <span class="font-semibold">13 November 2026</span>
-                            </li>
-                            <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Presentasi</span>
+                                <span class="text-muted">Grand Final</span>
                                 <span class="font-semibold">14 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
@@ -216,24 +212,16 @@
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Programmable Logic Controller — mengasah logika dan kemampuan dalam bidang pemrograman PLC industri.</p>
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Open Registration</span>
+                                <span class="text-muted">Pembukaan Pendaftaran</span>
                                 <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Close Registration</span>
-                                <span class="font-semibold">30 September 2026</span>
-                            </li>
-                            <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Plan Contest</span>
+                                <span class="text-muted">Penutupan Pendaftaran</span>
                                 <span class="font-semibold">11 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Pelatihan Sesi 1</span>
-                                <span class="font-semibold">17 Oktober 2026</span>
-                            </li>
-                            <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Pelatihan Sesi 2</span>
-                                <span class="font-semibold">18 Oktober 2026</span>
+                                <span class="text-muted">Pelatihan</span>
+                                <span class="font-semibold">17 – 18 Oktober 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
@@ -244,7 +232,7 @@
                                 <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Penyisihan 3</span>
+                                <span class="text-muted">Penyisihan 20 Besar</span>
                                 <span class="font-semibold">14 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
@@ -269,20 +257,20 @@
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Fire Fighting Roboboat — kapal tanpa awak yang bergerak otomatis dengan misi memadamkan api.</p>
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Pendaftaran</span>
+                                <span class="text-muted">Pembukaan Pendaftaran</span>
                                 <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">TM FFR & Test Track</span>
-                                <span class="font-semibold">13 November 2026</span>
+                                <span class="text-muted">Penutupan Pendaftaran</span>
+                                <span class="font-semibold">6 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Penyisihan</span>
-                                <span class="font-semibold">14 November 2026</span>
+                                <span class="text-muted">Technical Meeting</span>
+                                <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
-                                <span class="text-muted">Semifinal & Final</span>
-                                <span class="text-cyan-600 font-bold">15 November 2026</span>
+                                <span class="text-muted">Kompetisi</span>
+                                <span class="text-cyan-600 font-bold">14 – 15 November 2026</span>
                             </li>
                         </ul>
                         <a href="/guidebook/guidebook-ffr.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-cyan-600 hover:bg-cyan-500 transition-all no-underline shadow">
@@ -302,28 +290,24 @@
                         <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Robot mikrokontroler yang ditantang mengikuti lintasan secara otomatis dengan kecepatan tinggi.</p>
                         <ul class="w-full mb-8 text-xs">
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Open Registration</span>
+                                <span class="text-muted">Pembukaan Pendaftaran</span>
                                 <span class="font-semibold">8 September 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Close Registration</span>
-                                <span class="font-semibold">2 November 2026</span>
+                                <span class="text-muted">Penutupan Pendaftaran</span>
+                                <span class="font-semibold">6 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
-                                <span class="font-semibold">7 November 2026</span>
-                            </li>
-                            <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Uji Lintasan / Track</span>
                                 <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                <span class="text-muted">Penyisihan</span>
-                                <span class="font-semibold">14 November 2026</span>
+                                <span class="text-muted">Uji Lintasan</span>
+                                <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
-                                <span class="text-muted">16 Besar – Final</span>
-                                <span class="text-emerald-600 font-bold">15 November 2026</span>
+                                <span class="text-muted">Kompetisi</span>
+                                <span class="text-emerald-600 font-bold">14 – 15 November 2026</span>
                             </li>
                         </ul>
                         <a href="/guidebook/guidebook-lfm.pdf" target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 transition-all no-underline shadow">
@@ -344,11 +328,11 @@
                             <p class="text-center text-muted mb-6 text-sm leading-relaxed max-w-sm">Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.</p>
                             <ul class="w-full mb-8 text-xs">
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                    <span class="text-muted">Open Registrasi</span>
+                                    <span class="text-muted">Pembukaan Pendaftaran</span>
                                     <span class="font-semibold">8 September 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                    <span class="text-muted">Close Registrasi</span>
+                                    <span class="text-muted">Penutupan Pendaftaran</span>
                                     <span class="font-semibold">1 Oktober 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
@@ -360,11 +344,19 @@
                                     <span class="font-semibold">13 November 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
-                                    <span class="text-muted">Penyisihan 1 & 2</span>
-                                    <span class="font-semibold">14 Oktober 2026</span>
+                                    <span class="text-muted">Babak Sesi 1</span>
+                                    <span class="font-semibold">14 November 2026</span>
+                                </li>
+                                <li class="flex items-center justify-between py-2.5 border-b border-border">
+                                    <span class="text-muted">Babak Sesi 2</span>
+                                    <span class="font-semibold">14 November 2026</span>
+                                </li>
+                                <li class="flex items-center justify-between py-2.5 border-b border-border">
+                                    <span class="text-muted">Final</span>
+                                    <span class="font-semibold">15 November 2026</span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5">
-                                    <span class="text-muted">Final</span>
+                                    <span class="text-muted">Grandfinal</span>
                                     <span class="text-amber-600 font-bold">15 November 2026</span>
 
                                 </li>
