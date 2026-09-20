@@ -64,7 +64,7 @@ class TeamController extends Controller
             return;
         }
 
-        if (in_array($division, ['LF', 'PLC'])) {
+        if (in_array($division, ['LF', 'PLC', 'PROG'])) {
             $secondMemberName = null;
             $secondMemberPhoneNumber = null;
         }
@@ -312,7 +312,7 @@ class TeamController extends Controller
             if (empty($team[$key])) $missing[] = $label;
         }
 
-        $need = in_array($team['division'] ?? '', ['FFR', 'LKTI', 'PROG']) ? 3 : 2;
+        $need = in_array($team['division'] ?? '', ['FFR', 'LKTI']) ? 3 : 2;
         $nameKeys = [1 => 'leaderName', 2 => 'firstMemberName', 3 => 'secondMemberName'];
         $phoneKeys = [1 => 'leaderPhoneNumber', 2 => 'firstMemberPhoneNumber', 3 => 'secondMemberPhoneNumber'];
         $uploads = [];
