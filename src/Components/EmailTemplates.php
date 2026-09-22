@@ -31,8 +31,8 @@ class EmailTemplates
         if ($dashboardUrl) {
             $html .= '<p>Silahkan bergabung ke grup WhatsApp peserta yang tersedia di halaman dashboard anda: <a href="' . htmlspecialchars($dashboardUrl) . '" style="color:#b91c1c;">' . htmlspecialchars($dashboardUrl) . '</a></p>';
         }
-        $html .= '<p>Demikian informasi dari kami mengenai invoice. Terima kasih sudah berpartisipasi dalam kompetisi AutomationWeek IX. Semoga Sukses!</p>'
-            . '<p>Demikian informasi dari kami mengenai invoice. Terima kasih sudah berpartisipasi dalam kompetisi AutomationWeek IX. Semoga Sukses!</p>'
+        $html .= '<p>Demikian informasi dari kami mengenai invoice. Terima kasih sudah berpartisipasi dalam kompetisi AutomationWeek IX.</p>'
+            . '<p>Semoga Sukses!</p>'
             . '<div style="margin:12px 0;padding:10px 10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;">'
             . '<p style="margin:0 0 6px;font-weight:bold;">Kontak Pembayaran & Bantuan:</p>'
             . '<p style="margin:4px 0;">Titis Nabila (085755184808)</p>'
