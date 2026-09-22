@@ -47,8 +47,21 @@ class Payment extends Model
 
     public function getAllPayments(): array
     {
-        $stmt = $this->db->prepare("SELECT p.*, t.name as team_name, t.teamSchool, t.division, t.leaderName, t.leaderPhoneNumber FROM payments p JOIN teams t ON p.teamId = t.id ORDER BY p.submittedAt DESC");
+        $stmt = $this->db->prepare("SELECT p.*, t.name as team_name, t.teamSchool, t.division, t.leaderName, t.leaderPhoneNumber, u.email as user_email FROM payments p JOIN teams t ON p.teamId = t.id JOIN accounts u ON t.user_id = u.id ORDER BY p.submittedAt DESC");
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    public function findWithTeam(int $id): array|false
+    {
+        $stmt = $this->db->prepare("SELECT p.*, t.name as team_name, t.division, t.leaderName, u.email as user_email, u.name as user_name FROM payments p JOIN teams t ON p.teamId = t.id JOIN accounts u ON t.user_id = u.id WHERE p.id = :id LIMIT 1");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
+
+    public function saveInvoice(int $id, string $filename, string $originalName): bool
+    {
+        $stmt = $this->db->prepare("UPDATE payments SET invoice_file = :file, invoice_original_name = :orig, invoice_uploaded_at = NOW() WHERE id = :id");
+        return $stmt->execute([':file' => $filename, ':orig' => $originalName, ':id' => $id]);
     }
 }

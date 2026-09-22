@@ -44,7 +44,7 @@ class Dialog extends Component
             $html .= '</div>';
         }
 
-        $html .= '<div class="p-6">' . $this->content . '</div>';
+        $html .= '<div class="p-6 overflow-hidden break-words [overflow-wrap:anywhere]">' . $this->content . '</div>';
         $html .= '</div></div></div>';
 
         $html .= $this->initScript();

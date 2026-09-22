@@ -258,7 +258,9 @@ class AdminController extends Controller
         $this->view('admin/payments', [
             'payments' => $payments,
             'csrf_token' => Security::generateCsrfToken(),
-            'page_title' => 'Pembayaran'
+            'page_title' => 'Pembayaran',
+            'toast_success' => Session::flash('invoice_success'),
+            'toast_error' => Session::flash('invoice_error'),
         ], 'admin');
     }
 
@@ -364,6 +366,57 @@ class AdminController extends Controller
             $paymentModel->updateStatus($paymentId, $status, $note ?: null, Session::get('user_id'));
         }
 
+        $this->redirect('/admin/payments');
+    }
+
+    public function sendInvoice()
+    {
+        $this->requireAdmin();
+        $this->requirePaymentsAccess();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('/admin/payments');
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) $this->redirect('/admin/payments');
+        $paymentId = (int)($_POST['payment_id'] ?? 0);
+        if (!$paymentId) $this->redirect('/admin/payments');
+        $payment = (new \App\Models\Payment())->findWithTeam($paymentId);
+        if (!$payment || empty($payment['user_email'])) $this->redirect('/admin/payments');
+        if (($payment['status'] ?? '') !== 'verified') $this->redirect('/admin/payments');
+        if (empty($_FILES['invoice']) || $_FILES['invoice']['error'] !== UPLOAD_ERR_OK) $this->redirect('/admin/payments');
+        $file = $_FILES['invoice'];
+        $allowed = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp', 'application/pdf'];
+        $max = 5 * 1024 * 1024;
+        if ($file['size'] > $max) $this->redirect('/admin/payments');
+        $mime = mime_content_type($file['tmp_name']) ?: '';
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $isPdf = $ext === 'pdf' || $mime === 'application/pdf';
+        if (!$isPdf && !str_starts_with($mime, 'image/')) $this->redirect('/admin/payments');
+        if (!in_array($mime, $allowed) && !$isPdf) $this->redirect('/admin/payments');
+        $dedupeKey = 'last_invoice_' . $paymentId;
+        $last = (int) Session::get($dedupeKey);
+        if ($last && (time() - $last) < 10) $this->redirect('/admin/payments');
+        Session::set($dedupeKey, time());
+        $uploadDir = BASE_PATH . '/public/uploads/invoices';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', $payment['team_name'] ?? 'team'), '-')) ?: 'team';
+        $filename = $slug . '_invoice_' . date('Ymd_His') . '.' . $ext;
+        $dest = $uploadDir . '/' . $filename;
+        $saved = $file['tmp_name'];
+        if (move_uploaded_file($file['tmp_name'], $dest)) {
+            $saved = $dest;
+            (new \App\Models\Payment())->saveInvoice($paymentId, $filename, $file['name']);
+        }
+        $subject = 'Invoice Pembayaran AutomationWeek IX - ' . ($payment['team_name'] ?? 'Tim');
+        $appUrl = getenv('APP_URL');
+        $baseUrl = !empty($appUrl) ? rtrim($appUrl, '/') : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+        $recipient = $payment['leaderName'] ?? $payment['user_name'] ?? $payment['team_name'] ?? 'Tim';
+        $dashboardUrl = $baseUrl . '/home';
+        $body = \App\Components\MailLayout::render(\App\Components\EmailTemplates::invoice($payment['team_name'] ?? 'Tim', $recipient, null, $dashboardUrl), $baseUrl . '/image/faveicon.png');
+        $sent = \App\Utils\Mailer::send($payment['user_email'], $subject, $body, $saved, $file['name']);
+        if ($sent) {
+            Session::flash('invoice_success', 'Invoice ' . $file['name'] . ' berhasil dikirim ke tim ' . ($payment['team_name'] ?? ''));
+        } else {
+            Session::flash('invoice_error', 'Gagal mengirim invoice ke tim ' . ($payment['team_name'] ?? ''));
+        }
         $this->redirect('/admin/payments');
     }
 }
