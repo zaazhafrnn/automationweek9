@@ -49,6 +49,7 @@
 
         <div class="hidden md:flex items-center gap-6 text-xs font-semibold">
             <a href="#competitions" class="hover:text-primary transition-colors no-underline">Lomba</a>
+            <a href="#sponsors" class="hover:text-primary transition-colors no-underline">Sponsor</a>
             <a href="#videos" class="hover:text-primary transition-colors no-underline">Video</a>
             <a href="#contact" class="hover:text-primary transition-colors no-underline">Kontak</a>
             <!-- <a href="/application/team-register" class="inline-flex items-center gap-1.5 hover:text-primary transition-colors no-underline">
@@ -61,6 +62,7 @@
             class="absolute left-0 right-auto w-max min-w-[180px] bg-white border border-border rounded-xl shadow-lg py-2 z-10 hidden md:hidden"
             style="top: calc(100% + 0.5rem);">
             <a href="#competitions" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Lomba</a>
+            <a href="#sponsors" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Sponsor</a>
             <a href="#videos" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Video</a>
             <a href="#contact" class="block px-4 py-2 text-xs font-semibold text-foreground hover:bg-gray-100 hover:text-primary transition-colors no-underline">Kontak</a>
         </div>
@@ -87,6 +89,7 @@
                 Pendaftaran
             </a> -->
             <a href="#competitions" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Lomba</a>
+            <a href="#sponsors" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Sponsor</a>
             <a href="#videos" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Video</a>
             <a href="#contact" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-100 transition-colors no-underline">Kontak</a>
         </nav>
@@ -422,20 +425,27 @@
         </div>
     </section>
 
-    <section class="py-24 px-4 bg-background border-t border-border">
+    <section id="sponsors" class="py-24 px-4 bg-background border-t border-border">
         <div class="max-w-6xl mx-auto text-center">
             <h2 class="text-3xl md:text-5xl font-black text-foreground mb-4 tracking-tight">Sponsor</h2>
-            <p class="text-muted mb-12 text-sm max-w-sm mx-auto">Apresiasi khusus Wecon Indonesia dan PT Berkat Solusindo mendukung penuh AutomationWeek 9</p>
-            <div class="flex flex-col md:flex-row flex-wrap items-center justify-center select-none gap-8">
-                <div class="flex items-center justify-center gap-3 md:gap-4 p-6 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors">
-                    <img src="/image/logo-bersol.png" alt="Bersol" class="h-14 md:h-16 object-contain">
-                    <span class="text-lg text-black md:text-2xl font-extrabold tracking-tight leading-none">PT BERKAT SOLUSINDO</span>
+            <p class="text-muted mb-12 text-sm max-w-sm mx-auto">Apresiasi khusus Wecon Indonesia, PT Berkat Solusindo, Elmech, AssemblyPro, dan Galeri Trophy mendukung penuh AutomationWeek 9</p>
+            <div class="grid grid-cols-2 lg:flex lg:flex-row lg:flex-nowrap items-center justify-center select-none gap-3 lg:gap-6 max-w-72 mx-auto lg:max-w-none">
+                <div class="col-span-2 lg:col-span-1 justify-self-center w-52 md:w-64 flex items-center justify-center gap-3 p-6 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors">
+                    <img src="/image/sponsor-logo-bersol.png" alt="Bersol" class="h-14 md:h-16 object-contain">
+                    <span class="text-lg text-black text-left md:text-2xl font-extrabold tracking-tight leading-none">PT BERKAT SOLUSINDO</span>
                 </div>
-                <div class="flex flex-col items-center p-6 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors w-64">
-                    <img src="/image/logo-wecon.png" alt="Wecon" class="h-12 object-contain mb-1 mx-auto">
-                    <span
-                        class="w-full text-base font-bold -mt-3 text-center block"
-                        style="letter-spacing: .6em; padding-left: .6em;">INDONESIA</span>
+                <div class="col-span-2 lg:col-span-1 justify-self-center w-64 flex flex-col items-center p-6 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors">
+                    <img src="/image/sponsor-logo-wecon.png" alt="Wecon" class="h-12 object-contain mb-1 mx-auto">
+                    <span class="w-full text-base font-bold -mt-3 text-center block" style="letter-spacing: .6em; padding-left: .6em;">INDONESIA</span>
+                </div>
+                <div class="col-span-2 lg:col-span-1 justify-self-center w-64 h-[115px] flex items-center justify-center p-4 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors">
+                    <img src="/image/sponsor-logo-elmech.png" alt="Elmech" class="h-12 w-auto h-auto object-contain">
+                </div>
+                <div class="col-span-1 justify-self-end w-full h-[115px] flex items-center justify-center p-2 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors overflow-hidden lg:w-auto">
+                    <img src="/image/sponsor-logo-ap.jpeg" alt="AssemblyPro" class="w-full h-full object-contain rounded-lg p-2">
+                </div>
+                <div class="col-span-1 justify-self-start w-full h-[115px] flex items-center justify-center p-2 rounded-2xl border border-border bg-card shadow-md hover:border-accent transition-colors overflow-hidden lg:w-auto">
+                    <img src="/image/sponsor-logo-galeri.jpeg" alt="Galeri" class="w-full h-full object-cover scale-[1.35] rounded-lg">
                 </div>
             </div>
         </div>
