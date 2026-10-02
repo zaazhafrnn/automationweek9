@@ -54,10 +54,10 @@ $DIVISION_INFO = [
     'guide_book' => '/guidebook/guidebook-lkti.pdf',
     'timeline' => [
       ['title' => 'Pembukaan Pendaftaran & Pengumpulan Abstrak', 'date' => '8 September 2026'],
-      ['title' => 'Penutupan Pendaftaran & Pengumpulan Abstrak', 'date' => '1 Oktober 2026'],
-      ['title' => 'Pengumuman Lolos Abstrak', 'date' => '3 Oktober 2026'],
-      ['title' => 'Pembayaran & Pengumpulan Full Paper', 'date' => '4 – 26 Oktober 2026'],
-      ['title' => 'Pengumuman Finalis', 'date' => '2 November 2026'],
+      ['title' => 'Penutupan Pendaftaran & Pengumpulan Abstrak', 'date' => '10 Oktober 2026', 'old_date' => '1 Oktober 2026'],
+      ['title' => 'Pengumuman Lolos Abstrak', 'date' => '13 Oktober 2026', 'old_date' => '3 Oktober 2026'],
+      ['title' => 'Pembayaran & Pengumpulan Full Paper', 'date' => '14 – 30 Oktober 2026', 'old_date' => '4 – 26 Oktober 2026'],
+      ['title' => 'Pengumuman Finalis', 'date' => '4 November 2026', 'old_date' => '2 November 2026'],
       ['title' => 'Technical Meeting', 'date' => '6 November 2026'],
       ['title' => 'Grand Final', 'date' => '14 November 2026'],
       ['title' => 'Pameran', 'date' => '15 November 2026'],
@@ -73,6 +73,7 @@ $DIVISION_INFO = [
       ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
       ['title' => 'Penutupan Pendaftaran', 'date' => '6 November 2026'],
       ['title' => 'Technical Meeting', 'date' => '13 November 2026'],
+      ['title' => 'Uji Lintasan', 'date' => '13 November 2026'],
       ['title' => 'Kompetisi', 'date' => '14 – 15 November 2026'],
     ],
     'video' => 'https://www.youtube.com/embed/ZRfGoB4jJPw'
@@ -84,8 +85,8 @@ $DIVISION_INFO = [
     'guide_book' => '/guidebook/guidebook-plc.pdf',
     'timeline' => [
       ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
-      ['title' => 'Penutupan Pendaftaran', 'date' => '11 Oktober 2026'],
-      ['title' => 'Pelatihan', 'date' => '17 – 18 Oktober 2026'],
+      ['title' => 'Penutupan Pendaftaran', 'date' => '5 November 2026', 'old_date' => '11 Oktober 2026'],
+      ['title' => 'Pelatihan', 'date' => '6 – 7 November 2026', 'old_date' => '17 – 18 Oktober 2026'],
       ['title' => 'Technical Meeting', 'date' => '8 November 2026'],
       ['title' => 'Penyisihan 1 & 2', 'date' => '13 November 2026'],
       ['title' => 'Penyisihan 20 Besar', 'date' => '14 November 2026'],
@@ -114,8 +115,8 @@ $DIVISION_INFO = [
     'guide_book' => '/guidebook/guidebook-program.pdf',
     'timeline' => [
       ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
-      ['title' => 'Penutupan Pendaftaran', 'date' => '1 Oktober 2026'],
-      ['title' => 'Technical Meeting', 'date' => '4 Oktober 2026'],
+      ['title' => 'Penutupan Pendaftaran', 'date' => '5 November 2026', 'old_date' => '1 Oktober 2026'],
+      ['title' => 'Technical Meeting', 'date' => '7 November 2026', 'old_date' => '4 Oktober 2026'],
       ['title' => 'Pelatihan', 'date' => '13 November 2026'],
       ['title' => 'Babak Sesi 1', 'date' => '14 November 2026'],
       ['title' => 'Babak Sesi 2', 'date' => '14 November 2026'],
@@ -318,11 +319,22 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
           <?php foreach ($info['timeline'] as $item):
             $ts = $parseDate($item['date']);
             $reached = $ts !== null && $ts <= $today;
+            $hasOld = !empty($item['old_date']);
           ?>
             <div class="relative pl-6">
               <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand' ?>"></div>
               <h4 class="text-sm font-bold <?= $reached ? 'text-green-700' : 'text-gray-800' ?>"><?= htmlspecialchars($item['title']) ?></h4>
-              <p class="text-xs <?= $reached ? 'text-green-600' : 'text-gray-500' ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
+              <?php if ($hasOld): ?>
+                <div class="flex flex-col leading-none gap-0.5 mt-1">
+                  <span class="text-xs line-through opacity-60 <?= $reached ? 'text-green-600' : 'text-gray-400' ?>"><?= htmlspecialchars($item['old_date']) ?></span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold <?= $reached ? 'text-green-600' : 'text-brand' ?>"><?= htmlspecialchars($item['date']) ?></span>
+                    <span class="text-[10px] font-black tracking-widest bg-amber-500 text-white px-2 py-0.5 rounded-full rotate-[6deg]">EXTENDED</span>
+                  </div>
+                </div>
+              <?php else: ?>
+                <p class="text-xs <?= $reached ? 'text-green-600' : 'text-gray-500' ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
+              <?php endif; ?>
             </div>
           <?php endforeach; ?>
         </div>

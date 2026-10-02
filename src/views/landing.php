@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 8 September hingga 1 Oktober 2026 Daftarkan tim Anda sekarang!">
+    <meta name="description" content="Automation Week 9 2026 PPNS — kompetisi otomasi & teknologi: Line Follower(LF), Programmable Logic Controller(PLC), Fire Fighting Robot(FFR), Lomba Karya Tulis Ilmiah(LKTI), dan Algoritma Program. Total hadiah puluhan juta rupiah & free pass teknik otomasi. Dibuka 8 September hingga 5 November 2026 (EXTENDED dari 1 Oktober 2026) Daftarkan tim Anda sekarang!">
     <title>Automation Week 9</title>
     <link rel="icon" href="/image/faveicon.png">
     <link rel="apple-touch-icon" href="/image/faveicon.png">
@@ -153,7 +153,9 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
+                <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl relative">
+                    <!-- ponytail: pure CSS stamp, no image -->
+                    <div class="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-black tracking-widest px-5 py-1.5 rounded-full rotate-[12deg] shadow-lg border-2 border-white/60 select-none pointer-events-none">EXTENDED</div>
                     <div class="h-1.5 bg-gradient-to-r from-yellow-500 to-yellow-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
@@ -168,19 +170,19 @@
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Penutupan Pendaftaran &amp; Pengumpulan Abstrak</span>
-                                <span class="font-semibold text-right shrink-0 whitespace-nowrap pl-3">1 Oktober 2026</span>
+                                <span class="font-semibold text-right shrink-0 pl-3 flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">1 Oktober 2026</span><span class="text-yellow-600">10 Oktober 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Lolos Abstrak</span>
-                                <span class="font-semibold">3 Oktober 2026</span>
+                                <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">3 Oktober 2026</span><span class="text-yellow-600">13 Oktober 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pembayaran &amp; Pengumpulan Full Paper</span>
-                                <span class="font-semibold text-right shrink-0 whitespace-nowrap pl-3">4 – 26 Oktober 2026</span>
+                                <span class="font-semibold text-right shrink-0 pl-3 flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">4 – 26 Oktober 2026</span><span class="text-yellow-600">14 – 30 Oktober 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Finalis</span>
-                                <span class="font-semibold">2 November 2026</span>
+                                <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">2 November 2026</span><span class="text-yellow-600">4 November 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
@@ -202,7 +204,8 @@
                     </div>
                 </div>
 
-                <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl">
+                <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl relative">
+                    <div class="absolute top-3 right-3 bg-accent text-white text-sm font-black tracking-widest px-5 py-1.5 rounded-full rotate-[12deg] shadow-lg border-2 border-white/60 select-none pointer-events-none">EXTENDED</div>
                     <div class="h-1.5 bg-gradient-to-r from-accent to-red-800"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
                         <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
@@ -217,11 +220,11 @@
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Penutupan Pendaftaran</span>
-                                <span class="font-semibold">11 Oktober 2026</span>
+                                <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">11 Oktober 2026</span><span class="text-red-600">5 November 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pelatihan</span>
-                                <span class="font-semibold">17 – 18 Oktober 2026</span>
+                                <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">17 – 18 Oktober 2026</span><span class="text-red-600">6 – 7 November 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
@@ -266,6 +269,10 @@
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
+                                <span class="font-semibold">13 November 2026</span>
+                            </li>
+                            <li class="flex items-center justify-between py-2.5 border-b border-border">
+                                <span class="text-muted">Uji Lintasan</span>
                                 <span class="font-semibold">13 November 2026</span>
                             </li>
                             <li class="flex items-center justify-between py-2.5">
@@ -318,7 +325,8 @@
                 </div>
 
                 <div class="md:col-span-2 flex justify-center">
-                    <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl w-full md:w-[calc(50%-1rem)]">
+                    <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl w-full md:w-[calc(50%-1rem)] relative">
+                        <div class="absolute top-3 right-3 bg-amber-500 text-white text-sm font-black tracking-widest px-5 py-1.5 rounded-full rotate-[12deg] shadow-lg border-2 border-white/60 select-none pointer-events-none">EXTENDED</div>
                         <div class="h-1.5 bg-gradient-to-r from-amber-500 to-amber-600"></div>
                         <div class="p-8 flex flex-col items-center flex-grow">
                             <div class="p-4 bg-secondary border border-border rounded-2xl mb-6 shadow-sm">
@@ -333,11 +341,11 @@
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Penutupan Pendaftaran</span>
-                                    <span class="font-semibold">1 Oktober 2026</span>
+                                    <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">1 Oktober 2026</span><span class="text-amber-600">5 November 2026</span></span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Technical Meeting</span>
-                                    <span class="font-semibold">4 Oktober 2026</span>
+                                    <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">4 Oktober 2026</span><span class="text-amber-600">7 November 2026</span></span>
                                 </li>
                                 <li class="flex items-center justify-between py-2.5 border-b border-border">
                                     <span class="text-muted">Pelatihan</span>
@@ -508,7 +516,12 @@
             var textPath = document.getElementById('marquee-text');
             if (!textPath) return;
 
-            var text = '✦ Pendaftaran dibuka! Segera daftarkan tim Anda — 8 September – 1 Oktober 2026 ✦ Total hadiah puluhan juta rupiah + Free pass Teknik Otomasi + trophy + e-sertifikat ✦ 5 kategori lomba: LF · PLC · FFR · LKTI · PROGRAM ';
+            var pre = '✦ Pendaftaran DIPERPANJANG! Segera daftarkan tim Anda — 8 September – ';
+            var oldDate = '1 Oktober 2026';
+            var mid = ' → ';
+            var newDate = '5 November 2026 (EXTENDED)';
+            var post = ' ✦ Total hadiah puluhan juta rupiah + Free pass Teknik Otomasi + trophy + e-sertifikat ✦ 5 kategori lomba: LF · PLC · FFR · LKTI · PROGRAM ';
+            var plain = pre + oldDate + mid + newDate + post;
             var speed = 1.5;
             var spacing = 0;
             var svg = textPath.closest('svg');
@@ -521,7 +534,7 @@
             measureEl.style.fontWeight = 'bold';
             measureEl.style.letterSpacing = '0.1em';
             measureEl.style.textTransform = 'uppercase';
-            measureEl.textContent = text;
+            measureEl.textContent = plain;
             svg.appendChild(measureEl);
             spacing = measureEl.getComputedTextLength();
             measureEl.remove();
@@ -532,8 +545,26 @@
             }
 
             var repeat = Math.ceil(1800 / spacing) + 2;
-            var totalText = Array(repeat).fill(text).join('');
-            textPath.textContent = totalText;
+            textPath.textContent = '';
+            for (var r = 0; r < repeat; r++) {
+                var a = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                a.textContent = pre;
+                textPath.appendChild(a);
+                var b = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                b.textContent = oldDate;
+                b.setAttribute('text-decoration', 'line-through');
+                b.style.textDecoration = 'line-through';
+                b.style.opacity = '0.7';
+                textPath.appendChild(b);
+                var c = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                c.textContent = mid + newDate;
+                c.style.fill = '#facc15';
+                c.style.fontWeight = '900';
+                textPath.appendChild(c);
+                var d = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                d.textContent = post;
+                textPath.appendChild(d);
+            }
             textPath.setAttribute('startOffset', -spacing + 'px');
 
             var dragRef = false,
