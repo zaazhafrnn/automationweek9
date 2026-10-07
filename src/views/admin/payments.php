@@ -103,9 +103,11 @@ foreach ($payments as $p) {
     <div class="p-6 pt-0">
         <?= DataTable::make()
             ->columns([
-                ['key' => 'team', 'label' => 'Tim', 'render' => fn($row) => '<div class="font-medium">' . $row['team_name'] . '</div><div class="text-sm text-muted-foreground">' . ($row['school'] ?? '-') . '</div>'],
+                ['key' => 'team', 'label' => 'Tim', 'render' => fn($row) => '<div class="font-medium">' . $row['team_name'] . '</div>'],
+                ['key' => 'school', 'label' => 'Sekolah', 'render' => fn($row) => $row['school'] ?? '-'],
                 ['key' => 'divisi', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['divisi'] . '</span>'],
-                ['key' => 'ketua', 'label' => 'Anggota 1 (Ketua)', 'render' => fn($row) => '<div class="font-medium">' . $row['leader'] . '</div><div class="text-sm text-muted-foreground">' . $row['leaderPhone'] . '</div>'],
+                ['key' => 'ketua', 'label' => 'Anggota 1 (Ketua)', 'render' => fn($row) => '<div class="font-medium">' . $row['leader'] . '</div>'],
+                ['key' => 'leaderPhone', 'label' => 'No. HP', 'render' => fn($row) => $row['leaderPhone']],
                 ['key' => 'status', 'label' => 'Status', 'sortable' => false, 'render' => fn($row) => $row['status']],
                 ['key' => 'bukti', 'label' => 'Bukti', 'sortable' => false, 'render' => fn($row) => $row['bukti']],
                 ['key' => 'submitted', 'label' => 'Dikirim', 'tdClass' => 'text-muted-foreground'],
