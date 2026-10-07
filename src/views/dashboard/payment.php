@@ -42,10 +42,10 @@ $verified = ($status === 'verified');
                 <p class="text-sm text-gray-600 leading-relaxed">Pembayaran melalui salah satu dari 2 rekening berikut</p>
                 <div class="mt-4 space-y-8">
                   <div class="flex items-center gap-3">
-                    <img src="/image/logo-seabank.png" alt="Logo Seabank" class="h-10 w-auto shrink-0" draggable="false" style="user-select: none;">
+                    <img src="/image/logo-bni.webp" alt="Logo BNI" class="rounded-lg p-1.5 h-10 w-auto shrink-0" draggable="false" style="user-select: none;">
                     <div>
-                      <p class="text-sm font-semibold text-gray-900 leading-none">Seabank</p>
-                      <p class="text-base font-bold tracking-wide text-gray-900 leading-none">901531540263</p>
+                      <p class="text-sm font-semibold text-gray-900 leading-none">BNI</p>
+                      <p class="text-base font-bold tracking-wide text-gray-900 leading-none">2104121333</p>
                       <p class="text-sm leading-none">Titis Nabila (CP. 085755184808)</p>
                     </div>
                   </div>
