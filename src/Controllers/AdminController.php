@@ -332,7 +332,29 @@ class AdminController extends Controller
             $this->redirect('/admin/submissions');
         }
 
-        (new Submission())->updateStatus((int) $id, $map[$_POST['action']]);
+        $action = $_POST['action'] ?? '';
+        (new Submission())->updateStatus((int) $id, $map[$action]);
+
+        if (in_array($action, ['approve', 'reject'], true)) {
+            $row = (new Submission())->find((int) $id);
+            if ($row && ($row['type'] ?? '') === 'abstract' && !empty($row['email'])) {
+                $passed = $action === 'approve';
+                $appUrl = getenv('APP_URL');
+                $baseUrl = !empty($appUrl) ? rtrim($appUrl, '/') : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+                $subject = $passed
+                    ? 'Selamat! Abstrak ' . ($row['team_name'] ?? 'Tim') . ' Lolos Seleksi 🎉 - AutomationWeek IX'
+                    : 'Hasil Seleksi Abstrak ' . ($row['team_name'] ?? 'Tim') . ' - AutomationWeek IX';
+                $body = \App\Components\MailLayout::render(
+                    \App\Components\EmailTemplates::abstractResult($passed, $row['leaderName'] ?? $row['user_name'] ?? 'Peserta', $row['original_name'] ?: ($row['value'] ?? '-'), $passed ? $baseUrl . '/payments' : null),
+                    '',
+                    false,
+                    \App\Components\EmailTemplates::abstractBanner($passed, $baseUrl . '/image/faveicon.png')
+                );
+                if (!\App\Utils\Mailer::send($row['email'], $subject, $body)) {
+                    error_log('Abstract result email failed for submission ' . $id);
+                }
+            }
+        }
         $this->redirect('/admin/submissions');
     }
 

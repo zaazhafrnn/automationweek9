@@ -32,14 +32,20 @@ class Mailer
                 . "--$boundary--";
             $message = $headers . $body;
         } else {
+            $plain = html_entity_decode(preg_replace('/\s+/', ' ', trim(strip_tags(preg_replace('/<\/(p|div|tr|table)>/i', "$0\n\n", preg_replace('/<br\s*\/?>/i', "\n", $htmlBody))))), ENT_QUOTES, 'UTF-8');
+            $alt = 'a_' . md5(uniqid((string)mt_rand(), true));
             $headers = "From: Automation Week IX <$user>\r\n"
                 . "To: <$to>\r\n"
                 . "Reply-To: $user\r\n"
                 . "Subject: $subject\r\n"
                 . "MIME-Version: 1.0\r\n"
-                . "Content-Type: text/html; charset=UTF-8\r\n"
-                . "Content-Transfer-Encoding: base64\r\n\r\n";
-            $message = $headers . chunk_split(base64_encode($htmlBody));
+                . "Content-Type: multipart/alternative; boundary=\"$alt\"\r\n\r\n";
+            $message = $headers
+                . "--$alt\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+                . chunk_split(base64_encode($plain)) . "\r\n"
+                . "--$alt\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+                . chunk_split(base64_encode($htmlBody)) . "\r\n"
+                . "--$alt--";
         }
 
         $fp = stream_socket_client('tls://smtp.gmail.com:465', $errno, $errstr, 10);

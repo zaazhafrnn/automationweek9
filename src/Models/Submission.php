@@ -56,6 +56,19 @@ class Submission extends Model
         return $stmt->fetchAll();
     }
 
+    public function find(int $id): array|false
+    {
+        $stmt = $this->db->prepare("
+            SELECT s.*, t.name as team_name, t.division, t.teamSchool, t.leaderName, u.email, u.name as user_name
+            FROM submissions s
+            JOIN teams t ON s.team_id = t.id
+            JOIN accounts u ON t.user_id = u.id
+            WHERE s.id = :id LIMIT 1
+        ");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
+
     public function updateStatus(int $id, string $status): bool
     {
         $stmt = $this->db->prepare("UPDATE submissions SET status = :status WHERE id = :id");
