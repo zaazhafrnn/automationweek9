@@ -31,14 +31,16 @@ $abstractApproved = $abstract_status === 'approved';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
 
 if ($isAbstract) {
-  $locked = !$team || !$is_reviewed || !empty($abstract_closed);
+  $locked = !$team || !$is_reviewed || !empty($abstract_closed) || $status === 'rejected';
 } else {
   $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified;
 }
 
 $lockReason = null;
 if ($locked) {
-  if (!empty($abstract_closed)) {
+  if ($isAbstract && $status === 'rejected') {
+    $lockReason = 'failed';
+  } elseif (!empty($abstract_closed)) {
     $lockReason = 'closed';
   } elseif (!$team || !$is_reviewed) {
     $lockReason = 'reg';
@@ -206,7 +208,15 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
         </div>
       </div>
 
-      <?php if ($lockReason === 'closed'): ?>
+      <?php if ($lockReason === 'failed'): ?>
+        <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
+          <?= Icon::make()->name('x')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
+          <div>
+            <p class="text-sm font-semibold text-red-700">Abstrak tidak lolos seleksi</p>
+            <p class="text-xs text-red-600 mt-0.5">Terima kasih atas partisipasinya. Pengumpulan dikunci dan kamu tidak dapat lanjut ke tahap pembayaran maupun full paper.</p>
+          </div>
+        </div>
+      <?php elseif ($lockReason === 'closed'): ?>
         <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
           <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
           <div>
@@ -274,7 +284,7 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
             <?php endif; ?>
           </div>
         </div>
-      <?php elseif ($status === 'rejected'): ?>
+      <?php elseif ($status === 'rejected' && !$isAbstract): ?>
         <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
           <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
           <div>

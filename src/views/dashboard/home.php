@@ -21,6 +21,7 @@ $divisionDisplay = $divisionNames[$divisionUpper] ?? $divisionUpper;
 $upload1 = $uploads[1] ?? [];
 $isLkti = $divisionUpper === 'LKTI';
 $abstractApproved = ($abstract['status'] ?? '') === 'approved';
+$abstractRejected = ($abstract['status'] ?? '') === 'rejected';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
 
 $steps = [
@@ -196,7 +197,9 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
           <div class="mt-6 mb-4 md:mb-0 flex justify-center">
             <?php
             $allDone = $paymentVerified && (!$isLkti || !empty($full_paper));
-            if (!$allDone):
+            if ($abstractRejected): ?>
+              <p class="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl px-5 py-3">Abstrak tidak lolos seleksi — perjalanan kamu di LKTI berakhir di sini. Terima kasih atas partisipasinya!</p>
+            <?php elseif (!$allDone):
               if (!$applicationDone) {
                 $btnUrl = '/application';
                 $btnLabel = 'Lanjutkan Pendaftaran';
@@ -320,20 +323,25 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
             $ts = $parseDate($item['date']);
             $reached = $ts !== null && $ts <= $today;
             $hasOld = !empty($item['old_date']);
+            $isAnnounce = $isLkti && stripos($item['title'], 'lolos abstrak') !== false;
+            $failed = $isAnnounce && $abstractRejected;
+            $dotCls = $failed ? 'bg-red-500 ring-4 ring-red-500/25' : ($reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand');
+            $titleCls = $failed ? 'text-red-700' : ($reached ? 'text-green-700' : 'text-gray-800');
+            $dateCls = $failed ? 'text-red-600' : ($reached ? 'text-green-600' : 'text-gray-500');
           ?>
             <div class="relative pl-6">
-              <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand' ?>"></div>
-              <h4 class="text-sm font-bold <?= $reached ? 'text-green-700' : 'text-gray-800' ?>"><?= htmlspecialchars($item['title']) ?></h4>
+              <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $dotCls ?>"></div>
+              <h4 class="text-sm font-bold <?= $titleCls ?>"><?= htmlspecialchars($item['title']) ?><?= $failed ? ' — Tidak Lolos' : '' ?></h4>
               <?php if ($hasOld): ?>
                 <div class="flex flex-col leading-none gap-0.5 mt-1">
-                  <span class="text-xs line-through opacity-60 <?= $reached ? 'text-green-600' : 'text-gray-400' ?>"><?= htmlspecialchars($item['old_date']) ?></span>
+                  <span class="text-xs line-through opacity-60 <?= $dateCls ?>"><?= htmlspecialchars($item['old_date']) ?></span>
                   <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold <?= $reached ? 'text-green-600' : 'text-brand' ?>"><?= htmlspecialchars($item['date']) ?></span>
+                    <span class="text-xs font-bold <?= $failed ? 'text-red-600' : ($reached ? 'text-green-600' : 'text-brand') ?>"><?= htmlspecialchars($item['date']) ?></span>
                     <span class="text-[10px] font-black tracking-widest bg-amber-500 text-white px-2 py-0.5 rounded-full rotate-[6deg]">EXTENDED</span>
                   </div>
                 </div>
               <?php else: ?>
-                <p class="text-xs <?= $reached ? 'text-green-600' : 'text-gray-500' ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
+                <p class="text-xs <?= $dateCls ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
               <?php endif; ?>
             </div>
           <?php endforeach; ?>
