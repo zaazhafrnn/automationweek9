@@ -17,6 +17,7 @@ use App\Components\Toast;
 /** @var string|null $abstract_category */
 /** @var string|null $success */
 /** @var string|null $error */
+/** @var bool $abstract_closed */
 
 $isAbstract = $type === 'abstract';
 $title = $isAbstract ? 'Abstrak' : 'Full Paper';
@@ -30,14 +31,16 @@ $abstractApproved = $abstract_status === 'approved';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
 
 if ($isAbstract) {
-  $locked = !$team || !$is_reviewed;
+  $locked = !$team || !$is_reviewed || !empty($abstract_closed);
 } else {
   $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified;
 }
 
 $lockReason = null;
 if ($locked) {
-  if (!$team || !$is_reviewed) {
+  if (!empty($abstract_closed)) {
+    $lockReason = 'closed';
+  } elseif (!$team || !$is_reviewed) {
     $lockReason = 'reg';
   } elseif (!$abstractApproved) {
     $lockReason = 'abstract';
@@ -203,7 +206,15 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
         </div>
       </div>
 
-      <?php if ($lockReason === 'reg'): ?>
+      <?php if ($lockReason === 'closed'): ?>
+        <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
+          <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
+          <div>
+            <p class="text-sm font-semibold text-red-700">Pengumpulan abstrak telah ditutup</p>
+            <p class="text-xs text-red-600 mt-0.5">Batas pengumpulan adalah <span class="font-semibold">10 Oktober 2026</span>. Kamu tidak dapat mengumpulkan abstrak lagi.</p>
+          </div>
+        </div>
+      <?php elseif ($lockReason === 'reg'): ?>
         <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
           <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
           <div>

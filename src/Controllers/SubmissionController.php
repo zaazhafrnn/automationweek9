@@ -20,6 +20,7 @@ class SubmissionController extends Controller
         'originality' => 'Lembar Pernyataan Orisinalitas Karya',
         'approval' => 'Lembar Pengesahan Karya',
     ];
+    private const ABSTRACT_DEADLINE = '2026-10-10 23:59:59';
 
     private static function label(string $type): string
     {
@@ -76,6 +77,11 @@ class SubmissionController extends Controller
         $url = '/submission/' . ($type === 'abstract' ? 'abstract' : 'full-paper');
 
         $submissionModel = new Submission();
+        if ($type === 'abstract' && self::abstractClosed() && !$submissionModel->findByTeamAndType($team['id'], 'abstract')) {
+            Session::flash('submission_error', 'Batas pengumpulan abstrak telah berakhir (10 Oktober 2026).');
+            $this->redirect($url);
+        }
+
         $is_reviewed = $submissionModel->isReviewed($team['id']);
         if (!$is_reviewed) {
             Session::flash('submission_error', 'Selesaikan pendaftaran tim terlebih dahulu.');
@@ -204,9 +210,15 @@ class SubmissionController extends Controller
             'approval' => $submissionModel->findByTeamAndType($team['id'], 'approval'),
             'abstract_status' => $abstractRow['status'] ?? null,
             'abstract_category' => $abstractRow['category'] ?? null,
+            'abstract_closed' => $type === 'abstract' && self::abstractClosed() && !$submissionModel->findByTeamAndType($team['id'], 'abstract'),
             'success' => Session::flash('submission_success'),
             'error' => Session::flash('submission_error'),
         ];
+    }
+
+    private static function abstractClosed(): bool
+    {
+        return time() > strtotime(self::ABSTRACT_DEADLINE);
     }
 
     public function upload()
