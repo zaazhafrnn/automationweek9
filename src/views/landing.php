@@ -157,7 +157,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="card-glow flex flex-col overflow-hidden shadow-sm border border-border rounded-2xl relative">
-                    <!-- ponytail: pure CSS stamp, no image -->
                     <div class="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-black tracking-widest px-5 py-1.5 rounded-full rotate-[12deg] shadow-lg border-2 border-white/60 select-none pointer-events-none">EXTENDED</div>
                     <div class="h-1.5 bg-gradient-to-r from-yellow-500 to-yellow-600"></div>
                     <div class="p-8 flex flex-col items-center flex-grow">
