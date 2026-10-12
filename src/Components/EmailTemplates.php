@@ -44,9 +44,8 @@ class EmailTemplates
 
     public static function abstractResult(bool $passed, string $name, string $title, ?string $nextUrl = null): string
     {
-        $head = $passed ? 'SELAMAT‼️' : 'MOHON MAAF';
-        $html = '<p style="text-align:center;font-family:Poppins,Arial,Helvetica,sans-serif;font-size:28px;font-weight:900;letter-spacing:2px;margin:0 0 16px;">' . $head . '</p>';
         $mark = '<span style="background:#fde047;font-weight:bold;padding:0 6px;border-radius:4px;">LOLOS</span>';
+        $html = '';
         if ($passed) {
             $html .= '<p>Hai, ' . htmlspecialchars($name) . '! 👋</p>'
                 . '<p>Terima kasih telah menjadi bagian dari Automation Week IX.</p>'

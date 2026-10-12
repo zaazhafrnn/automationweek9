@@ -348,7 +348,7 @@ class AdminController extends Controller
                     \App\Components\EmailTemplates::abstractResult($passed, $row['leaderName'] ?? $row['user_name'] ?? 'Peserta', $row['original_name'] ?: ($row['value'] ?? '-'), $passed ? $baseUrl . '/payments' : null),
                     $baseUrl . '/image/faveicon.png',
                     true,
-                    'red-block'
+                    $passed ? 'SELAMAT‼️' : 'MOHON MAAF'
                 );
                 if (!\App\Utils\Mailer::send($row['email'], $subject, $body)) {
                     error_log('Abstract result email failed for submission ' . $id);
