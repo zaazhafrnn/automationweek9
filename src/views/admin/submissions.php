@@ -75,8 +75,10 @@ foreach ($submissions as $s) {
             . '<input type="hidden" name="submission_id" value="' . $s['id'] . '">'
             . '<input type="hidden" name="action" value="reject">'
             . '<p class="text-sm text-gray-600 mb-6 break-words whitespace-normal w-full">' . $rejectMessage . '</p>'
-            . '<div class="mb-2"><label class="block text-sm font-medium mb-1">Catatan (opsional)</label>'
+            . '<!--  unused (never read by controller), hidden
+            <div class="mb-2"><label class="block text-sm font-medium mb-1">Catatan (opsional)</label>'
             . '<textarea name="note" class="w-full border rounded p-1 min-h-[120px] md:min-h-[160px] text-base" placeholder="Opsional: beri catatan penolakan" rows="5" style="min-height:120px"></textarea></div>'
+            . '-->'
             . '<div class="flex justify-end space-x-2">'
             . '<button type="button" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors" onclick="closeDialog(\'' . $rejectDialogId . '\')">Batal</button>'
             . '<button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-red-700 rounded-lg hover:bg-red-800">Ya, Tolak</button>'
