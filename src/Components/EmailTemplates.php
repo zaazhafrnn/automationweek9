@@ -42,31 +42,20 @@ class EmailTemplates
         return $html;
     }
 
-    public static function abstractBanner(bool $passed, string $logoUrl = ''): string
-    {
-        $banner = $passed ? '#16a34a' : '#b91c1c';
-        return '<div style="background:' . $banner . ';padding:20px;">'
-            . '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;"><tr>'
-            . '<td style="vertical-align:middle;">'
-            . ($logoUrl !== '' ? '<img src="' . htmlspecialchars($logoUrl) . '" alt="AutomationWeek" style="width:56px;height:auto;display:block;background:#ffffff;border-radius:8px;padding:4px;" />' : '')
-            . '</td>'
-            . '<td align="right" style="vertical-align:middle;font-size:30px;font-weight:900;letter-spacing:1px;color:#ffffff;">'
-            . ($passed ? 'SELAMAT!!!' : 'WE WERE SORRY :(')
-            . '</td></tr></table></div>';
-    }
-
     public static function abstractResult(bool $passed, string $name, string $title, ?string $nextUrl = null): string
     {
+        $head = $passed ? 'SELAMAT‼️' : 'MOHON MAAF';
+        $html = '<p style="text-align:center;font-family:Poppins,Arial,Helvetica,sans-serif;font-size:28px;font-weight:900;letter-spacing:2px;margin:0 0 16px;">' . $head . '</p>';
         $mark = '<span style="background:#fde047;font-weight:bold;padding:0 6px;border-radius:4px;">LOLOS</span>';
         if ($passed) {
-            $html = '<p>Hai, ' . htmlspecialchars($name) . '! 👋</p>'
+            $html .= '<p>Hai, ' . htmlspecialchars($name) . '! 👋</p>'
                 . '<p>Terima kasih telah menjadi bagian dari Automation Week IX.</p>'
                 . '<p>Selamat🤩!!! Abstrak anda dengan judul <b>"' . htmlspecialchars($title) . '"</b> dinyatakan ' . $mark . ' pada tahap seleksi abstrak.✨</p>'
                 . '<p>Silahkan melanjutkan ke tahap selanjutnya melalui tautan dibawah ini 👇</p>';
             if ($nextUrl) $html .= self::button($nextUrl, 'Lanjut ke Pembayaran');
             return $html;
         }
-        return '<p>Hai, ' . htmlspecialchars($name) . '! 👋</p>'
+        return $html . '<p>Hai, ' . htmlspecialchars($name) . '! 👋</p>'
             . '<p>Terima kasih telah menjadi bagian dari Automation Week IX.</p>'
             . '<p>Abstrakmu yang berjudul <b>"' . htmlspecialchars($title) . '"</b> dinyatakan <b>tidak lolos</b> pada tahap seleksi abstrak kali ini.</p>'
             . '<p>Jangan berkecil hati, ya! Tetap semangat berkarya, kembangkan potensimu, dan terus ciptakan inovasi baru. ✨<br><br>Your Journey Doesn\'t End Here.🤗</p>';

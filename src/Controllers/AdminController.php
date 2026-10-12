@@ -346,9 +346,9 @@ class AdminController extends Controller
                     : 'Hasil Seleksi Abstrak ' . ($row['team_name'] ?? 'Tim') . ' - AutomationWeek IX';
                 $body = \App\Components\MailLayout::render(
                     \App\Components\EmailTemplates::abstractResult($passed, $row['leaderName'] ?? $row['user_name'] ?? 'Peserta', $row['original_name'] ?: ($row['value'] ?? '-'), $passed ? $baseUrl . '/payments' : null),
-                    '',
-                    false,
-                    \App\Components\EmailTemplates::abstractBanner($passed, $baseUrl . '/image/faveicon.png')
+                    $baseUrl . '/image/faveicon.png',
+                    true,
+                    'red-block'
                 );
                 if (!\App\Utils\Mailer::send($row['email'], $subject, $body)) {
                     error_log('Abstract result email failed for submission ' . $id);
