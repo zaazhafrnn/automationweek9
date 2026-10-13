@@ -335,7 +335,8 @@ class AdminController extends Controller
         $action = $_POST['action'] ?? '';
         (new Submission())->updateStatus((int) $id, $map[$action]);
 
-        if (in_array($action, ['approve', 'reject'], true)) {
+        // auto-send disabled for manual revision resend (LKTI ABSTRACT ANNOUNCEMENT)*
+        if (false && in_array($action, ['approve', 'reject'], true)) {
             $row = (new Submission())->find((int) $id);
             if ($row && ($row['type'] ?? '') === 'abstract' && !empty($row['email'])) {
                 $passed = $action === 'approve';
