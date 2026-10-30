@@ -75,6 +75,39 @@ if ($isLkti) {
 
     </div>
 
+    <div id="page-loader" class="fixed inset-0 z-[100] hidden items-center justify-center bg-background/70 backdrop-blur-sm">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary"></div>
+    </div>
+
+    <script>
+        (function () {
+            var loader = document.getElementById('page-loader');
+            if (!loader) return;
+            var show = function () {
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+            };
+            var hide = function () {
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+            };
+            window.addEventListener('pageshow', hide);
+            document.addEventListener('click', function (e) {
+                var a = e.target.closest('a[href]');
+                if (!a || a.target === '_blank' || a.hasAttribute('download') || a.hasAttribute('data-no-loader')) return;
+                var url;
+                try { url = new URL(a.href, location.href); } catch (err) { return; }
+                if (url.origin !== location.origin) return;
+                if (url.pathname === location.pathname && url.search === location.search) return;
+                if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+                show();
+            });
+            document.addEventListener('submit', function (e) {
+                if (!e.defaultPrevented) show();
+            });
+        })();
+    </script>
+
 </body>
 
 </html>
