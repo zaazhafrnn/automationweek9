@@ -6,6 +6,7 @@ $body_class = $body_class ?? 'antialiased';
 
 $uri = $_SERVER['REQUEST_URI'];
 $div = $_GET['div'] ?? '';
+$type = $_GET['type'] ?? '';
 
 $user_name = (string) \App\Utils\Session::get('user_name');
 $isSuperAdmin = stripos($user_name, 'superadmin') !== false;
@@ -20,18 +21,21 @@ if ($isBendahara) {
     $sidebarItems[] = ['label' => 'Pembayaran', 'icon' => 'credit-card', 'route' => '/admin/payments', 'active' => $uri === '/admin/payments'];
 }
 
-$divisionItems = $isLkti ? ['LKTI' => 'file'] : [];
 if ($isLkti) {
     $sidebarItems[] = ['label' => 'Upload karya', 'header' => true];
-}
-
-foreach ($divisionItems as $d => $icon) {
-    $sidebarItems[] = [
-        'label' => $d,
-        'icon' => $icon,
-        'route' => "/admin/submissions?div=$d",
-        'active' => strpos($uri, '/admin/submissions') !== false && $div === $d,
-    ];
+    foreach (
+        [
+            'full_paper' => 'Full Paper',
+            'abstract' => 'Abstrak',
+        ] as $t => $label
+    ) {
+        $sidebarItems[] = [
+            'label' => $label,
+            'icon' => 'file',
+            'route' => "/admin/submissions?div=LKTI&type=$t",
+            'active' => strpos($uri, '/admin/submissions') !== false && $type === $t,
+        ];
+    }
 }
 ?>
 <!DOCTYPE html>

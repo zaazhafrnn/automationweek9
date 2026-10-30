@@ -3,10 +3,30 @@
 /** @var array $submissions */
 /** @var string $csrf_token */
 /** @var string $page_title */
+/** @var string $type_filter */
 
 use App\Components\DataTable;
 use App\Components\Dialog;
 use App\Components\Icon;
+
+$typeFilter = $type_filter ?? '';
+$heading = [
+    'abstract' => 'Karya Abstrak',
+    'full_paper' => 'Karya Full Paper',
+][$typeFilter] ?? 'Pengumpulan Karya';
+$description = [
+    'abstract' => 'Kelola pengumpulan abstrak dari setiap tim LKTI.',
+    'full_paper' => 'Kelola pengumpulan full paper dari setiap tim LKTI.',
+][$typeFilter] ?? 'Kelola abstrak, full paper, dan karya dari setiap tim.';
+
+$filterQuery = [];
+if (($_GET['div'] ?? '') !== '') {
+    $filterQuery['div'] = $_GET['div'];
+}
+if ($typeFilter !== '') {
+    $filterQuery['type'] = $typeFilter;
+}
+$filterQuery = $filterQuery ? '?' . http_build_query($filterQuery) : '';
 
 $typeLabels = [
     'abstract' => 'Abstrak',
@@ -45,7 +65,8 @@ foreach ($submissions as $s) {
     }
 
     $fullName = htmlspecialchars((string) ($s['original_name'] ?: $s['value']), ENT_QUOTES);
-    $karya = '<span data-tooltip="' . $fullName . '"><a href="/uploads/submissions/' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline inline-block align-middle max-w-[220px] truncate text-xs md:text-sm">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a></span>';
+    $karyaMaxWidth = $typeFilter === '' ? 'max-w-[220px]' : 'max-w-[560px]';
+    $karya = '<span data-tooltip="' . $fullName . '"><a href="/uploads/submissions/' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline inline-block align-middle ' . $karyaMaxWidth . ' truncate text-xs md:text-sm">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a></span>';
     $statusBadge = $statusMap[$s['status']] ?? htmlspecialchars($s['status']);
 
     $dialogHtml = '';
@@ -57,6 +78,7 @@ foreach ($submissions as $s) {
         $approveMessage = "Apakah Anda yakin ingin meloloskan $typeLabel <b>\"" . htmlspecialchars($submissionTitle) . "\"</b> dari tim <b>" . htmlspecialchars($teamName) . "</b> ke tahap berikutnya?";
         $approveForm = '<form action="/admin/submissions/process" method="POST">'
             . '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($csrf_token) . '">'
+            . '<input type="hidden" name="filter_query" value="' . htmlspecialchars($filterQuery) . '">'
             . '<input type="hidden" name="submission_id" value="' . $s['id'] . '">'
             . '<input type="hidden" name="action" value="approve">'
             . '<p class="text-sm text-gray-600 mb-6 break-words whitespace-normal w-full">' . $approveMessage . '</p>'
@@ -72,6 +94,7 @@ foreach ($submissions as $s) {
         $rejectMessage = "Apakah Anda yakin ingin menolak $typeLabel <b>\"" . htmlspecialchars($submissionTitle) . "\"</b> dari tim <b>" . htmlspecialchars($teamName) . "</b>?";
         $rejectForm = '<form action="/admin/submissions/process" method="POST">'
             . '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($csrf_token) . '">'
+            . '<input type="hidden" name="filter_query" value="' . htmlspecialchars($filterQuery) . '">'
             . '<input type="hidden" name="submission_id" value="' . $s['id'] . '">'
             . '<input type="hidden" name="action" value="reject">'
             . '<p class="text-sm text-gray-600 mb-6 break-words whitespace-normal w-full">' . $rejectMessage . '</p>'
@@ -90,6 +113,7 @@ foreach ($submissions as $s) {
     $resetDialogId = 'dialog-reset-' . $s['id'];
     $resetForm = '<form action="/admin/submissions/process" method="POST">'
         . '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($csrf_token) . '">'
+        . '<input type="hidden" name="filter_query" value="' . htmlspecialchars($filterQuery) . '">'
         . '<input type="hidden" name="submission_id" value="' . $s['id'] . '">'
         . '<input type="hidden" name="action" value="reset">'
         . '<p class="text-sm text-gray-600 mb-6 break-words whitespace-normal w-full">Reset status karya tim <b>' . htmlspecialchars($s['team_name']) . '</b> menjadi menunggu?</p>'
@@ -103,9 +127,10 @@ foreach ($submissions as $s) {
 
     $dis = 'opacity-40 cursor-not-allowed pointer-events-none';
     $btnBase = 'rounded p-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
-    $iconForm = function (string $action, string $icon, string $color, string $tip, string $confirm, bool $enabled) use ($csrf_token, $s, $btnBase, $dis) {
+    $iconForm = function (string $action, string $icon, string $color, string $tip, string $confirm, bool $enabled) use ($csrf_token, $s, $btnBase, $dis, $filterQuery) {
         return '<form action="/admin/submissions/process" method="POST"' . ($enabled ? ' onsubmit="return confirm(\'' . $confirm . '\')"' : '') . '>'
             . '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($csrf_token) . '">'
+            . '<input type="hidden" name="filter_query" value="' . htmlspecialchars($filterQuery) . '">'
             . '<input type="hidden" name="submission_id" value="' . $s['id'] . '">'
             . '<input type="hidden" name="action" value="' . $action . '">'
             . '<button type="submit"' . ($enabled ? '' : ' disabled') . ' class="' . $color . ' bg-gray-100 hover:bg-gray-200 ' . $btnBase . ($enabled ? '' : ' ' . $dis) . '" data-tooltip="' . $tip . '">' . Icon::make()->name($icon)->class('w-5 h-5') . '</button>'
@@ -152,22 +177,29 @@ foreach ($submissions as $s) {
 
 <div class="rounded-xl border bg-card text-card-foreground shadow-sm">
     <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-2xl font-semibold leading-none tracking-tight">Pengumpulan Karya</h3>
-        <p class="text-sm text-muted-foreground">Kelola abstrak, full paper, dan karya dari setiap tim.</p>
+        <h3 class="text-2xl font-semibold leading-none tracking-tight"><?= htmlspecialchars($heading) ?></h3>
+        <p class="text-sm text-muted-foreground"><?= htmlspecialchars($description) ?></p>
     </div>
     <div class="p-6 pt-0">
+        <?php
+        $columns = [
+            ['key' => 'team_name', 'label' => 'Tim'],
+            ['key' => 'leader', 'label' => 'Anggota 1 (Ketua)'],
+            ['key' => 'school', 'label' => 'Asal Sekolah'],
+            ['key' => 'kategori', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['kategori'] . '</span>'],
+        ];
+        if ($typeFilter === '') {
+            $columns[] = ['key' => 'jenis', 'label' => 'Jenis', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['jenis'] . '</span>'];
+        }
+        $columns = array_merge($columns, [
+            ['key' => 'karya', 'label' => 'Karya', 'sortable' => false, 'render' => fn($row) => $row['karya']],
+            ['key' => 'status', 'label' => 'Status', 'render' => fn($row) => $row['status']],
+            ['key' => 'uploaded', 'label' => 'Diupload', 'tdClass' => 'text-muted-foreground'],
+            ['key' => 'aksi', 'label' => 'Aksi', 'sortable' => false, 'render' => fn($row) => $row['aksi']],
+        ]);
+        ?>
         <?= DataTable::make()
-            ->columns([
-                ['key' => 'team_name', 'label' => 'Tim'],
-                ['key' => 'leader', 'label' => 'Anggota 1 (Ketua)'],
-                ['key' => 'school', 'label' => 'Asal Sekolah'],
-                ['key' => 'kategori', 'label' => 'Kategori', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['kategori'] . '</span>'],
-                ['key' => 'jenis', 'label' => 'Jenis', 'render' => fn($row) => '<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">' . $row['jenis'] . '</span>'],
-                ['key' => 'karya', 'label' => 'Karya', 'sortable' => false, 'render' => fn($row) => $row['karya']],
-                ['key' => 'status', 'label' => 'Status', 'render' => fn($row) => $row['status']],
-                ['key' => 'uploaded', 'label' => 'Diupload', 'tdClass' => 'text-muted-foreground'],
-                ['key' => 'aksi', 'label' => 'Aksi', 'sortable' => false, 'render' => fn($row) => $row['aksi']],
-            ])
+            ->columns($columns)
             ->searchable()
             ->columnSelectable()
             ->pageable()

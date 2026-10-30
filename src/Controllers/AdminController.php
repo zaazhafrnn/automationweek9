@@ -300,10 +300,24 @@ class AdminController extends Controller
             ));
         }
 
+        $typeFilter = $_GET['type'] ?? '';
+        if (!in_array($typeFilter, ['abstract', 'full_paper'], true)) {
+            $typeFilter = '';
+        }
+        if ($typeFilter !== '') {
+            $submissions = array_values(array_filter($submissions, fn($s) => $s['type'] === $typeFilter));
+        }
+
+        $titles = [
+            'abstract' => 'Pengumpulan Karya Abstrak',
+            'full_paper' => 'Pengumpulan Karya Full Paper',
+        ];
+
         $this->view('admin/submissions', [
             'submissions' => $submissions,
             'csrf_token' => Security::generateCsrfToken(),
-            'page_title' => 'Karya'
+            'page_title' => $titles[$typeFilter] ?? 'Pengumpulan Karya',
+            'type_filter' => $typeFilter,
         ], 'admin');
     }
 
@@ -311,12 +325,18 @@ class AdminController extends Controller
     {
         $this->requireAdmin();
 
+        $back = '/admin/submissions';
+        $query = (string) ($_POST['filter_query'] ?? '');
+        if (preg_match('/^\?[A-Za-z0-9_=&-]*$/', $query)) {
+            $back .= $query;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/admin/submissions');
+            $this->redirect($back);
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
-            $this->redirect('/admin/submissions');
+            $this->redirect($back);
         }
 
         $id = $_POST['submission_id'] ?? null;
@@ -329,7 +349,7 @@ class AdminController extends Controller
         ];
 
         if (!$id || !isset($map[$_POST['action'] ?? ''])) {
-            $this->redirect('/admin/submissions');
+            $this->redirect($back);
         }
 
         $action = $_POST['action'] ?? '';
@@ -356,7 +376,7 @@ class AdminController extends Controller
                 }
             }
         }
-        $this->redirect('/admin/submissions');
+        $this->redirect($back);
     }
 
     public function processPayment()
