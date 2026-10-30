@@ -180,11 +180,11 @@
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pembayaran &amp; Pengumpulan Full Paper</span>
-                                <span class="font-semibold text-right shrink-0 pl-3 flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">4 – 26 Oktober 2026</span><span class="text-yellow-600">14 – 30 Oktober 2026</span></span>
+                                <span class="font-semibold text-right shrink-0 pl-3 flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">14 – 30 Oktober 2026</span><span class="text-yellow-600">14 – 7 November 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Pengumuman Finalis</span>
-                                <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">2 November 2026</span><span class="text-yellow-600">4 November 2026</span></span>
+                                <span class="font-semibold flex flex-col items-end leading-none gap-0.5"><span style="text-decoration:line-through;opacity:.6">4 November 2026</span><span class="text-yellow-600">11 November 2026</span></span>
                             </li>
                             <li class="flex items-center justify-between py-2.5 border-b border-border">
                                 <span class="text-muted">Technical Meeting</span>
