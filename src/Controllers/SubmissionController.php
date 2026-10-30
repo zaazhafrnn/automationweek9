@@ -130,7 +130,7 @@ class SubmissionController extends Controller
             }
 
             $file = $_FILES[$inputName] ?? [];
-            $cat = $fileType === 'abstract' ? $category : null;
+            $cat = $category;
             $uploadDir = BASE_PATH . '/public/uploads/submissions';
 
             if (isset($file['error']) && $file['error'] === UPLOAD_ERR_OK) {
