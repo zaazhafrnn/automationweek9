@@ -30,8 +30,12 @@ $shortcuts = [
     ['Akun', 'users', '/admin/accounts'],
     ['Tim', 'trophy', '/admin/teams'],
 ];
-if ($isAll || in_array($division, ['PLC', 'LKTI'], true)) {
+if ($isAll || $division === 'PLC') {
     $shortcuts[] = ['Karya', 'file-text', '/admin/submissions'];
+}
+if ($isAll || $division === 'LKTI') {
+    $shortcuts[] = ['Full Paper', 'file-text', '/admin/submissions?div=LKTI&type=full_paper'];
+    $shortcuts[] = ['Abstrak', 'file', '/admin/submissions?div=LKTI&type=abstract'];
 }
 ?>
 
