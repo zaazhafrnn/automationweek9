@@ -65,8 +65,7 @@ foreach ($submissions as $s) {
     }
 
     $fullName = htmlspecialchars((string) ($s['original_name'] ?: $s['value']), ENT_QUOTES);
-    $karyaMaxWidth = $typeFilter === '' ? 'max-w-[220px]' : 'max-w-[360px]';
-    $karya = '<span data-tooltip="' . $fullName . '"><a href="/uploads/submissions/' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline inline-block align-middle ' . $karyaMaxWidth . ' truncate text-xs md:text-sm">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a></span>';
+    $karya = '<span data-tooltip="' . $fullName . '"><a href="/uploads/submissions/' . htmlspecialchars((string) $s['value']) . '" target="_blank" class="text-primary underline-offset-4 hover:underline inline-block align-middle max-w-[220px] truncate text-xs md:text-sm">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a></span>';
     $statusBadge = $statusMap[$s['status']] ?? htmlspecialchars($s['status']);
 
     $dialogHtml = '';
