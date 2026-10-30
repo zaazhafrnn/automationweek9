@@ -11,8 +11,8 @@ use App\Components\Icon;
 
 $typeFilter = $type_filter ?? '';
 $heading = [
-    'abstract' => 'Karya Abstrak',
-    'full_paper' => 'Karya Full Paper',
+    'abstract' => 'Pengumpulan Karya Abstrak',
+    'full_paper' => 'Pengumpulan Karya Full Paper',
 ][$typeFilter] ?? 'Pengumpulan Karya';
 $description = [
     'abstract' => 'Kelola pengumpulan abstrak dari setiap tim LKTI.',
@@ -126,7 +126,7 @@ foreach ($submissions as $s) {
 
 
     $dis = 'opacity-40 cursor-not-allowed pointer-events-none';
-    $btnBase = 'rounded p-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
+    $btnBase = 'rounded p-1.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
     $iconForm = function (string $action, string $icon, string $color, string $tip, string $confirm, bool $enabled) use ($csrf_token, $s, $btnBase, $dis, $filterQuery) {
         return '<form action="/admin/submissions/process" method="POST"' . ($enabled ? ' onsubmit="return confirm(\'' . $confirm . '\')"' : '') . '>'
             . '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($csrf_token) . '">'

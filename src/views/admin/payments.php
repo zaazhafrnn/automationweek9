@@ -142,7 +142,7 @@ foreach ($payments as $p) {
     $allDialogs .= $dialogHtml;
 
     $dis = 'opacity-40 cursor-not-allowed pointer-events-none';
-    $btnBase = 'rounded p-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
+    $btnBase = 'rounded p-1.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
 
     $aksi = '<div class="flex gap-1 items-center">'
         . '<button type="button" ' . ($isPending ? Dialog::make()->id($verifyId)->getOpenAttr() : '') . ' ' . ($isPending ? '' : 'disabled') . ' class="text-green-600 bg-gray-100 hover:bg-gray-200 ' . $btnBase . ' ' . ($isPending ? '' : $dis) . '" data-tooltip="Verifikasi">' . Icon::make()->name('check')->class('w-5 h-5') . '</button>'

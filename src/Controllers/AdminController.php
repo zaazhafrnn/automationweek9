@@ -309,8 +309,8 @@ class AdminController extends Controller
         }
 
         $titles = [
-            'abstract' => 'Pengumpulan Karya Abstrak',
-            'full_paper' => 'Pengumpulan Karya Full Paper',
+            'abstract' => 'Karya Abstrak',
+            'full_paper' => 'Karya Full Paper',
         ];
 
         $this->view('admin/submissions', [

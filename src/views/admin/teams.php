@@ -72,7 +72,7 @@ use App\Components\Icon; ?>
             ], $teams))
             ->searchable()
             ->columnSelectable()
-            ->toolbarActions('<button type="button" onclick="openDialog(\'export-csv-dialog\')" class="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-green-700 px-3 py-2 text-xs font-semibold shadow-sm transition-all hover:bg-green-800 hover:text-white text-white"><span class="inline-block">' . Icon::make()->name('file-spreadsheet')->class('w-4 h-4') . '</span>Export CSV</button>')
+            ->toolbarActions('<button type="button" onclick="openDialog(\'export-csv-dialog\')" class="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-green-700 px-3 py-2 text-xs font-semibold shadow-sm transition-all hover:cursor-pointer hover:bg-green-800 hover:text-white text-white"><span class="inline-block">' . Icon::make()->name('file-spreadsheet')->class('w-4 h-4') . '</span>Export CSV</button>')
             ->pageable()
             ->emptyText('Belum ada tim yang terdaftar.')
             ->render() ?>
