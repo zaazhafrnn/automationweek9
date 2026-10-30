@@ -196,7 +196,7 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
           </div>
           <div class="mt-6 mb-4 md:mb-0 flex justify-center">
             <?php
-            $allDone = $paymentVerified && (!$isLkti || !empty($full_paper));
+            $allDone = $paymentVerified && (!$isLkti);
             if ($abstractRejected): ?>
               <p class="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl px-5 py-3">Abstrak tidak lolos seleksi — perjalanan kamu di LKTI berakhir di sini. Terima kasih atas partisipasinya!</p>
             <?php elseif (!$allDone):
