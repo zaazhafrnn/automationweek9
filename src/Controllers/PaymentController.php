@@ -11,6 +11,8 @@ use App\Utils\Security;
 
 class PaymentController extends Controller
 {
+    private const LKTI_PAYMENT_DEADLINE = '2026-11-07 23:59:00';
+
     private $teamModel;
     private $paymentModel;
 
@@ -45,10 +47,17 @@ class PaymentController extends Controller
         }
 
         if ($team['division'] === 'LKTI') {
+            if (time() > strtotime(self::LKTI_PAYMENT_DEADLINE)) {
+                Session::flash('payment_error', 'Batas pembayaran untuk LKTI telah berakhir (7 November 2026, 23:59 WIB).');
+                $this->redirect('/payments');
+                return;
+            }
+
             $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
             if (!$abstract || $abstract['status'] !== 'approved') {
                 Session::flash('payment_error', 'Abstrak kamu belum disetujui admin.');
                 $this->redirect('/submission/abstract');
+                return;
             }
         }
 

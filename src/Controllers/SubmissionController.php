@@ -21,6 +21,7 @@ class SubmissionController extends Controller
         'approval' => 'Lembar Pengesahan Karya',
     ];
     private const ABSTRACT_DEADLINE = '2026-10-10 23:59:59';
+    private const FULL_PAPER_DEADLINE = '2026-11-07 23:59:00';
 
     private static function label(string $type): string
     {
@@ -85,6 +86,12 @@ class SubmissionController extends Controller
         if ($type === 'abstract' && self::abstractClosed() && !$submissionModel->findByTeamAndType($team['id'], 'abstract')) {
             Session::flash('submission_error', 'Batas pengumpulan abstrak telah berakhir (10 Oktober 2026).');
             $this->redirect($url);
+            return;
+        }
+        if ($type === 'full_paper' && self::fullPaperClosed()) {
+            Session::flash('submission_error', 'Batas pengumpulan full paper telah berakhir (7 November 2026, 23:59 WIB).');
+            $this->redirect($url);
+            return;
         }
 
         $is_reviewed = $submissionModel->isReviewed($team['id']);
@@ -202,6 +209,7 @@ class SubmissionController extends Controller
         $submissionModel = new Submission();
         $payment = (new Payment())->findByTeamId($team['id']);
         $abstractRow = $submissionModel->findByTeamAndType($team['id'], 'abstract');
+        $fullPaperRow = $submissionModel->findByTeamAndType($team['id'], 'full_paper');
 
         return [
             'user_name' => Session::get('user_name'),
@@ -215,7 +223,9 @@ class SubmissionController extends Controller
             'approval' => $submissionModel->findByTeamAndType($team['id'], 'approval'),
             'abstract_status' => $abstractRow['status'] ?? null,
             'abstract_category' => $abstractRow['category'] ?? null,
-            'abstract_closed' => $type === 'abstract' && self::abstractClosed() && !$submissionModel->findByTeamAndType($team['id'], 'abstract'),
+            'abstract_closed' => $type === 'abstract' && self::abstractClosed() && !$abstractRow,
+            'full_paper_closed' => $type === 'full_paper' && self::fullPaperClosed() && !$fullPaperRow,
+            'deadline_passed' => ($type === 'full_paper' && self::fullPaperClosed()) || ($type === 'abstract' && self::abstractClosed()),
             'success' => Session::flash('submission_success'),
             'error' => Session::flash('submission_error'),
         ];
@@ -224,6 +234,11 @@ class SubmissionController extends Controller
     private static function abstractClosed(): bool
     {
         return time() > strtotime(self::ABSTRACT_DEADLINE);
+    }
+
+    private static function fullPaperClosed(): bool
+    {
+        return time() > strtotime(self::FULL_PAPER_DEADLINE);
     }
 
     public function upload()

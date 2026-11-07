@@ -18,6 +18,8 @@ use App\Components\Toast;
 /** @var string|null $success */
 /** @var string|null $error */
 /** @var bool $abstract_closed */
+/** @var bool|null $full_paper_closed */
+/** @var bool|null $deadline_passed */
 
 $isAbstract = $type === 'abstract';
 $title = $isAbstract ? 'Abstrak' : 'Full Paper';
@@ -33,14 +35,14 @@ $paymentVerified = ($payment['status'] ?? '') === 'verified';
 if ($isAbstract) {
   $locked = !$team || !$is_reviewed || !empty($abstract_closed) || $status === 'rejected';
 } else {
-  $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified;
+  $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified || !empty($full_paper_closed);
 }
 
 $lockReason = null;
 if ($locked) {
   if ($isAbstract && $status === 'rejected') {
     $lockReason = 'failed';
-  } elseif (!empty($abstract_closed)) {
+  } elseif (!empty($abstract_closed) || !empty($full_paper_closed)) {
     $lockReason = 'closed';
   } elseif (!$team || !$is_reviewed) {
     $lockReason = 'reg';
@@ -181,7 +183,7 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
               </div>
 
               <div class="mt-6 flex justify-end">
-                <button type="submit" disabled id="submission-submit-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors <?= $approved ? 'hidden' : '' ?>">
+                <button type="submit" disabled id="submission-submit-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors <?= ($approved || !empty($deadline_passed)) ? 'hidden' : '' ?>">
                   Simpan
                   <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
                 </button>
@@ -189,6 +191,16 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
             </form>
           </div>
         </div>
+
+        <?php if (!empty($deadline_passed) && $hasFile && !$locked): ?>
+          <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
+            <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-amber-700">Batas pengumpulan berakhir</p>
+              <p class="text-xs text-amber-600 mt-0.5">Pengumpulan telah ditutup pada <?= $isAbstract ? '10 Oktober 2026' : '7 November 2026, 23:59 WIB' ?>. File yang sudah diunggah tidak dapat diubah lagi.</p>
+            </div>
+          </div>
+        <?php endif; ?>
 
         <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl mt-4">
           <?= Icon::make()->name('megaphone')->class('w-5 h-5 text-blue-500 shrink-0 mt-0.5') ?>
@@ -220,8 +232,8 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
         <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
           <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
           <div>
-            <p class="text-sm font-semibold text-red-700">Pengumpulan abstrak telah ditutup</p>
-            <p class="text-xs text-red-600 mt-0.5">Batas pengumpulan adalah <span class="font-semibold">10 Oktober 2026</span>. Kamu tidak dapat mengumpulkan abstrak lagi.</p>
+            <p class="text-sm font-semibold text-red-700">Pengumpulan <?= $isAbstract ? 'abstrak' : 'full paper' ?> telah ditutup</p>
+            <p class="text-xs text-red-600 mt-0.5">Batas pengumpulan adalah <span class="font-semibold"><?= $isAbstract ? '10 Oktober 2026' : '7 November 2026, 23:59 WIB' ?></span>. Kamu tidak dapat mengumpulkan <?= $isAbstract ? 'abstrak' : 'full paper' ?> lagi.</p>
           </div>
         </div>
       <?php elseif ($lockReason === 'reg'): ?>
