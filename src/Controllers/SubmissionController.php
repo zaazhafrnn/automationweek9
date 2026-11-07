@@ -21,7 +21,7 @@ class SubmissionController extends Controller
         'approval' => 'Lembar Pengesahan Karya',
     ];
     private const ABSTRACT_DEADLINE = '2026-10-10 23:59:59';
-    private const FULL_PAPER_DEADLINE = '2026-11-07 23:59:00';
+    private const FULL_PAPER_DEADLINE = '2026-11-08 23:59:00';
 
     private static function label(string $type): string
     {
