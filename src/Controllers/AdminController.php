@@ -64,7 +64,7 @@ class AdminController extends Controller
             ));
         }
 
-        return self::keepVerifiedOrLkti($teams, $this->paymentStatusByTeam());
+        return self::keepVerified($teams, $this->paymentStatusByTeam());
     }
 
     private function paymentStatusByTeam(): array
@@ -77,13 +77,11 @@ class AdminController extends Controller
         return $statusByTeam;
     }
 
-    public static function keepVerifiedOrLkti(array $teams, array $paymentStatusByTeam): array
+    public static function keepVerified(array $teams, array $paymentStatusByTeam): array
     {
         return array_values(array_filter(
             $teams,
-            fn($t) =>
-            strtoupper($t['division'] ?? '') === 'LKTI'
-                || ($paymentStatusByTeam[$t['id']] ?? '') === 'verified'
+            fn($t) => ($paymentStatusByTeam[$t['id']] ?? '') === 'verified'
         ));
     }
 
@@ -94,7 +92,7 @@ class AdminController extends Controller
         $division = $this->adminDivision();
 
         $teamModel = new \App\Models\Team();
-        $allTeams = self::keepVerifiedOrLkti($teamModel->getAllTeams(), $this->paymentStatusByTeam());
+        $allTeams = self::keepVerified($teamModel->getAllTeams(), $this->paymentStatusByTeam());
         $teams = ($division === null)
             ? $allTeams
             : array_values(array_filter($allTeams, fn($t) => strtoupper($t['division'] ?? '') === $division));
