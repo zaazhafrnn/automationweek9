@@ -64,7 +64,22 @@ class AdminController extends Controller
             ));
         }
 
-        return $teams;
+        $paymentStatusByTeam = [];
+        foreach ((new \App\Models\Payment())->getAllPayments() as $p) {
+            $paymentStatusByTeam[$p['teamId']] ??= $p['status'] ?? '';
+        }
+
+        return self::keepVerifiedOrLkti($teams, $paymentStatusByTeam);
+    }
+
+    public static function keepVerifiedOrLkti(array $teams, array $paymentStatusByTeam): array
+    {
+        return array_values(array_filter(
+            $teams,
+            fn($t) =>
+            strtoupper($t['division'] ?? '') === 'LKTI'
+                || ($paymentStatusByTeam[$t['id']] ?? '') === 'verified'
+        ));
     }
 
     public function dashboard()
