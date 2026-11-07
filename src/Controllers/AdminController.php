@@ -64,12 +64,17 @@ class AdminController extends Controller
             ));
         }
 
-        $paymentStatusByTeam = [];
+        return self::keepVerifiedOrLkti($teams, $this->paymentStatusByTeam());
+    }
+
+    private function paymentStatusByTeam(): array
+    {
+        $statusByTeam = [];
         foreach ((new \App\Models\Payment())->getAllPayments() as $p) {
-            $paymentStatusByTeam[$p['teamId']] ??= $p['status'] ?? '';
+            $statusByTeam[$p['teamId']] ??= $p['status'] ?? '';
         }
 
-        return self::keepVerifiedOrLkti($teams, $paymentStatusByTeam);
+        return $statusByTeam;
     }
 
     public static function keepVerifiedOrLkti(array $teams, array $paymentStatusByTeam): array
@@ -89,7 +94,7 @@ class AdminController extends Controller
         $division = $this->adminDivision();
 
         $teamModel = new \App\Models\Team();
-        $allTeams = $teamModel->getAllTeams();
+        $allTeams = self::keepVerifiedOrLkti($teamModel->getAllTeams(), $this->paymentStatusByTeam());
         $teams = ($division === null)
             ? $allTeams
             : array_values(array_filter($allTeams, fn($t) => strtoupper($t['division'] ?? '') === $division));
@@ -106,7 +111,7 @@ class AdminController extends Controller
             'division' => $division,
             'total_users' => $total_participants,
             'total_teams' => count($teams),
-            'all_divisions' => ($division === null) ? $teamModel->countByDivision() : [],
+            'all_divisions' => ($division === null) ? array_count_values(array_column($allTeams, 'division')) : [],
             'page_title' => 'Dasbor'
         ], 'admin');
     }
