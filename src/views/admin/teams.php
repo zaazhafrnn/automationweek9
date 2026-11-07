@@ -10,7 +10,7 @@ use App\Components\Icon; ?>
 <div class="rounded-xl border bg-card text-card-foreground shadow-sm">
     <div class="flex flex-col space-y-1.5 p-6">
         <h3 class="text-2xl font-semibold leading-none tracking-tight">Semua Tim Terdaftar</h3>
-        <p class="text-sm text-muted-foreground">Daftar semua tim yang terdaftar.</p>
+        <p class="text-sm text-muted-foreground">Daftar semua tim yang sudah melakukan pembayaran.</p>
     </div>
     <div class="p-6 pt-0">
         <?= DataTable::make()
@@ -74,7 +74,7 @@ use App\Components\Icon; ?>
             ->columnSelectable()
             ->toolbarActions('<button type="button" onclick="openDialog(\'export-csv-dialog\')" class="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-green-700 px-3 py-2 text-xs font-semibold shadow-sm transition-all hover:cursor-pointer hover:bg-green-800 hover:text-white text-white"><span class="inline-block">' . Icon::make()->name('file-spreadsheet')->class('w-4 h-4') . '</span>Export CSV</button>')
             ->pageable()
-            ->emptyText('Belum ada tim yang terdaftar.')
+            ->emptyText('Belum ada tim yang sudah melakukan pembayaran.')
             ->render() ?>
     </div>
 </div>
