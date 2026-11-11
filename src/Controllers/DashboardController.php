@@ -129,12 +129,14 @@ class DashboardController extends Controller
         $team = (new Team())->findByUserId(Session::get('user_id'));
         $payment = null;
         $is_reviewed = false;
+        $payment_closed = false;
         if ($team) {
             $payment = (new Payment())->findByTeamId($team['id']);
             $is_reviewed = (new Submission())->isReviewed($team['id']);
             if ($team['division'] === 'LKTI') {
                 $abstract = (new Submission())->findByTeamAndType($team['id'], 'abstract');
                 $is_reviewed = $is_reviewed && $abstract && $abstract['status'] === 'approved';
+                $payment_closed = time() > strtotime('2026-11-08 00:10:00') && ($payment['status'] ?? '') !== 'verified';
             }
         }
 
@@ -144,6 +146,8 @@ class DashboardController extends Controller
             'team' => $team,
             'payment' => $payment,
             'is_reviewed' => $is_reviewed,
+            'payment_closed' => $payment_closed,
+            'payment_error' => Session::flash('payment_error'),
         ]);
     }
 
@@ -190,6 +194,8 @@ class DashboardController extends Controller
             'uploads' => $uploads,
             'abstract' => $abstract,
             'full_paper' => $full_paper,
+            'success' => Session::flash('submission_success'),
+            'error' => Session::flash('submission_error'),
         ]);
     }
 

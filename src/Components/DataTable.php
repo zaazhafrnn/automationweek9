@@ -10,6 +10,7 @@ class DataTable extends Component
   private bool $searchable = false;
   private bool $columnSelectable = false;
   private int $perPage = 0;
+  private string $toolbarActions = '';
 
   public function columns(array $columns): static
   {
@@ -47,6 +48,12 @@ class DataTable extends Component
     return $this;
   }
 
+  public function toolbarActions(string $html): static
+  {
+    $this->toolbarActions = $html;
+    return $this;
+  }
+
   public function render(): string
   {
     $id = 'dt-' . uniqid();
@@ -68,8 +75,13 @@ class DataTable extends Component
         $html .= '</div>';
       }
 
-      if ($this->columnSelectable) {
-        $html .= '<div class="relative self-end sm:self-auto">';
+      if ($this->toolbarActions || $this->columnSelectable) {
+        $html .= '<div class="flex items-center gap-2 self-end sm:self-auto">';
+
+        $html .= $this->toolbarActions;
+
+        if ($this->columnSelectable) {
+        $html .= '<div class="relative">';
         $html .= '<details class="group">';
         $html .= '<summary class="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold shadow-sm transition-all hover:bg-secondary/40 hover:text-foreground cursor-pointer list-none [&::-webkit-details-marker]:hidden">';
         $html .= 'Tampilkan Kolom';
@@ -85,6 +97,9 @@ class DataTable extends Component
         }
         $html .= '</div>';
         $html .= '</details>';
+        $html .= '</div>';
+        }
+
         $html .= '</div>';
       }
 

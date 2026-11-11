@@ -143,6 +143,10 @@ $errors = $errors ?? [];
     </div>
 ') ?>
 
+<template id="fp-success-toast">
+  <?= Toast::make()->title('Link terkirim')->message('Periksa inbox email Anda.')->variant('success') ?>
+</template>
+
 <script>
   (async () => {
     const [eye, eyeOff] = await Promise.all([
@@ -165,25 +169,19 @@ $errors = $errors ?? [];
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
         },
         body: 'email=' + encodeURIComponent('<?= htmlspecialchars($user_email) ?>') + '&csrf_token=' + encodeURIComponent('<?= htmlspecialchars($csrf_token) ?>')
       })
       .then(r => r.json())
       .then(data => {
-        const toast = document.createElement('div');
-        toast.id = 'flash-toast';
-        toast.setAttribute('role', 'alert');
-        toast.className = 'pointer-events-auto relative w-full rounded-xl border border-green-500/50 bg-[#1e1d1a] px-4 py-3 pl-10 text-sm text-white shadow-lg opacity-0 -translate-x-2 transition-all duration-300';
-        toast.innerHTML = '<p class="font-semibold">Link terkirim</p><p class="mt-0.5 pr-6 text-xs text-gray-400">Periksa inbox email Anda.</p>';
-        const root = document.getElementById('toast-root');
-        root.appendChild(toast);
-        requestAnimationFrame(() => toast.classList.remove('opacity-0', '-translate-x-2'));
-        setTimeout(() => {
-          toast.classList.add('opacity-0', '-translate-x-2');
-          setTimeout(() => toast.remove(), 300);
-        }, 5000);
+        if (data.success) {
+          presentToast(document.getElementById('fp-success-toast').content.firstElementChild);
+          return;
+        }
+        showToast(data.message || 'Permintaan gagal diproses.', 'error');
       })
-      .catch(() => {});
+      .catch(() => showToast('Terjadi kesalahan jaringan. Silakan coba lagi.', 'error'));
   };
 </script>

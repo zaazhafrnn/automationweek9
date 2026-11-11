@@ -2,15 +2,18 @@
 
 use App\Components\Dialog;
 use App\Components\Icon;
+use App\Components\Toast;
 
 /** @var string $csrf_token */
 /** @var string $user_name */
 /** @var array|null $team */
 /** @var array|null $payment */
 /** @var bool $is_reviewed */
+/** @var bool|null $payment_closed */
+/** @var string|null $payment_error */
 
 $status = $payment['status'] ?? null;
-$locked = !$team || !$is_reviewed;
+$locked = !$team || !$is_reviewed || !empty($payment_closed);
 $hasProof = !empty($payment['proofImage']);
 $verified = ($status === 'verified');
 ?>
@@ -20,6 +23,10 @@ $verified = ($status === 'verified');
   <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-4 mx-auto">
+    <?php if (!empty($payment_error)): ?>
+      <?= Toast::make()->variant('error')->message($payment_error)->render() ?>
+    <?php endif; ?>
+
     <?php if ($locked): ?>
       <div class="relative">
         <div class="pointer-events-none select-none opacity-50">
@@ -42,11 +49,11 @@ $verified = ($status === 'verified');
                 <p class="text-sm text-gray-600 leading-relaxed">Pembayaran melalui salah satu dari 2 rekening berikut</p>
                 <div class="mt-4 space-y-8">
                   <div class="flex items-center gap-3">
-                    <img src="/image/logo-seabank.png" alt="Logo Seabank" class="h-10 w-auto shrink-0" draggable="false" style="user-select: none;">
+                    <img src="/image/logo-bni.webp" alt="Logo BNI" class="rounded-lg p-1.5 h-10 w-auto shrink-0" draggable="false" style="user-select: none;">
                     <div>
-                      <p class="text-sm font-semibold text-gray-900 leading-none">Seabank</p>
-                      <p class="text-base font-bold tracking-wide text-gray-900 leading-none">901531540263</p>
-                      <p class="text-sm leading-none">Titis Nabila</p>
+                      <p class="text-sm font-semibold text-gray-900 leading-none">BNI</p>
+                      <p class="text-base font-bold tracking-wide text-gray-900 leading-none">2104121333</p>
+                      <p class="text-sm leading-none">Titis Nabila (CP. 085755184808)</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3 mt-0.5">
@@ -54,7 +61,7 @@ $verified = ($status === 'verified');
                     <div>
                       <p class="text-sm font-semibold text-gray-900 leading-none">BRI</p>
                       <p class="text-base font-bold tracking-wide text-gray-900 leading-none">375701061838531</p>
-                      <p class="text-sm leading-none">Shafaatur R.</p>
+                      <p class="text-sm leading-none">Shafaatur R. (CP. 0895396129215 )</p>
                     </div>
                   </div>
 
@@ -149,17 +156,27 @@ $verified = ($status === 'verified');
       </div>
 
 
-      <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
-        <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
-        <div>
-          <p class="text-sm font-semibold text-amber-700">Mohon perhatian!</p>
-          <p class="text-xs text-amber-600 mt-0.5">Pembayaran belum dapat diakses. Mohon <span class="font-semibold">selesaikan</span> seluruh tahap <span class="font-semibold">pendaftaran tim</span> terlebih dahulu, lengkapi data anggota tim, upload twibbon, kemudian submit pada halaman review.</p>
-          <a href="/application" class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors no-underline">
-            <?= Icon::make()->name('arrow-left')->class('w-3.5 h-3.5') ?>
-            Selesaikan pendaftaran
-          </a>
+      <?php if (!empty($payment_closed)): ?>
+        <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
+          <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
+          <div>
+            <p class="text-sm font-semibold text-red-700">Pembayaran LKTI telah ditutup</p>
+            <p class="text-xs text-red-600 mt-0.5">Batas pembayaran untuk LKTI adalah <span class="font-semibold">7 November 2026, 23:59 WIB</span>. Kamu tidak dapat melakukan pembayaran lagi.</p>
+          </div>
         </div>
-      </div>
+      <?php else: ?>
+        <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
+          <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
+          <div>
+            <p class="text-sm font-semibold text-amber-700">Mohon perhatian!</p>
+            <p class="text-xs text-amber-600 mt-0.5">Pembayaran belum dapat diakses. Mohon <span class="font-semibold">selesaikan</span> seluruh tahap <span class="font-semibold">pendaftaran tim</span> terlebih dahulu, lengkapi data anggota tim, unggah twibbon, kemudian submit pada halaman review.</p>
+            <a href="/application" class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors no-underline">
+              <?= Icon::make()->name('arrow-left')->class('w-3.5 h-3.5') ?>
+              Selesaikan pendaftaran
+            </a>
+          </div>
+        </div>
+      <?php endif; ?>
     <?php endif; ?>
   </div>
 

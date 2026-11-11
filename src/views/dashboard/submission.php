@@ -11,10 +11,15 @@ use App\Components\Toast;
 /** @var bool $is_reviewed */
 /** @var string $type */
 /** @var array|null $submission */
+/** @var array|null $originality */
+/** @var array|null $approval */
 /** @var string|null $abstract_status */
 /** @var string|null $abstract_category */
 /** @var string|null $success */
 /** @var string|null $error */
+/** @var bool $abstract_closed */
+/** @var bool|null $full_paper_closed */
+/** @var bool|null $deadline_passed */
 
 $isAbstract = $type === 'abstract';
 $title = $isAbstract ? 'Abstrak' : 'Full Paper';
@@ -24,28 +29,22 @@ $desc = $isAbstract
 
 $status = $submission['status'] ?? null;
 $hasFile = !empty($submission['value']);
-$storedSize = '';
-if ($hasFile) {
-  $filePath = BASE_PATH . '/public/uploads/submissions/' . $submission['value'];
-  if (is_file($filePath)) {
-    $bytes = filesize($filePath);
-    $storedSize = $bytes < 1024 * 1024
-      ? round($bytes / 1024, 1) . ' KB'
-      : round($bytes / (1024 * 1024), 2) . ' MB';
-  }
-}
 $abstractApproved = $abstract_status === 'approved';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
 
 if ($isAbstract) {
-  $locked = !$team || !$is_reviewed;
+  $locked = !$team || !$is_reviewed || !empty($abstract_closed) || $status === 'rejected';
 } else {
-  $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified;
+  $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified || !empty($full_paper_closed);
 }
 
 $lockReason = null;
 if ($locked) {
-  if (!$team || !$is_reviewed) {
+  if ($isAbstract && $status === 'rejected') {
+    $lockReason = 'failed';
+  } elseif (!empty($abstract_closed) || !empty($full_paper_closed)) {
+    $lockReason = 'closed';
+  } elseif (!$team || !$is_reviewed) {
     $lockReason = 'reg';
   } elseif (!$abstractApproved) {
     $lockReason = 'abstract';
@@ -55,7 +54,60 @@ if ($locked) {
 }
 
 $approved = $status === 'approved';
-$nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis';
+$abstractFormat = 'ABSTRAK_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis';
+$originalityFormat = 'SURAT ORISINALITAS_AW9_Nama Lengkap Ketua_Nama Sekolah';
+$approvalFormat = 'LEMBAR PENGESAHAN_AW9_Nama Lengkap Ketua_Nama Sekolah';
+$nameFormat = ($isAbstract ? $abstractFormat : 'FULLPAPER_AW9_Nama Lengkap Ketua_Nama Sekolah_Judul Karya Tulis');
+$formatTemplateLink = 'https://drive.google.com/drive/folders/1ZqorKKptIvz1DxWnEhuq3WUZZEsV1igr?usp=sharing';
+
+if (!function_exists('submission_slot')) {
+  function submission_slot(string $inputName, string $label, string $format, array|false $row, string $errId, ?string $templateLink = null): string
+  {
+    $hasFile = !empty($row['value']);
+    $storedSize = '';
+    if ($hasFile) {
+      $filePath = BASE_PATH . '/public/uploads/submissions/' . $row['value'];
+      if (is_file($filePath)) {
+        $bytes = filesize($filePath);
+        $storedSize = $bytes < 1024 * 1024
+          ? round($bytes / 1024, 1) . ' KB'
+          : round($bytes / (1024 * 1024), 2) . ' MB';
+      }
+    }
+    ob_start(); ?>
+    <div>
+      <label class="block text-sm font-semibold mb-1">File <?= $label ?><span class="text-red-500">*</span><?php if ($templateLink): ?> <a href="<?= htmlspecialchars($templateLink) ?>" target="_blank" data-tooltip="Unduh template <?= htmlspecialchars(strtolower($label)) ?>" class="text-brand font-semibold hover:underline">Unduh Template</a><?php endif; ?></label>
+      <p class="text-xs text-gray-500 mb-2">Unggah file dengan format nama <strong class="font-semibold text-gray-700"><?= $format ?></strong></p>
+      <div data-slot="attachment" class="w-full" data-has-file="<?= $hasFile ? '1' : '0' ?>">
+        <label class="dropzone relative block w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-gray-300 bg-transparent hover:border-brand transition-colors cursor-pointer overflow-hidden">
+
+          <div data-slot="attachment-idle" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6 text-center">
+            <?= Icon::make()->name('file-text')->class('size-14 mb-3') ?>
+            <p class="text-base font-semibold text-gray-800" data-slot="idle-title"><?= $hasFile ? htmlspecialchars($row['original_name'] ?? $row['value']) : 'Seret & lepas file ke sini' ?></p>
+            <p class="text-xs text-gray-500 mt-1" data-slot="idle-desc">
+              <?= $hasFile
+                ? ($storedSize ? ('PDF &#8226; ' . $storedSize) : 'PDF')
+                : 'atau klik untuk memilih file (PDF &#8226; maks 100MB)' ?>
+            </p>
+          </div>
+
+          <button type="button" data-clear-attachment
+            class="absolute top-4 right-4 z-20 <?= $hasFile ? 'flex' : 'hidden' ?> items-center justify-center w-10 h-10 bg-white rounded-full shadow-md border border-gray-200 hover:bg-red-50 hover:border-red-300 transition-colors">
+            <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-red-500') ?>
+          </button>
+
+          <input type="file" name="<?= $inputName ?>" accept=".pdf,application/pdf" required
+            data-error="<?= $errId ?>" data-max-size="<?= 100 * 1024 * 1024 ?>"
+            class="absolute inset-0 opacity-0 cursor-pointer z-10">
+        </label>
+      </div>
+      <p id="<?= $errId ?>" class="text-xs text-red-500 mt-1.5 hidden">File wajib diupload</p>
+    </div>
+<?php return ob_get_clean();
+  }
+}
+
+$anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value']);
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = $isAbstract ? 'submission-abstract' : 'submission-full-paper';
@@ -83,7 +135,7 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
           </div>
 
           <div class="p-5 sm:p-6">
-            <form action="/submission/<?= $isAbstract ? 'abstract' : 'full-paper' ?>" method="POST" enctype="multipart/form-data" novalidate id="submission-form">
+            <form action="/submission/<?= $isAbstract ? 'abstract' : 'full-paper' ?>" method="POST" enctype="multipart/form-data" novalidate id="submission-form" data-abstract="<?= $isAbstract ? '1' : '0' ?>">
               <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 <?= $approved ? 'pointer-events-none opacity-60 select-none' : '' ?>">
@@ -117,50 +169,44 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
                 </fieldset>
 
                 <div>
-                  <label class="block text-sm font-semibold mb-1">File <?= $title ?><span class="text-red-500">*</span></label>
-                  <p class="text-xs text-gray-500 mb-2">Unggah file dengan format nama (<?= $nameFormat ?>)</p>
-                  <div data-slot="attachment" class="w-full" data-has-file="<?= $hasFile ? '1' : '0' ?>">
-                    <label class="dropzone relative block w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-gray-300 bg-transparent hover:border-brand transition-colors cursor-pointer overflow-hidden">
-
-                      <div data-slot="attachment-idle" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6 text-center">
-                        <?= Icon::make()->name('file-text')->class('size-14 mb-3') ?>
-                        <p class="text-base font-semibold text-gray-800" data-slot="idle-title"><?= $hasFile ? htmlspecialchars($submission['value']) : 'Seret & lepas file ke sini' ?></p>
-                        <p class="text-xs text-gray-500 mt-1" data-slot="idle-desc">
-                          <?= $hasFile
-                            ? ($storedSize ? ('PDF &#8226; ' . $storedSize) : 'PDF')
-                            : 'atau klik untuk memilih file (PDF &#8226; maks 100MB)' ?>
-                        </p>
-
-                      </div>
-
-                      <button type="button" data-clear-attachment
-                        class="absolute top-4 right-4 z-20 <?= $hasFile ? 'flex' : 'hidden' ?> items-center justify-center w-10 h-10 bg-white rounded-full shadow-md border border-gray-200 hover:bg-red-50 hover:border-red-300 transition-colors">
-                        <?= Icon::make()->name('trash-2')->class('w-5 h-5 text-red-500') ?>
-                      </button>
-
-                      <input type="file" name="doc_file" accept=".pdf,application/pdf" required
-                        data-error="err-submission-file" data-max-size="<?= 100 * 1024 * 1024 ?>"
-                        class="absolute inset-0 opacity-0 cursor-pointer z-10">
-                    </label>
-                  </div>
-
-                  <p id="err-submission-file" class="text-xs text-red-500 mt-1.5 hidden">File wajib diupload</p>
-                  <button type="submit" disabled id="submission-submit-btn" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors <?= $approved ? 'hidden' : '' ?>">
-                    Simpan & upload <?= $title ?>
-                    <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
-                  </button>
+                  <?= submission_slot('doc_file', $title, $nameFormat, $submission, 'err-submission-file') ?>
                 </div>
+
+                <?php if ($isAbstract): ?>
+                  <div>
+                    <?= submission_slot('doc_originality', 'Lembar Pernyataan Orisinalitas Karya', $originalityFormat, $originality, 'err-submission-originality', $formatTemplateLink) ?>
+                  </div>
+                  <div>
+                    <?= submission_slot('doc_approval', 'Lembar Pengesahan Karya', $approvalFormat, $approval, 'err-submission-approval', $formatTemplateLink) ?>
+                  </div>
+                <?php endif; ?>
+              </div>
+
+              <div class="mt-6 flex justify-end">
+                <button type="submit" disabled id="submission-submit-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gray-300 rounded-xl transition-colors <?= ($approved || !empty($deadline_passed)) ? 'hidden' : '' ?>">
+                  Simpan
+                  <?= Icon::make()->name('upload')->class('w-4 h-4') ?>
+                </button>
               </div>
             </form>
           </div>
         </div>
 
+        <?php if (!empty($deadline_passed) && $hasFile && !$locked): ?>
+          <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
+            <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-amber-700">Batas pengumpulan berakhir</p>
+              <p class="text-xs text-amber-600 mt-0.5">Pengumpulan telah ditutup pada <?= $isAbstract ? '10 Oktober 2026' : '7 November 2026, 23:59 WIB' ?>. File yang sudah diunggah tidak dapat diubah lagi.</p>
+            </div>
+          </div>
+        <?php endif; ?>
+
         <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl mt-4">
           <?= Icon::make()->name('megaphone')->class('w-5 h-5 text-blue-500 shrink-0 mt-0.5') ?>
           <div class="min-w-0">
             <p class="text-sm font-semibold text-blue-700">Harap perhatikan!</p>
-            <p class="text-xs text-blue-600 mt-0.5">Unggah file dengan format penamaan berikut agar mempermudah proses review:</p>
-            <p class="text-sm font-semibold text-blue-700 mt-1 break-all"><?= $nameFormat ?></p>
+            <p class="text-xs text-blue-600 mt-0.5">Ikuti format penamaan file yang tertera di masing-masing kolom agar mempermudah proses review.</p>
           </div>
         </div>
 
@@ -174,7 +220,23 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
         </div>
       </div>
 
-      <?php if ($lockReason === 'reg'): ?>
+      <?php if ($lockReason === 'failed'): ?>
+        <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
+          <?= Icon::make()->name('x')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
+          <div>
+            <p class="text-sm font-semibold text-red-700">Abstrak tidak lolos seleksi</p>
+            <p class="text-xs text-red-600 mt-0.5">Terima kasih atas partisipasinya. Pengumpulan dikunci dan kamu tidak dapat lanjut ke tahap pembayaran maupun full paper.</p>
+          </div>
+        </div>
+      <?php elseif ($lockReason === 'closed'): ?>
+        <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
+          <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
+          <div>
+            <p class="text-sm font-semibold text-red-700">Pengumpulan <?= $isAbstract ? 'abstrak' : 'full paper' ?> telah ditutup</p>
+            <p class="text-xs text-red-600 mt-0.5">Batas pengumpulan adalah <span class="font-semibold"><?= $isAbstract ? '10 Oktober 2026' : '7 November 2026, 23:59 WIB' ?></span>. Kamu tidak dapat mengumpulkan <?= $isAbstract ? 'abstrak' : 'full paper' ?> lagi.</p>
+          </div>
+        </div>
+      <?php elseif ($lockReason === 'reg'): ?>
         <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
           <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
           <div>
@@ -234,7 +296,7 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
             <?php endif; ?>
           </div>
         </div>
-      <?php elseif ($status === 'rejected'): ?>
+      <?php elseif ($status === 'rejected' && !$isAbstract): ?>
         <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
           <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
           <div>
@@ -246,7 +308,7 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
     <?php endif; ?>
   </div>
 
-  <?php if ($hasFile): ?>
+  <?php if ($anyFile): ?>
     <?= (new Dialog())->id('confirm-change-doc')->title('Apakah anda yakin?')->width('max-w-md')->content(
       '<div class="flex items-start gap-3">'
         . '<p class="text-sm text-gray-600">File yang sudah diupload akan diganti dengan file baru yang kamu pilih.</p>'
@@ -280,14 +342,14 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
       return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
     }
 
-    var pendingInput = null;
+    var pendingSlot = null;
     var confirmed = false;
 
     var origClose = window.closeDialog;
     window.closeDialog = function(id) {
-      if (id === 'confirm-change-doc' && !confirmed && pendingInput) {
-        pendingInput.value = '';
-        pendingInput = null;
+      if (id === 'confirm-change-doc' && !confirmed && pendingSlot) {
+        pendingSlot.input.value = '';
+        pendingSlot = null;
         refresh();
       }
       origClose(id);
@@ -296,14 +358,20 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
     var form = document.getElementById('submission-form');
     if (!form) return;
 
-    var att = form.querySelector('[data-slot="attachment"]');
-    var hasShown = att.dataset.hasFile === '1';
-    var idleTitle = att.querySelector('[data-slot="idle-title"]');
-    var idleDesc = att.querySelector('[data-slot="idle-desc"]');
-    var clearBtn = att.querySelector('[data-clear-attachment]');
-    var input = form.querySelector('input[type="file"]');
+    var isAbstract = form.dataset.abstract === '1';
+    var slots = [].map.call(form.querySelectorAll('[data-slot="attachment"]'), function(att) {
+      var input = att.querySelector('input[type="file"]');
+      return {
+        input: input,
+        title: att.querySelector('[data-slot="idle-title"]'),
+        desc: att.querySelector('[data-slot="idle-desc"]'),
+        clear: att.querySelector('[data-clear-attachment]'),
+        zone: att.querySelector('.dropzone'),
+        err: document.getElementById(input.dataset.error),
+        hasFile: att.dataset.hasFile === '1'
+      };
+    });
     var submitBtn = document.getElementById('submission-submit-btn');
-    var errEl = document.getElementById('err-submission-file');
     var errCatEl = document.getElementById('err-submission-category');
     var radios = form.querySelectorAll('input[name="category"]');
     var originalCategory = (form.querySelector('input[name="category"]:checked') || {}).value || null;
@@ -318,8 +386,24 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
       return originalCategory !== null && checked && checked.value !== originalCategory;
     }
 
+    function stagedAny() {
+      return slots.some(function(s) {
+        return s.input.files && s.input.files.length > 0;
+      });
+    }
+
+    function allFilled() {
+      return categoryChosen() && slots.every(function(s) {
+        return s.hasFile || (s.input.files && s.input.files.length > 0);
+      });
+    }
+
     function refresh() {
-      setEnabled(categoryChosen() && (input.files.length > 0 || categoryChanged()));
+      if (isAbstract) {
+        setEnabled(allFilled());
+      } else {
+        setEnabled(categoryChosen() && (stagedAny() || categoryChanged()));
+      }
     }
 
     function setEnabled(on) {
@@ -331,48 +415,83 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
       submitBtn.classList.toggle('cursor-pointer', on);
     }
 
-    function showFile(file) {
-      idleTitle.textContent = file.name;
-      idleDesc.textContent = 'PDF \u2022 ' + formatFileSize(file.size);
-      clearBtn.classList.remove('hidden');
-      clearBtn.classList.add('flex');
-      hasShown = true;
+    function showErr(slot, msg) {
+      slot.err.textContent = msg;
+      slot.err.classList.remove('hidden');
     }
 
-    function processFile(target) {
-      var file = target.files && target.files[0];
+    function showFile(slot, file) {
+      slot.title.textContent = file.name;
+      slot.desc.textContent = 'PDF \u2022 ' + formatFileSize(file.size);
+      slot.clear.classList.remove('hidden');
+      slot.clear.classList.add('flex');
+      slot.hasFile = true;
+    }
+
+    function processFile(slot) {
+      var file = slot.input.files && slot.input.files[0];
       if (!file) return;
 
-      var maxSize = parseInt(target.dataset.maxSize);
+      var maxSize = parseInt(slot.input.dataset.maxSize);
       if (file.size > maxSize) {
-        target.value = '';
-        errEl.textContent = 'File terlalu besar. Maksimal ' + formatFileSize(maxSize);
-        errEl.classList.remove('hidden');
+        slot.input.value = '';
+        showErr(slot, 'File terlalu besar. Maksimal ' + formatFileSize(maxSize));
         refresh();
         return;
       }
       if (!/\.pdf$/i.test(file.name)) {
-        target.value = '';
-        errEl.textContent = 'Hanya file PDF yang diizinkan.';
-        errEl.classList.remove('hidden');
+        slot.input.value = '';
+        showErr(slot, 'Hanya file PDF yang diizinkan.');
         refresh();
         return;
       }
 
-      errEl.classList.add('hidden');
-      showFile(file);
+      slot.err.classList.add('hidden');
+      showFile(slot, file);
       refresh();
     }
 
-    input.addEventListener('change', function(e) {
-      if (!e.target.files || !e.target.files[0]) return;
-      if (!confirmed && hasShown) {
-        pendingInput = e.target;
-        openDialog('confirm-change-doc');
-        return;
-      }
-      confirmed = false;
-      processFile(e.target);
+    slots.forEach(function(slot) {
+      slot.input.addEventListener('change', function(e) {
+        if (!e.target.files || !e.target.files[0]) return;
+        if (!confirmed && slot.hasFile) {
+          pendingSlot = slot;
+          openDialog('confirm-change-doc');
+          return;
+        }
+        confirmed = false;
+        processFile(slot);
+      });
+
+      slot.clear.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        slot.input.value = '';
+        slot.title.textContent = 'Seret & lepas file ke sini';
+        slot.desc.textContent = 'atau klik untuk memilih file (PDF, maks 100MB)';
+        slot.clear.classList.add('hidden');
+        slot.clear.classList.remove('flex');
+        slot.hasFile = false;
+
+        refresh();
+      });
+
+      slot.zone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        slot.zone.classList.add('border-brand', 'bg-red-50');
+      });
+      slot.zone.addEventListener('dragleave', function() {
+        slot.zone.classList.remove('border-brand', 'bg-red-50');
+      });
+      slot.zone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        slot.zone.classList.remove('border-brand', 'bg-red-50');
+        if (e.dataTransfer.files.length) {
+          slot.input.files = e.dataTransfer.files;
+          slot.input.dispatchEvent(new Event('change'));
+        }
+      });
     });
 
     radios.forEach(function(radio) {
@@ -382,26 +501,12 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
       });
     });
 
-    clearBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      input.value = '';
-      idleTitle.textContent = 'Seret & lepas file ke sini';
-      idleDesc.textContent = 'atau klik untuk memilih file (PDF, maks 100MB)';
-      clearBtn.classList.add('hidden');
-      clearBtn.classList.remove('flex');
-      hasShown = false;
-
-      refresh();
-    });
-
     var yesBtn = document.getElementById('confirm-doc-yes');
     if (yesBtn) yesBtn.addEventListener('click', function() {
       confirmed = true;
       closeDialog('confirm-change-doc');
-      if (pendingInput) processFile(pendingInput);
-      pendingInput = null;
+      if (pendingSlot) processFile(pendingSlot);
+      pendingSlot = null;
       confirmed = false;
     });
     var noBtn = document.getElementById('confirm-doc-no');
@@ -409,45 +514,28 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
       closeDialog('confirm-change-doc');
     });
 
-    var zone = form.querySelector('.dropzone');
-    zone.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      zone.classList.add('border-brand', 'bg-red-50');
-    });
-    zone.addEventListener('dragleave', function() {
-      zone.classList.remove('border-brand', 'bg-red-50');
-    });
-    zone.addEventListener('drop', function(e) {
-      e.preventDefault();
-      zone.classList.remove('border-brand', 'bg-red-50');
-      if (e.dataTransfer.files.length) {
-        input.files = e.dataTransfer.files;
-        input.dispatchEvent(new Event('change'));
-      }
-    });
-
     form.addEventListener('submit', function(e) {
-      var hasFileStaged = input.files && input.files.length > 0;
-
       if (!categoryChosen()) {
         e.preventDefault();
         errCatEl.classList.remove('hidden');
         return;
       }
 
-      if (hasFileStaged) return;
-
-      if (categoryChanged()) {
-        if (!catConfirmed) {
-          e.preventDefault();
-          openDialog('confirm-change-category');
-        }
+      if (!allFilled()) {
+        e.preventDefault();
+        slots.forEach(function(s) {
+          if (!(s.hasFile || (s.input.files && s.input.files.length > 0))) {
+            showErr(s, 'File wajib diupload');
+          }
+        });
         return;
       }
 
-      e.preventDefault();
-      errEl.textContent = 'Pilih file baru atau ubah kategori terlebih dahulu.';
-      errEl.classList.remove('hidden');
+      if (categoryChanged() && !catConfirmed) {
+        e.preventDefault();
+        openDialog('confirm-change-category');
+        return;
+      }
     });
 
     var catYesBtn = document.getElementById('confirm-category-yes');
@@ -461,5 +549,7 @@ $nameFormat = ($isAbstract ? 'ABSTRAK' : 'FULLPAPER') . '_AW9_Nama Lengkap Ketua
     if (catNoBtn) catNoBtn.addEventListener('click', function() {
       closeDialog('confirm-change-category');
     });
+
+    refresh();
   });
 </script>

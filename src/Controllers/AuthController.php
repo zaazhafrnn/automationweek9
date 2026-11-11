@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Components\MailLayout;
+use App\Components\EmailTemplates;
 use App\Models\User;
 use App\Utils\Mailer;
 use App\Utils\Session;
@@ -37,6 +39,17 @@ class AuthController extends Controller
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
+    }
+
+    private function baseUrl(): string
+    {
+        $appUrl = getenv('APP_URL');
+        if (!empty($appUrl)) {
+            return rtrim($appUrl, '/');
+        }
+
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
     }
 
     private function redirectWithError($route, $errors, $oldData = [])
@@ -162,9 +175,8 @@ class AuthController extends Controller
         }
 
         if ($this->userModel->create($name, $email, $password)) {
-            $body = '<p>Halo ' . htmlspecialchars($name) . ',</p>'
-                . '<p>Selamat! Akun Anda berhasil dibuat di ' . APP_NAME . '.</p>'
-                . '<p>Anda sekarang dapat <a href="/login">masuk</a> menggunakan email dan password yang terdaftar.</p>';
+            $baseUrl = $this->baseUrl();
+            $body = MailLayout::render(EmailTemplates::welcome($name, $baseUrl . '/login'), $baseUrl . '/image/faveicon.png');
             Mailer::send($email, 'Selamat Datang di ' . APP_NAME, $body);
 
             if ($this->wantsJson()) {
@@ -218,12 +230,9 @@ class AuthController extends Controller
             $token = bin2hex(random_bytes(32));
             $this->userModel->storeResetToken($user['id'], $token);
 
-            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-            $link = $scheme . '://' . $_SERVER['HTTP_HOST'] . '/reset-password?token=' . $token;
-            $body = '<p>Halo ' . htmlspecialchars($user['name']) . ',</p>'
-                . '<p>Klik link berikut untuk mereset password Anda (berlaku 1 jam):</p>'
-                . '<p><a href="' . htmlspecialchars($link) . '">Reset password</a></p>'
-                . '<p>Jika bukan Anda, abaikan email ini.</p>';
+            $baseUrl = $this->baseUrl();
+            $link = $baseUrl . '/reset-password?token=' . $token;
+            $body = MailLayout::render(EmailTemplates::resetPassword($user['name'], $link), $baseUrl . '/image/faveicon.png');
 
             Mailer::send($email, 'Reset Password - Automation Week IX', $body);
         }

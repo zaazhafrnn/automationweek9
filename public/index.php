@@ -60,8 +60,10 @@ $router->post('/profile/update-password', 'DashboardController@updatePassword');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
 $router->get('/admin/accounts', 'AdminController@accounts');
 $router->get('/admin/teams', 'AdminController@teams');
+$router->get('/admin/teams/export', 'AdminController@exportTeams');
 $router->get('/admin/payments', 'AdminController@payments');
 $router->post('/admin/payments/process', 'AdminController@processPayment');
+$router->post('/admin/payments/invoice', 'AdminController@sendInvoice');
 $router->get('/admin/submissions', 'AdminController@submissions');
 $router->post('/admin/submissions/process', 'AdminController@processSubmission');
 
@@ -91,4 +93,3 @@ try {
     echo '<pre style="background:#fff; padding:1rem; overflow:auto;">' . htmlspecialchars($e->getTraceAsString()) . '</pre>';
     echo '</div>';
 }
-

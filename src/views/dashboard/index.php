@@ -582,7 +582,7 @@ if (!isset($activeTab)) {
           const p = el.closest('.division-card');
           const rb = p?.querySelector('input[type="radio"]');
           if (!rb) return;
-          el.textContent = rb.value === 'FFR' || rb.value === 'LKTI' ? 'max 3 siswa' : 'max 2 siswa';
+          el.textContent = rb.value === 'LF' || rb.value === 'PLC' || rb.value === 'PROG' ? 'max 2 siswa' : 'max 3 siswa';
         });
       }
       radios.forEach(r => r.addEventListener('change', () => upd(r.value)));
@@ -592,7 +592,7 @@ if (!isset($activeTab)) {
         const p = el.closest('.division-card');
         const rb = p?.querySelector('input[type="radio"]');
         if (!rb) return;
-        el.textContent = rb.value === 'LF' || rb.value === 'PLC' ? 'max 2 siswa' : 'max 3 siswa';
+        el.textContent = rb.value === 'LF' || rb.value === 'PLC' || rb.value === 'PROG' ? 'max 2 siswa' : 'max 3 siswa';
       });
     }
   });

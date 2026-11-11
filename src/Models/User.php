@@ -36,9 +36,10 @@ class User extends Model
         return $stmt->fetch();
     }
 
-    public function getAllMembers(): array
+    public function getAllMembers(bool $includeDummies = false): array
     {
-        $stmt = $this->db->prepare("SELECT id, name, email, role, created_at FROM accounts WHERE role = 'member' ORDER BY created_at DESC");
+        $roles = $includeDummies ? "'member', 'dummy'" : "'member'";
+        $stmt = $this->db->prepare("SELECT id, name, email, role, created_at FROM accounts WHERE role IN ($roles) ORDER BY created_at DESC");
         $stmt->execute();
 
         return $stmt->fetchAll();

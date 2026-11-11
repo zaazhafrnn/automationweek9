@@ -6,19 +6,110 @@ use App\Core\Controller;
 use App\Utils\Session;
 
 use App\Utils\Security;
+use App\Models\TeamDocumentationUpload;
 use App\Models\Submission;
 
 class AdminController extends Controller
 {
+    private function adminDivision(): ?string
+    {
+        $userName = (string) Session::get('user_name');
+        if (stripos($userName, 'superadmin') !== false) {
+            return null;
+        }
+        foreach (['LF', 'PLC', 'FFR', 'LKTI', 'PROG'] as $code) {
+            if (stripos($userName, $code) !== false) {
+                return $code;
+            }
+        }
+
+        return null;
+    }
+
+    private function isBendahara(): bool
+    {
+        $userName = (string) Session::get('user_name');
+        return stripos($userName, 'bendahara') !== false || stripos($userName, 'keuangan') !== false;
+    }
+
+    private function requirePaymentsAccess(): void
+    {
+        if (!($this->isBendahara() || stripos((string) Session::get('user_name'), 'superadmin') !== false)) {
+            $this->redirect('/admin/dashboard');
+        }
+    }
+
+    private function filteredTeams(): array
+    {
+        $teamModel = new \App\Models\Team();
+        $teams = $teamModel->getAllTeams();
+
+        $division = $this->adminDivision();
+
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teams = array_values(array_filter($teams, fn($t) => ($roleByUserId[$t['user_id']] ?? '') !== 'dummy'));
+        }
+
+        if ($division !== null) {
+            $teams = array_values(array_filter(
+                $teams,
+                fn($t) => strtoupper($t['division'] ?? '') === $division
+            ));
+        }
+
+        return self::keepVerified($teams, $this->paymentStatusByTeam());
+    }
+
+    private function paymentStatusByTeam(): array
+    {
+        $statusByTeam = [];
+        foreach ((new \App\Models\Payment())->getAllPayments() as $p) {
+            $statusByTeam[$p['teamId']] ??= $p['status'] ?? '';
+        }
+
+        return $statusByTeam;
+    }
+
+    public static function keepVerified(array $teams, array $paymentStatusByTeam): array
+    {
+        return array_values(array_filter(
+            $teams,
+            fn($t) => ($paymentStatusByTeam[$t['id']] ?? '') === 'verified'
+        ));
+    }
+
     public function dashboard()
     {
         $this->requireAdmin();
 
+        $division = $this->adminDivision();
+
+        $teamModel = new \App\Models\Team();
+        $allTeams = self::keepVerified($teamModel->getAllTeams(), $this->paymentStatusByTeam());
+        $teams = ($division === null)
+            ? $allTeams
+            : array_values(array_filter($allTeams, fn($t) => strtoupper($t['division'] ?? '') === $division));
+
+        $total_participants = 0;
+        foreach ($teams as $t) {
+            $total_participants += 1;
+            if (!empty($t['firstMemberName'])) $total_participants += 1;
+            if (!empty($t['secondMemberName'])) $total_participants += 1;
+        }
+
         $this->view('admin/dashboard', [
             'user_name' => Session::get('user_name'),
-            'total_users' => (new \App\Models\User())->countMembers(),
-            'total_teams' => (new \App\Models\Team())->countAll(),
-            'divisions' => (new \App\Models\Team())->countByDivision(),
+            'division' => $division,
+            'total_users' => $total_participants,
+            'total_teams' => count($teams),
+            'all_divisions' => ($division === null) ? array_count_values(array_column($allTeams, 'division')) : [],
             'page_title' => 'Dasbor'
         ], 'admin');
     }
@@ -28,11 +119,20 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $userModel = new \App\Models\User();
-        $members = $userModel->getAllMembers();
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        $division = $this->adminDivision();
+        $members = $userModel->getAllMembers($isSuperAdmin);
 
         $teamsByUser = [];
         foreach ((new \App\Models\Team())->getAllTeams() as $t) {
             $teamsByUser[$t['user_id']] = $t;
+        }
+
+        if ($division !== null) {
+            $members = array_values(array_filter(
+                $members,
+                fn($m) => strtoupper($teamsByUser[$m['id']]['division'] ?? '') === $division
+            ));
         }
 
         $paymentsByTeam = [];
@@ -46,10 +146,24 @@ class AdminController extends Controller
         }
 
         $progress = [];
+
+
         foreach ($members as $m) {
             $team = $teamsByUser[$m['id']] ?? null;
+            $docRows = [];
+            if ($team && $team['id']) {
+                $docRows = (new TeamDocumentationUpload())
+                    ->findByTeam($team['id']);
+                foreach ($docRows as $row) {
+                    $num = $row['member_number'];
+                    $team["twibbon_$num"] = $row['twibbon'] ?? null;
+                    $team["student_card_$num"] = $row['student_card'] ?? null;
+                    $team["ig_follow_$num"] = $row['ig_follow'] ?? null;
+                }
+            }
             $progress[$m['id']] = [
                 'team' => $team,
+                'docs' => $docRows,
                 'payment' => $team ? ($paymentsByTeam[$team['id']] ?? null) : null,
                 'submissions' => $team ? ($subsByTeam[$team['id']] ?? []) : [],
             ];
@@ -66,26 +180,105 @@ class AdminController extends Controller
     {
         $this->requireAdmin();
 
-        $teamModel = new \App\Models\Team();
-        $teams = $teamModel->getAllTeams();
-
         $this->view('admin/teams', [
-            'teams' => $teams,
+            'teams' => $this->filteredTeams(),
             'page_title' => 'Tim'
         ], 'admin');
+    }
+
+    public function exportTeams()
+    {
+        $this->requireAdmin();
+
+        $teams = $this->filteredTeams();
+
+        $division = $this->adminDivision();
+        $slug = $division ? strtolower($division) : 'semua';
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="daftar_tim_' . $slug . '_' . date('Y-m-d_H-i') . '.csv"');
+        echo "\xEF\xBB\xBF";
+
+        $out = fopen('php://output', 'w');
+        fputcsv($out, ['No.', 'Nama Tim', 'Asal Sekolah', 'Email', 'Nama Anggota', 'No. HP', 'Jenis Kelamin'], ',', '"', '');
+
+        $no = 1;
+        foreach ($teams as $t) {
+            $firstRow = true;
+            foreach (self::teamCsvRows($t) as $row) {
+                array_unshift($row, $firstRow ? $no++ : '');
+                $firstRow = false;
+                fputcsv($out, $row, ',', '"', '');
+            }
+        }
+
+        fclose($out);
+        exit();
+    }
+
+    public static function teamCsvRows(array $t): array
+    {
+        $school = $t['teamSchool'] ?? '-';
+        $email = $t['user_email'] ?? '-';
+        $rows = [];
+
+        $members = [
+            [$t['leaderName'], $t['leaderPhoneNumber'] ?? '', $t['leaderGender'] ?? ''],
+            [$t['firstMemberName'] ?? '', $t['firstMemberPhoneNumber'] ?? '', $t['firstMemberGender'] ?? ''],
+            [$t['secondMemberName'] ?? '', $t['secondMemberPhoneNumber'] ?? '', $t['secondMemberGender'] ?? ''],
+        ];
+
+        $first = true;
+        foreach ($members as [$name, $phone, $gender]) {
+            if ($name === '') continue;
+            $rows[] = [
+                $first ? $t['name'] : '',
+                $first ? $school : '',
+                $first ? $email : '',
+                $name,
+                $phone,
+                $gender,
+            ];
+            $first = false;
+        }
+
+        return $rows;
     }
 
     public function payments()
     {
         $this->requireAdmin();
+        $this->requirePaymentsAccess();
 
         $paymentModel = new \App\Models\Payment();
         $payments = $paymentModel->getAllPayments();
 
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teamModelTmp = new \App\Models\Team();
+            $teamsTmp = $teamModelTmp->getAllTeams();
+            $teamUser = [];
+            foreach ($teamsTmp as $t) {
+                $teamUser[$t['id']] = $t['user_id'];
+            }
+            $payments = array_values(array_filter($payments, function ($p) use ($roleByUserId, $teamUser) {
+                $uid = $teamUser[$p['teamId']] ?? null;
+                return $uid === null || ($roleByUserId[$uid] ?? '') !== 'dummy';
+            }));
+        }
+
         $this->view('admin/payments', [
             'payments' => $payments,
             'csrf_token' => Security::generateCsrfToken(),
-            'page_title' => 'Pembayaran'
+            'page_title' => 'Pembayaran',
+            'toast_success' => Session::flash('invoice_success'),
+            'toast_error' => Session::flash('invoice_error'),
         ], 'admin');
     }
 
@@ -94,11 +287,55 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $submissionModel = new Submission();
+        $submissions = array_values(array_filter($submissionModel->getAll(), fn($s) => in_array($s['type'], ['abstract', 'full_paper'], true)));
+
+        $division = $this->adminDivision();
+
+        $isSuperAdmin = stripos((string) Session::get('user_name'), 'superadmin') !== false;
+        if (!$isSuperAdmin) {
+            $userModelTmp = new \App\Models\User();
+            $allMembersTmp = $userModelTmp->getAllMembers(true);
+            $roleByUserId = [];
+            foreach ($allMembersTmp as $m) {
+                $roleByUserId[$m['id']] = $m['role'] ?? '';
+            }
+            $teamModelTmp = new \App\Models\Team();
+            $teamsTmp = $teamModelTmp->getAllTeams();
+            $teamUser = [];
+            foreach ($teamsTmp as $t) {
+                $teamUser[$t['id']] = $t['user_id'];
+            }
+            $submissions = array_values(array_filter($submissions, function ($s) use ($roleByUserId, $teamUser) {
+                $uid = $teamUser[$s['team_id']] ?? null;
+                return $uid === null || ($roleByUserId[$uid] ?? '') !== 'dummy';
+            }));
+        }
+
+        if ($division !== null) {
+            $submissions = array_values(array_filter(
+                $submissions,
+                fn($s) => strtoupper($s['division'] ?? '') === $division
+            ));
+        }
+
+        $typeFilter = $_GET['type'] ?? '';
+        if (!in_array($typeFilter, ['abstract', 'full_paper'], true)) {
+            $typeFilter = '';
+        }
+        if ($typeFilter !== '') {
+            $submissions = array_values(array_filter($submissions, fn($s) => $s['type'] === $typeFilter));
+        }
+
+        $titles = [
+            'abstract' => 'Karya Abstrak',
+            'full_paper' => 'Karya Full Paper',
+        ];
 
         $this->view('admin/submissions', [
-            'submissions' => $submissionModel->getAll(),
+            'submissions' => $submissions,
             'csrf_token' => Security::generateCsrfToken(),
-            'page_title' => 'Karya'
+            'page_title' => $titles[$typeFilter] ?? 'Pengumpulan Karya',
+            'type_filter' => $typeFilter,
         ], 'admin');
     }
 
@@ -106,12 +343,18 @@ class AdminController extends Controller
     {
         $this->requireAdmin();
 
+        $back = '/admin/submissions';
+        $query = (string) ($_POST['filter_query'] ?? '');
+        if (preg_match('/^\?[A-Za-z0-9_=&-]*$/', $query)) {
+            $back .= $query;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/admin/submissions');
+            $this->redirect($back);
         }
 
         if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
-            $this->redirect('/admin/submissions');
+            $this->redirect($back);
         }
 
         $id = $_POST['submission_id'] ?? null;
@@ -124,16 +367,40 @@ class AdminController extends Controller
         ];
 
         if (!$id || !isset($map[$_POST['action'] ?? ''])) {
-            $this->redirect('/admin/submissions');
+            $this->redirect($back);
         }
 
-        (new Submission())->updateStatus((int) $id, $map[$_POST['action']]);
-        $this->redirect('/admin/submissions');
+        $action = $_POST['action'] ?? '';
+        (new Submission())->updateStatus((int) $id, $map[$action]);
+
+        // auto-send disabled for manual revision resend (LKTI ABSTRACT ANNOUNCEMENT)*
+        if (false && in_array($action, ['approve', 'reject'], true)) {
+            $row = (new Submission())->find((int) $id);
+            if ($row && ($row['type'] ?? '') === 'abstract' && !empty($row['email'])) {
+                $passed = $action === 'approve';
+                $appUrl = getenv('APP_URL');
+                $baseUrl = !empty($appUrl) ? rtrim($appUrl, '/') : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+                $subject = $passed
+                    ? 'Selamat! Abstrak ' . ($row['team_name'] ?? 'Tim') . ' Lolos Seleksi 🎉 - AutomationWeek IX'
+                    : 'Hasil Seleksi Abstrak ' . ($row['team_name'] ?? 'Tim') . ' - AutomationWeek IX';
+                $body = \App\Components\MailLayout::render(
+                    \App\Components\EmailTemplates::abstractResult($passed, $row['leaderName'] ?? $row['user_name'] ?? 'Peserta', $row['original_name'] ?: ($row['value'] ?? '-'), $passed ? $baseUrl . '/payments' : null),
+                    $baseUrl . '/image/faveicon.png',
+                    true,
+                    $passed ? 'SELAMAT‼️' : 'MOHON MAAF'
+                );
+                if (!\App\Utils\Mailer::send($row['email'], $subject, $body)) {
+                    error_log('Abstract result email failed for submission ' . $id);
+                }
+            }
+        }
+        $this->redirect($back);
     }
 
     public function processPayment()
     {
         $this->requireAdmin();
+        $this->requirePaymentsAccess();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/admin/payments');
@@ -160,6 +427,57 @@ class AdminController extends Controller
             $paymentModel->updateStatus($paymentId, $status, $note ?: null, Session::get('user_id'));
         }
 
+        $this->redirect('/admin/payments');
+    }
+
+    public function sendInvoice()
+    {
+        $this->requireAdmin();
+        $this->requirePaymentsAccess();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('/admin/payments');
+        if (!Security::validateCsrfToken($_POST['csrf_token'] ?? '')) $this->redirect('/admin/payments');
+        $paymentId = (int)($_POST['payment_id'] ?? 0);
+        if (!$paymentId) $this->redirect('/admin/payments');
+        $payment = (new \App\Models\Payment())->findWithTeam($paymentId);
+        if (!$payment || empty($payment['user_email'])) $this->redirect('/admin/payments');
+        if (($payment['status'] ?? '') !== 'verified') $this->redirect('/admin/payments');
+        if (empty($_FILES['invoice']) || $_FILES['invoice']['error'] !== UPLOAD_ERR_OK) $this->redirect('/admin/payments');
+        $file = $_FILES['invoice'];
+        $allowed = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp', 'application/pdf'];
+        $max = 5 * 1024 * 1024;
+        if ($file['size'] > $max) $this->redirect('/admin/payments');
+        $mime = mime_content_type($file['tmp_name']) ?: '';
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $isPdf = $ext === 'pdf' || $mime === 'application/pdf';
+        if (!$isPdf && !str_starts_with($mime, 'image/')) $this->redirect('/admin/payments');
+        if (!in_array($mime, $allowed) && !$isPdf) $this->redirect('/admin/payments');
+        $dedupeKey = 'last_invoice_' . $paymentId;
+        $last = (int) Session::get($dedupeKey);
+        if ($last && (time() - $last) < 10) $this->redirect('/admin/payments');
+        Session::set($dedupeKey, time());
+        $uploadDir = BASE_PATH . '/public/uploads/invoices';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', $payment['team_name'] ?? 'team'), '-')) ?: 'team';
+        $filename = $slug . '_invoice_' . date('Ymd_His') . '.' . $ext;
+        $dest = $uploadDir . '/' . $filename;
+        $saved = $file['tmp_name'];
+        if (move_uploaded_file($file['tmp_name'], $dest)) {
+            $saved = $dest;
+            (new \App\Models\Payment())->saveInvoice($paymentId, $filename, $file['name']);
+        }
+        $subject = 'Invoice Pembayaran AutomationWeek IX - ' . ($payment['team_name'] ?? 'Tim');
+        $appUrl = getenv('APP_URL');
+        $baseUrl = !empty($appUrl) ? rtrim($appUrl, '/') : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+        $recipient = $payment['leaderName'] ?? $payment['user_name'] ?? $payment['team_name'] ?? 'Tim';
+        $dashboardUrl = $baseUrl . '/home';
+        $body = \App\Components\MailLayout::render(\App\Components\EmailTemplates::invoice($payment['team_name'] ?? 'Tim', $recipient, null, $dashboardUrl), $baseUrl . '/image/faveicon.png');
+        $sent = \App\Utils\Mailer::send($payment['user_email'], $subject, $body, $saved, $file['name']);
+        if ($sent) {
+            Session::flash('invoice_success', 'Invoice ' . $file['name'] . ' berhasil dikirim ke tim ' . ($payment['team_name'] ?? ''));
+        } else {
+            Session::flash('invoice_error', 'Gagal mengirim invoice ke tim ' . ($payment['team_name'] ?? ''));
+        }
         $this->redirect('/admin/payments');
     }
 }

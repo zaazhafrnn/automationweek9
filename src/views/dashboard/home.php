@@ -1,6 +1,7 @@
 <?php
 
 use App\Components\Icon;
+use App\Components\Toast;
 
 /** @var string $csrf_token */
 /** @var string $user_name */
@@ -10,6 +11,8 @@ use App\Components\Icon;
 /** @var array $uploads */
 /** @var array|null $abstract */
 /** @var array|null $full_paper */
+/** @var string|null $success */
+/** @var string|null $error */
 
 $division = $team['division'] ?? null;
 $divisionUpper = strtoupper((string) $division);
@@ -18,6 +21,7 @@ $divisionDisplay = $divisionNames[$divisionUpper] ?? $divisionUpper;
 $upload1 = $uploads[1] ?? [];
 $isLkti = $divisionUpper === 'LKTI';
 $abstractApproved = ($abstract['status'] ?? '') === 'approved';
+$abstractRejected = ($abstract['status'] ?? '') === 'rejected';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
 
 $steps = [
@@ -48,16 +52,15 @@ $DIVISION_INFO = [
     'title' => 'LKTI (Lomba Karya Tulis Ilmiah)',
     'logo' => '/image/lkti_icon.png',
     'desc' => 'Lomba Karya Tulis Ilmiah merupakan sebuah perlombaan yang bertujuan untuk mengembangkan ide kreatif dan inovatif siswa dalam memecahkan masalah yang ada di lingkungan sekitar.',
-    'guide_book' => 'https://drive.google.com/drive/folders/1LlB1h7dXbIcFxFiWV2BUf2RJfVFYDEZb',
+    'guide_book' => '/guidebook/guidebook-lkti.pdf',
     'timeline' => [
-      ['title' => 'Pendaftaran & Pengumpulan Abstrak', 'date' => '24 Agustus 2026'],
-      ['title' => 'Close Registration', 'date' => '1 Oktober 2026'],
-      ['title' => 'Pengumuman Lolos Abstrak', 'date' => '3 Oktober 2026'],
-      ['title' => 'Pengumpulan Full Paper', 'date' => '4 – 26 Oktober 2026'],
-      ['title' => 'Pengumuman Finalis', 'date' => '2 November 2026'],
+      ['title' => 'Pembukaan Pendaftaran & Pengumpulan Abstrak', 'date' => '8 September 2026'],
+      ['title' => 'Penutupan Pendaftaran & Pengumpulan Abstrak', 'date' => '10 Oktober 2026', 'old_date' => '1 Oktober 2026'],
+      ['title' => 'Pengumuman Lolos Abstrak', 'date' => '13 Oktober 2026', 'old_date' => '3 Oktober 2026'],
+      ['title' => 'Pembayaran & Pengumpulan Full Paper', 'date' => '14 – 7 November 2026', 'old_date' => '4 – 30 Oktober 2026'],
+      ['title' => 'Pengumuman Finalis', 'date' => '11 November 2026', 'old_date' => '4 November 2026'],
       ['title' => 'Technical Meeting', 'date' => '6 November 2026'],
-      ['title' => 'Pembukaan & Persiapan Prototype', 'date' => '13 November 2026'],
-      ['title' => 'Presentasi', 'date' => '14 November 2026'],
+      ['title' => 'Grand Final', 'date' => '14 November 2026'],
       ['title' => 'Pameran', 'date' => '15 November 2026'],
     ],
     'video' => null
@@ -66,12 +69,13 @@ $DIVISION_INFO = [
     'title' => 'FFR (Fire Fighting Roboboat)',
     'logo' => '/image/ffr_icon.png',
     'desc' => 'Fire Fighting Roboboat merupakan perlombaan kapal tanpa awak yang bergerak secara otomatis dan memiliki misi untuk memadamkan api.',
-    'guide_book' => 'https://drive.google.com/drive/folders/1Xc2tKgDXoXcN0q_Y-34UnCOw-E6OmqM0',
+    'guide_book' => '/guidebook/guidebook-ffr.pdf',
     'timeline' => [
-      ['title' => 'Pendaftaran', 'date' => '26 Agustus 2026'],
-      ['title' => 'TM FFR & Test Track', 'date' => '13 November 2026'],
-      ['title' => 'Penyisihan', 'date' => '14 November 2026'],
-      ['title' => 'Semifinal & Final', 'date' => '15 November 2026'],
+      ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
+      ['title' => 'Penutupan Pendaftaran', 'date' => '6 November 2026'],
+      ['title' => 'Technical Meeting', 'date' => '13 November 2026'],
+      ['title' => 'Uji Lintasan', 'date' => '13 November 2026'],
+      ['title' => 'Kompetisi', 'date' => '14 – 15 November 2026'],
     ],
     'video' => 'https://www.youtube.com/embed/ZRfGoB4jJPw'
   ],
@@ -79,16 +83,14 @@ $DIVISION_INFO = [
     'title' => 'PLC (Programmable Logic Controller)',
     'logo' => '/image/plc_icon.png',
     'desc' => 'Programmable Logic Controller merupakan jenis lomba yang bertujuan untuk mengasah logika dan kemampuan siswa dalam bidang pemrograman PLC.',
-    'guide_book' => 'https://drive.google.com/drive/folders/1QPSJh0ktutXskInEGvoYBCw69jRwd0KO',
+    'guide_book' => '/guidebook/guidebook-plc.pdf',
     'timeline' => [
-      ['title' => 'Open Registration', 'date' => '24 Agustus 2026'],
-      ['title' => 'Close Registration', 'date' => '30 September 2026'],
-      ['title' => 'Plan Contest', 'date' => '11 Oktober 2026'],
-      ['title' => 'Pelatihan Sesi 1', 'date' => '17 Oktober 2026'],
-      ['title' => 'Pelatihan Sesi 2', 'date' => '18 Oktober 2026'],
+      ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
+      ['title' => 'Penutupan Pendaftaran', 'date' => '5 November 2026', 'old_date' => '11 Oktober 2026'],
+      ['title' => 'Pelatihan', 'date' => '6 – 7 November 2026', 'old_date' => '17 – 18 Oktober 2026'],
       ['title' => 'Technical Meeting', 'date' => '8 November 2026'],
       ['title' => 'Penyisihan 1 & 2', 'date' => '13 November 2026'],
-      ['title' => 'Penyisihan 3', 'date' => '14 November 2026'],
+      ['title' => 'Penyisihan 20 Besar', 'date' => '14 November 2026'],
       ['title' => 'Final', 'date' => '15 November 2026'],
     ],
     'video' => null
@@ -97,14 +99,13 @@ $DIVISION_INFO = [
     'title' => 'Line Follower',
     'logo' => '/image/lf_icon.png',
     'desc' => 'Lomba Line Follower Mikrokontroler, Kompetisi robot berbasis mikrokontroler yang ditantang untuk mengikuti lintasan secara otomatis dengan kecepatan dan ketepatan tinggi.',
-    'guide_book' => 'https://drive.google.com/drive/folders/19rjeLr4o4ZYeSvLECxF9etIvNlbaSsfq',
+    'guide_book' => '/guidebook/guidebook-lfm.pdf',
     'timeline' => [
-      ['title' => 'Open Registration', 'date' => '17 Agustus 2026'],
-      ['title' => 'Close Registration', 'date' => '2 November 2026'],
-      ['title' => 'Technical Meeting', 'date' => '7 November 2026'],
-      ['title' => 'Uji Lintasan / Track', 'date' => '13 November 2026'],
-      ['title' => 'Penyisihan', 'date' => '14 November 2026'],
-      ['title' => '16 Besar – Final', 'date' => '15 November 2026'],
+      ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
+      ['title' => 'Penutupan Pendaftaran', 'date' => '6 November 2026'],
+      ['title' => 'Technical Meeting', 'date' => '13 November 2026'],
+      ['title' => 'Uji Lintasan', 'date' => '13 November 2026'],
+      ['title' => 'Kompetisi', 'date' => '14 – 15 November 2026'],
     ],
     'video' => null
   ],
@@ -112,18 +113,38 @@ $DIVISION_INFO = [
     'title' => 'Algoritma Program',
     'logo' => '/image/program_icon.png',
     'desc' => 'Kompetisi pemrograman yang menguji kemampuan algoritma dan logika dalam menyelesaikan masalah secara efisien.',
-    'guide_book' => '#',
+    'guide_book' => '/guidebook/guidebook-program.pdf',
     'timeline' => [
-      ['title' => 'Open Registrasi', 'date' => '24 Agustus 2026'],
-      ['title' => 'Close Registrasi', 'date' => '1 Oktober 2026'],
-      ['title' => 'Technical Meeting', 'date' => '4 Oktober 2026'],
+      ['title' => 'Pembukaan Pendaftaran', 'date' => '8 September 2026'],
+      ['title' => 'Penutupan Pendaftaran', 'date' => '5 November 2026', 'old_date' => '1 Oktober 2026'],
+      ['title' => 'Technical Meeting', 'date' => '7 November 2026', 'old_date' => '4 Oktober 2026'],
       ['title' => 'Pelatihan', 'date' => '13 November 2026'],
-      ['title' => 'Penyisihan 1 & 2', 'date' => '14 Oktober 2026'],
+      ['title' => 'Babak Sesi 1', 'date' => '14 November 2026'],
+      ['title' => 'Babak Sesi 2', 'date' => '14 November 2026'],
       ['title' => 'Final', 'date' => '15 November 2026'],
+      ['title' => 'Grandfinal', 'date' => '15 November 2026'],
     ],
     'video' => null
   ],
 ];
+
+$WA_GROUPS = [
+  'LKTI' => getenv('WA_GROUP_LKTI') ?: 'https://chat.whatsapp.com/KnFzh16dd0pFi3mqsp9BLm?s=qt&p=i&mlu=0&ilr=4',
+  'FFR'  => getenv('WA_GROUP_FFR')  ?: 'https://chat.whatsapp.com/DbqeuPs3dsM1YfjkLJtHrx?s=qt&p=i&mlu=0&ilr=4',
+  'PLC'  => getenv('WA_GROUP_PLC')  ?: 'https://chat.whatsapp.com/CjQM3Wmjvuu5pkIfULqVSC?s=qt&p=i&mlu=0&ilr=4',
+  'LF'   => getenv('WA_GROUP_LF')   ?: 'https://chat.whatsapp.com/HxmlPGPs4ozEoL3Ntb0foY?s=qt&p=i&mlu=0&ilr=4',
+  'PROG' => getenv('WA_GROUP_PROG') ?: 'https://chat.whatsapp.com/HaApq0N6M2V1dN9SvBvWIb?s=qt&p=i&mlu=0&ilr=4',
+];
+
+$QR_MAP = [
+  'LKTI' => '/image/qr-lkti-link.png',
+  'FFR'  => '/image/qr-ffr-link.png',
+  'PLC'  => '/image/qr-plc-link.png',
+  'LF'   => '/image/qr-lf-link.png',
+  'PROG' => '/image/qr-prog-link.png',
+];
+$waLink = $team ? ($WA_GROUPS[$divisionUpper] ?? null) : null;
+$qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'home';
@@ -131,6 +152,9 @@ $DIVISION_INFO = [
   <?php include BASE_PATH . '/src/Components/nav-tabs.php'; ?>
 
   <div class="px-4 sm:px-6 lg:px-8 py-6">
+    <?php if ($success || $error): ?>
+      <?= Toast::make()->variant($error ? 'error' : 'success')->message($error ?: $success)->render() ?>
+    <?php endif; ?>
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6">
       <div class="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
         <div class="md:w-64 shrink-0">
@@ -172,8 +196,10 @@ $DIVISION_INFO = [
           </div>
           <div class="mt-6 mb-4 md:mb-0 flex justify-center">
             <?php
-            $allDone = $paymentVerified && (!$isLkti || !empty($full_paper));
-            if (!$allDone):
+            $allDone = $paymentVerified && (!$isLkti);
+            if ($abstractRejected): ?>
+              <p class="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl px-5 py-3">Abstrak tidak lolos seleksi — perjalanan kamu di LKTI berakhir di sini. Terima kasih atas partisipasinya!</p>
+            <?php elseif (!$allDone):
               if (!$applicationDone) {
                 $btnUrl = '/application';
                 $btnLabel = 'Lanjutkan Pendaftaran';
@@ -220,8 +246,8 @@ $DIVISION_INFO = [
               <p class="text-sm text-gray-500 mt-1">Sekolah: <span class="font-semibold text-gray-700"><?= htmlspecialchars($team['teamSchool']) ?></span></p>
               <span class="inline-block mt-2 px-2.5 py-1 text-xs font-bold text-brand bg-brand/10 rounded-lg">Divisi <?= htmlspecialchars($divisionDisplay) ?></span>
             </div>
-            <?php if ($info && !empty($info['guide_book'])): ?>
-              <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
+            <?php if ($info && !empty($info['guide_book']) && $info['guide_book'] !== '#'): ?>
+              <a href="<?= htmlspecialchars($info['guide_book']) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline shrink-0 sm:self-center">
                 <?= Icon::make()->name('download')->class('w-4 h-4') ?>
                 Download Guide Book
               </a>
@@ -251,6 +277,34 @@ $DIVISION_INFO = [
         </div>
       <?php endif; ?>
 
+      <?php if ($paymentVerified): ?>
+        <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 bg-green-50 border border-green-200 rounded-2xl mt-6 lg:items-center">
+          <div class="flex gap-3 flex-1 min-w-0">
+            <?= Icon::make()->name('check')->class('w-5 h-5 text-green-600 shrink-0 mt-0.5') ?>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-green-700">Pembayaran telah dikonfirmasi!</p>
+              <p class="text-xs text-green-600 mt-0.5">Terimakasih sudah berpartisipasi pada AutomationWeek 9. Silakan bergabung ke grup WhatsApp peserta untuk info selanjutnya.</p>
+              <?php if ($waLink): ?>
+                <div class="mt-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
+                  <a href="<?= htmlspecialchars($waLink) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors no-underline shadow-sm">
+                    <?= Icon::make()->name('whatsapp')->class('w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white') ?>
+                    Gabung Grup WhatsApp
+                  </a>
+                  <span class="hidden sm:inline mx-1 text-gray-500 text-sm">atau</span>
+                  <button type="button" onclick="var b=this; navigator.clipboard.writeText('<?= htmlspecialchars($waLink, ENT_QUOTES) ?>'); var t=b.innerHTML; b.innerHTML='Tersalin!'; setTimeout(function(){b.innerHTML=t},1500)" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-700 bg-white border border-green-200 hover:bg-green-50 rounded-xl transition-colors"><?= Icon::make()->name('copy')->class('w-3.5 h-3.5 sm:w-4 sm:h-4') ?> Salin Link Grup</button>
+                </div>
+              <?php else: ?>
+
+                <p class="text-xs text-amber-700 mt-3 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">Link grup akan segera tersedia. Hubungi CP divisi jika belum muncul.</p>
+              <?php endif; ?>
+            </div>
+          </div>
+          <div class="shrink-0 bg-white p-2.5 rounded-xl border border-green-200 flex flex-col items-center self-center">
+            <img src="<?= htmlspecialchars($qrSrc) ?>" alt="QR Grup WhatsApp <?= htmlspecialchars($divisionUpper) ?>" class="w-36 h-36 object-contain rounded-lg" loading="lazy" onerror="this.style.display='none'">
+            <p class="text-[11px] text-center text-gray-500 mt-1.5">Scan QR untuk gabung</p>
+          </div>
+        </div>
+      <?php endif; ?>
       <div class="bg-white rounded-2xl p-6 mt-6 border border-gray-100 shadow-sm">
         <h3 class="text-md font-bold text-gray-800 mb-4">Timeline Divisi <?= htmlspecialchars($divisionUpper) ?></h3>
         <div class="relative border-l-2 border-brand/20 ml-4 space-y-6">
@@ -268,11 +322,27 @@ $DIVISION_INFO = [
           <?php foreach ($info['timeline'] as $item):
             $ts = $parseDate($item['date']);
             $reached = $ts !== null && $ts <= $today;
+            $hasOld = !empty($item['old_date']);
+            $isAnnounce = $isLkti && stripos($item['title'], 'lolos abstrak') !== false;
+            $failed = $isAnnounce && $abstractRejected;
+            $dotCls = $failed ? 'bg-red-500 ring-4 ring-red-500/25' : ($reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand');
+            $titleCls = $failed ? 'text-red-700' : ($reached ? 'text-green-700' : 'text-gray-800');
+            $dateCls = $failed ? 'text-red-600' : ($reached ? 'text-green-600' : 'text-gray-500');
           ?>
             <div class="relative pl-6">
-              <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $reached ? 'bg-green-500 animate-pulse ring-4 ring-green-500/25' : 'bg-brand' ?>"></div>
-              <h4 class="text-sm font-bold <?= $reached ? 'text-green-700' : 'text-gray-800' ?>"><?= htmlspecialchars($item['title']) ?></h4>
-              <p class="text-xs <?= $reached ? 'text-green-600' : 'text-gray-500' ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
+              <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white <?= $dotCls ?>"></div>
+              <h4 class="text-sm font-bold <?= $titleCls ?>"><?= htmlspecialchars($item['title']) ?><?= $failed ? ' — Tidak Lolos' : '' ?></h4>
+              <?php if ($hasOld): ?>
+                <div class="flex flex-col leading-none gap-0.5 mt-1">
+                  <span class="text-xs line-through opacity-60 <?= $dateCls ?>"><?= htmlspecialchars($item['old_date']) ?></span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold <?= $failed ? 'text-red-600' : ($reached ? 'text-green-600' : 'text-brand') ?>"><?= htmlspecialchars($item['date']) ?></span>
+                    <span class="text-[10px] font-black tracking-widest bg-amber-500 text-white px-2 py-0.5 rounded-full rotate-[6deg]">EXTENDED</span>
+                  </div>
+                </div>
+              <?php else: ?>
+                <p class="text-xs <?= $dateCls ?> mt-0.5"><?= htmlspecialchars($item['date']) ?></p>
+              <?php endif; ?>
             </div>
           <?php endforeach; ?>
         </div>
