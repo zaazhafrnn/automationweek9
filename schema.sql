@@ -99,3 +99,15 @@ ON DUPLICATE KEY UPDATE id=id;
 
 ALTER TABLE submissions ADD COLUMN category VARCHAR(20) NULL AFTER status;
 ALTER TABLE submissions ADD COLUMN original_name VARCHAR(255) NULL AFTER value;
+ALTER TABLE submissions ADD COLUMN score INT NULL AFTER category;
+
+CREATE TABLE IF NOT EXISTS submission_rounds (
+    type VARCHAR(50) PRIMARY KEY,
+    is_open TINYINT(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO submission_rounds (type, is_open) VALUES
+('plc_round_1', 0), ('plc_round_2', 0), ('plc_round_3', 0)
+ON DUPLICATE KEY UPDATE type = type;
+
+DROP TABLE IF EXISTS submission_deadlines;

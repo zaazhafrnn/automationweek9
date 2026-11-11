@@ -20,6 +20,7 @@ $divisionNames = ['PROG' => 'Program'];
 $divisionDisplay = $divisionNames[$divisionUpper] ?? $divisionUpper;
 $upload1 = $uploads[1] ?? [];
 $isLkti = $divisionUpper === 'LKTI';
+$isPlc = $divisionUpper === 'PLC';
 $abstractApproved = ($abstract['status'] ?? '') === 'approved';
 $abstractRejected = ($abstract['status'] ?? '') === 'rejected';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
@@ -196,7 +197,7 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
           </div>
           <div class="mt-6 mb-4 md:mb-0 flex justify-center">
             <?php
-            $allDone = $paymentVerified && (!$isLkti);
+            $allDone = $paymentVerified && (!$isLkti && !$isPlc);
             if ($abstractRejected): ?>
               <p class="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl px-5 py-3">Abstrak tidak lolos seleksi — perjalanan kamu di LKTI berakhir di sini. Terima kasih atas partisipasinya!</p>
             <?php elseif (!$allDone):
@@ -209,6 +210,9 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
               } elseif (!$paymentVerified) {
                 $btnUrl = '/payments';
                 $btnLabel = 'Lanjut ke Pembayaran';
+              } elseif ($isPlc) {
+                $btnUrl = '/submission/plc';
+                $btnLabel = 'Upload Karya PLC';
               } else {
                 $btnUrl = '/submission/full-paper';
                 $btnLabel = 'Lanjut ke Full Paper';

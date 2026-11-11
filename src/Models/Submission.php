@@ -6,6 +6,12 @@ use App\Core\Model;
 
 class Submission extends Model
 {
+    public const PLC_ROUNDS = [
+        1 => ['type' => 'plc_round_1', 'label' => 'Round 1'],
+        2 => ['type' => 'plc_round_2', 'label' => 'Round 2'],
+        3 => ['type' => 'plc_round_3', 'label' => 'Round 3 (Final)'],
+    ];
+
     public function findByTeamId(int $teamId): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM submissions WHERE team_id = :team_id LIMIT 1");
@@ -87,5 +93,80 @@ class Submission extends Model
         ");
         $stmt->execute([':division' => $division]);
         return $stmt->fetchAll();
+    }
+
+    public function getRoundStates(): array
+    {
+        $rows = $this->db->query("SELECT type, is_open FROM submission_rounds")->fetchAll();
+        return array_map('intval', array_column($rows, 'is_open', 'type'));
+    }
+
+    public function setRoundOpen(string $type, bool $open): bool
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO submission_rounds (type, is_open) VALUES (:type, :is_open)
+            ON DUPLICATE KEY UPDATE is_open = VALUES(is_open)
+        ");
+        return $stmt->execute([':type' => $type, ':is_open' => $open ? 1 : 0]);
+    }
+
+    public function updateScore(int $teamId, string $type, ?int $score): bool
+    {
+        $stmt = $this->db->prepare("UPDATE submissions SET score = :score WHERE team_id = :team_id AND type = :type");
+        return $stmt->execute([':score' => $score, ':team_id' => $teamId, ':type' => $type]);
+    }
+
+    public function getPlcTeams(): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT t.id, t.name, t.teamSchool, t.leaderName,
+                   (SELECT p.status FROM payments p WHERE p.teamId = t.id ORDER BY p.submittedAt DESC LIMIT 1) AS payment_status
+            FROM teams t
+            WHERE t.division = 'PLC'
+            ORDER BY t.name ASC
+        ");
+        $stmt->execute();
+
+        return array_values(array_filter(
+            $stmt->fetchAll(),
+            fn($t) => ($t['payment_status'] ?? '') === 'verified'
+        ));
+    }
+
+    /** @return array<int, array<string, array>> team_id => type => row */
+    public function getPlcSubmissions(): array
+    {
+        $types = array_column(self::PLC_ROUNDS, 'type');
+        $in = implode(',', array_fill(0, count($types), '?'));
+        $stmt = $this->db->prepare("SELECT * FROM submissions WHERE type IN ($in)");
+        $stmt->execute($types);
+
+        $out = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $out[(int) $row['team_id']][$row['type']] = $row;
+        }
+        return $out;
+    }
+
+    /** Teams ranked in the top N by combined round 1 + 2 score. */
+    public function plcTopTeamIds(int $limit = 20): array
+    {
+        $limit = max(1, $limit);
+        $stmt = $this->db->query("
+            SELECT s.team_id,
+                   SUM(COALESCE(s.score, 0)) AS total_score,
+                   MAX(s.updated_at) AS last_at
+            FROM submissions s
+            JOIN teams t ON t.id = s.team_id
+            WHERE t.division = 'PLC'
+              AND s.type IN ('plc_round_1', 'plc_round_2')
+              AND EXISTS (SELECT 1 FROM payments p WHERE p.teamId = t.id AND p.status = 'verified')
+            GROUP BY s.team_id
+            HAVING COUNT(DISTINCT s.type) = 2
+            ORDER BY total_score DESC, last_at ASC
+            LIMIT $limit
+        ");
+
+        return array_map('intval', array_column($stmt->fetchAll(), 'team_id'));
     }
 }

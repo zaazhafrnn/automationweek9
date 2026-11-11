@@ -28,6 +28,104 @@ class SubmissionController extends Controller
         return self::TYPE_LABELS[$type] ?? ucfirst(str_replace('_', ' ', $type));
     }
 
+    public function plcPage()
+    {
+        $this->requireAuth();
+        if (Session::get('role') === 'admin') {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $team = $this->plcTeam();
+        if (!$team) return;
+
+        $this->view('dashboard/plc-submission', $this->plcViewData($team));
+    }
+
+    public function uploadPlc()
+    {
+        $this->requireAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect('/submission/plc');
+        }
+
+        $team = $this->plcTeam();
+        if (!$team) return;
+
+        $round = (int) ($_POST['round'] ?? 0);
+        if (!isset(Submission::PLC_ROUNDS[$round])) {
+            $this->redirect('/submission/plc');
+        }
+
+        $payment = (new Payment())->findByTeamId($team['id']);
+        if (!$payment || $payment['status'] !== 'verified') {
+            Session::flash('submission_error', 'Selesaikan pembayaran terlebih dahulu.');
+            $this->redirect('/submission/plc');
+        }
+
+        $submissionModel = new Submission();
+        $type = Submission::PLC_ROUNDS[$round]['type'];
+
+        if (empty($submissionModel->getRoundStates()[$type])) {
+            Session::flash('submission_error', 'Pengumpulan ' . Submission::PLC_ROUNDS[$round]['label'] . ' sedang ditutup.');
+            $this->redirect('/submission/plc');
+        }
+
+        if ($round === 3 && !in_array((int) $team['id'], $submissionModel->plcTopTeamIds(20), true)) {
+            Session::flash('submission_error', 'Round 3 hanya untuk 20 tim terbaik dari Round 1 & 2.');
+            $this->redirect('/submission/plc');
+        }
+
+        $link = trim((string) ($_POST['link'] ?? ''));
+        if ($link === '' || strlen($link) > 2048 || !filter_var($link, FILTER_VALIDATE_URL) || !in_array(strtolower((string) parse_url($link, PHP_URL_SCHEME)), ['http', 'https'], true)) {
+            Session::flash('submission_error', 'Masukkan link yang valid (http/https).');
+            $this->redirect('/submission/plc');
+        }
+
+        $submissionModel->upsert($team['id'], $type, $link, 'submitted');
+        Session::flash('submission_success', 'Link ' . Submission::PLC_ROUNDS[$round]['label'] . ' berhasil disimpan!');
+        $this->redirect('/submission/plc');
+    }
+
+    private function plcTeam(): array|false
+    {
+        $team = (new Team())->findByUserId(Session::get('user_id'));
+        if (!$team || $team['division'] !== 'PLC') {
+            $this->redirect('/home');
+            return false;
+        }
+        return $team;
+    }
+
+    private function plcViewData(array $team): array
+    {
+        $submissionModel = new Submission();
+        $states = $submissionModel->getRoundStates();
+        $rounds = [];
+        foreach (Submission::PLC_ROUNDS as $number => $meta) {
+            $row = $submissionModel->findByTeamAndType($team['id'], $meta['type']);
+            $rounds[$number] = [
+                'label' => $meta['label'],
+                'row' => $row,
+                'open' => !empty($states[$meta['type']]),
+            ];
+        }
+
+        $topIds = $submissionModel->plcTopTeamIds(20);
+        $payment = (new Payment())->findByTeamId($team['id']);
+
+        return [
+            'user_name' => Session::get('user_name'),
+            'csrf_token' => Security::generateCsrfToken(),
+            'team' => $team,
+            'rounds' => $rounds,
+            'payment_verified' => ($payment['status'] ?? '') === 'verified',
+            'round3_eligible' => in_array((int) $team['id'], $topIds, true),
+            'success' => Session::flash('submission_success'),
+            'error' => Session::flash('submission_error'),
+        ];
+    }
+
     public function abstractPage()
     {
         $this->requireAuth();

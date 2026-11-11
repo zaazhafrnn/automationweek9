@@ -11,6 +11,7 @@ $type = $_GET['type'] ?? '';
 $user_name = (string) \App\Utils\Session::get('user_name');
 $isSuperAdmin = stripos($user_name, 'superadmin') !== false;
 $isLkti = stripos($user_name, 'lkti') !== false || $isSuperAdmin;
+$isPlc = stripos($user_name, 'plc') !== false || $isSuperAdmin;
 $isBendahara = stripos($user_name, 'bendahara') !== false || stripos($user_name, 'keuangan') !== false || $isSuperAdmin;
 
 $sidebarItems = [];
@@ -34,6 +35,18 @@ if ($isLkti) {
             'icon' => 'file',
             'route' => "/admin/submissions?div=LKTI&type=$t",
             'active' => strpos($uri, '/admin/submissions') !== false && $type === $t,
+        ];
+    }
+}
+
+if ($isPlc) {
+    $sidebarItems[] = ['label' => 'PLC', 'header' => true];
+    foreach ([1 => 'Round 1', 2 => 'Round 2', 3 => 'Round 3 (Final)'] as $r => $label) {
+        $sidebarItems[] = [
+            'label' => $label,
+            'icon' => 'file-text',
+            'route' => "/admin/plc-submissions?round=$r",
+            'active' => $uri === '/admin/plc-submissions' && (int) ($_GET['round'] ?? 1) === $r,
         ];
     }
 }

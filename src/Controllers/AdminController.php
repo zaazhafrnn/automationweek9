@@ -32,6 +32,12 @@ class AdminController extends Controller
         return stripos($userName, 'bendahara') !== false || stripos($userName, 'keuangan') !== false;
     }
 
+    private function isPlcAdmin(): bool
+    {
+        $userName = (string) Session::get('user_name');
+        return stripos($userName, 'plc') !== false || stripos($userName, 'superadmin') !== false;
+    }
+
     private function requirePaymentsAccess(): void
     {
         if (!($this->isBendahara() || stripos((string) Session::get('user_name'), 'superadmin') !== false)) {
@@ -280,6 +286,104 @@ class AdminController extends Controller
             'toast_success' => Session::flash('invoice_success'),
             'toast_error' => Session::flash('invoice_error'),
         ], 'admin');
+    }
+
+    public function plcSubmissions()
+    {
+        $this->requireAdmin();
+        if (!$this->isPlcAdmin()) {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $round = (int) ($_GET['round'] ?? 1);
+        if (!isset(Submission::PLC_ROUNDS[$round])) {
+            $round = 1;
+        }
+        $meta = Submission::PLC_ROUNDS[$round];
+
+        $model = new Submission();
+        $teams = $model->getPlcTeams();
+        $submissions = $model->getPlcSubmissions();
+        $topIds = $model->plcTopTeamIds(20);
+        $teams = array_values(array_filter(
+            $teams,
+            fn($t) => !empty($submissions[(int) $t['id']][$meta['type']]['value'])
+        ));
+        if ($round === 3) {
+            $teams = array_values(array_filter(
+                $teams,
+                fn($t) => in_array((int) $t['id'], $topIds, true)
+            ));
+        }
+
+        // First submitted team on top, latest on bottom.
+        usort($teams, function ($a, $b) use ($submissions, $meta) {
+            $left = strtotime($submissions[(int) $a['id']][$meta['type']]['updated_at'] ?? '') ?: 0;
+            $right = strtotime($submissions[(int) $b['id']][$meta['type']]['updated_at'] ?? '') ?: 0;
+            return $left <=> $right;
+        });
+
+        $this->view('admin/plc-submissions', [
+            'round' => $round,
+            'round_meta' => $meta,
+            'rounds' => Submission::PLC_ROUNDS,
+            'teams' => $teams,
+            'submissions' => $submissions,
+            'is_open' => !empty($model->getRoundStates()[$meta['type']]),
+            'csrf_token' => Security::generateCsrfToken(),
+            'page_title' => 'PLC ' . $meta['label'],
+        ], 'admin');
+    }
+
+    public function processPlcScore()
+    {
+        $this->requireAdmin();
+        if (!$this->isPlcAdmin()) {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $back = '/admin/plc-submissions?round=' . max(1, min(3, (int) ($_POST['round'] ?? 1)));
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect($back);
+        }
+
+        $teamId = (int) ($_POST['team_id'] ?? 0);
+        $model = new Submission();
+        foreach ([1, 2] as $number) {
+            if (!array_key_exists('score_' . $number, $_POST)) {
+                continue;
+            }
+            $raw = trim((string) $_POST['score_' . $number]);
+            $score = $raw === '' ? null : max(0, (int) $raw);
+            $model->updateScore($teamId, Submission::PLC_ROUNDS[$number]['type'], $score);
+        }
+
+        if ($this->isAjax()) {
+            $this->json(['ok' => true]);
+        }
+        $this->redirect($back);
+    }
+
+    public function processPlcRoundState()
+    {
+        $this->requireAdmin();
+        if (!$this->isPlcAdmin()) {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $round = max(1, min(3, (int) ($_POST['round'] ?? 1)));
+        $back = '/admin/plc-submissions?round=' . $round;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect($back);
+        }
+
+        $open = (int) ($_POST['is_open'] ?? 0) === 1;
+        (new Submission())->setRoundOpen(Submission::PLC_ROUNDS[$round]['type'], $open);
+        if ($this->isAjax()) {
+            $this->json(['ok' => true, 'is_open' => $open]);
+        }
+        Session::flash('plc_state_success', Submission::PLC_ROUNDS[$round]['label'] . ($open ? ' dibuka.' : ' ditutup.'));
+        $this->redirect($back);
     }
 
     public function submissions()

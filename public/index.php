@@ -66,6 +66,9 @@ $router->post('/admin/payments/process', 'AdminController@processPayment');
 $router->post('/admin/payments/invoice', 'AdminController@sendInvoice');
 $router->get('/admin/submissions', 'AdminController@submissions');
 $router->post('/admin/submissions/process', 'AdminController@processSubmission');
+$router->get('/admin/plc-submissions', 'AdminController@plcSubmissions');
+$router->post('/admin/plc-submissions/score', 'AdminController@processPlcScore');
+$router->post('/admin/plc-submissions/state', 'AdminController@processPlcRoundState');
 
 $router->post('/application/team/register', 'TeamController@register');
 $router->post('/application/team/update', 'TeamController@update');
@@ -77,8 +80,10 @@ $router->post('/application/submission', 'SubmissionController@upload');
 
 $router->get('/submission/abstract', 'SubmissionController@abstractPage');
 $router->get('/submission/full-paper', 'SubmissionController@fullPaperPage');
+$router->get('/submission/plc', 'SubmissionController@plcPage');
 $router->post('/submission/abstract', 'SubmissionController@uploadAbstract');
 $router->post('/submission/full-paper', 'SubmissionController@uploadFullPaper');
+$router->post('/submission/plc', 'SubmissionController@uploadPlc');
 
 $router->post('/logout', 'AuthController@logout');
 
