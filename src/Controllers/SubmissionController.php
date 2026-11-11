@@ -78,9 +78,9 @@ class SubmissionController extends Controller
         $url = '/submission/' . ($type === 'abstract' ? 'abstract' : 'full-paper');
 
         $submissionModel = new Submission();
-        $existingAbstract = $submissionModel->findByTeamAndType($team['id'], 'abstract');
-        if ($type === 'abstract' && $existingAbstract && $existingAbstract['status'] === 'rejected') {
-            Session::flash('submission_error', 'Abstrak kamu tidak lolos seleksi, pengumpulan telah dikunci.');
+        $existingDoc = $submissionModel->findByTeamAndType($team['id'], $type);
+        if ($existingDoc && $existingDoc['status'] === 'rejected') {
+            Session::flash('submission_error', self::label($type) . ' tidak lolos seleksi, pengumpulan telah dikunci.');
             $this->redirect($url);
         }
         if ($type === 'abstract' && self::abstractClosed() && !$submissionModel->findByTeamAndType($team['id'], 'abstract')) {

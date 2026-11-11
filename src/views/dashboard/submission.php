@@ -31,16 +31,18 @@ $status = $submission['status'] ?? null;
 $hasFile = !empty($submission['value']);
 $abstractApproved = $abstract_status === 'approved';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
+$isFinalist = !$isAbstract && $status === 'approved';
+$finalistGroup = getenv('WA_GROUP_LKTI_FINALIST') ?: 'https://chat.whatsapp.com/Di3EY5RdRUbBnvqfSLUewu?s=cl&p=a&iam=2';
 
 if ($isAbstract) {
   $locked = !$team || !$is_reviewed || !empty($abstract_closed) || $status === 'rejected';
 } else {
-  $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified || !empty($full_paper_closed);
+  $locked = !$team || !$is_reviewed || !$abstractApproved || !$paymentVerified || !empty($full_paper_closed) || $status === 'rejected';
 }
 
 $lockReason = null;
 if ($locked) {
-  if ($isAbstract && $status === 'rejected') {
+  if ($status === 'rejected') {
     $lockReason = 'failed';
   } elseif (!empty($abstract_closed) || !empty($full_paper_closed)) {
     $lockReason = 'closed';
@@ -192,7 +194,7 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
           </div>
         </div>
 
-        <?php if (!empty($deadline_passed) && $hasFile && !$locked): ?>
+        <?php if (false && !empty($deadline_passed) && $hasFile && !$locked): ?>
           <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl mt-4">
             <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-amber-500 shrink-0 mt-0.5') ?>
             <div class="min-w-0">
@@ -202,13 +204,39 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
           </div>
         <?php endif; ?>
 
-        <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl mt-4">
-          <?= Icon::make()->name('megaphone')->class('w-5 h-5 text-blue-500 shrink-0 mt-0.5') ?>
-          <div class="min-w-0">
-            <p class="text-sm font-semibold text-blue-700">Harap perhatikan!</p>
-            <p class="text-xs text-blue-600 mt-0.5">Ikuti format penamaan file yang tertera di masing-masing kolom agar mempermudah proses review.</p>
+        <?php if ($isFinalist): ?>
+          <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 bg-green-50 border border-green-200 rounded-2xl mb-4 lg:items-center">
+            <div class="flex gap-3 flex-1 min-w-0">
+              <?= Icon::make()->name('check')->class('w-5 h-5 text-green-600 shrink-0 mt-0.5') ?>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-green-700">Selamat! Kamu lolos sebagai finalis LKTI!</p>
+                <p class="text-xs text-green-600 mt-0.5">Silakan bergabung ke grup WhatsApp finalis untuk informasi selanjutnya.</p>
+                <div class="mt-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
+                  <a href="<?= htmlspecialchars($finalistGroup, ENT_QUOTES) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors no-underline shadow-sm">
+                    <?= Icon::make()->name('whatsapp')->class('w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white') ?>
+                    Gabung Grup Finalis
+                  </a>
+                  <span class="hidden sm:inline mx-1 text-gray-500 text-sm">atau</span>
+                  <button type="button" onclick="var b=this; navigator.clipboard.writeText('<?= htmlspecialchars($finalistGroup, ENT_QUOTES) ?>'); var t=b.innerHTML; b.innerHTML='Tersalin!'; setTimeout(function(){b.innerHTML=t},1500)" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-700 bg-white border border-green-200 hover:bg-green-50 rounded-xl transition-colors"><?= Icon::make()->name('copy')->class('w-3.5 h-3.5 sm:w-4 sm:h-4') ?> Salin Link Grup</button>
+                </div>
+              </div>
+            </div>
+            <div class="shrink-0 bg-white p-2.5 rounded-xl border border-green-200 flex flex-col items-center self-center">
+              <img src="/image/qr-lkti-finalist-link.png" alt="QR Grup Finalis LKTI" class="w-36 h-36 object-contain rounded-lg" loading="lazy">
+              <p class="text-[11px] text-center text-gray-500 mt-1.5">Scan QR untuk gabung</p>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
+
+        <?php if (false && !empty($deadline_passed) && $hasFile && !$locked): ?>
+          <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl mt-4">
+            <?= Icon::make()->name('megaphone')->class('w-5 h-5 text-blue-500 shrink-0 mt-0.5') ?>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-blue-700">Harap perhatikan!</p>
+              <p class="text-xs text-blue-600 mt-0.5">Ikuti format penamaan file yang tertera di masing-masing kolom agar mempermudah proses review.</p>
+            </div>
+          </div>
+        <?php endif; ?>
 
         <?php if ($locked): ?>
         </div>
@@ -224,8 +252,8 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
         <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
           <?= Icon::make()->name('x')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
           <div>
-            <p class="text-sm font-semibold text-red-700">Abstrak tidak lolos seleksi</p>
-            <p class="text-xs text-red-600 mt-0.5">Terima kasih atas partisipasinya. Pengumpulan dikunci dan kamu tidak dapat lanjut ke tahap pembayaran maupun full paper.</p>
+            <p class="text-sm font-semibold text-red-700"><?= $isAbstract ? 'Abstrak tidak lolos seleksi' : 'Full paper tidak lolos seleksi' ?></p>
+            <p class="text-xs text-red-600 mt-0.5">Terima kasih atas partisipasinya. Pengumpulan dikunci dan perjalanan kamu di LKTI berakhir di sini.</p>
           </div>
         </div>
       <?php elseif ($lockReason === 'closed'): ?>
@@ -294,14 +322,6 @@ $anyFile = $hasFile || !empty($originality['value']) || !empty($approval['value'
                 <?= Icon::make()->name('chevron-right')->class('w-3.5 h-3.5') ?>
               </a>
             <?php endif; ?>
-          </div>
-        </div>
-      <?php elseif ($status === 'rejected' && !$isAbstract): ?>
-        <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl mt-4">
-          <?= Icon::make()->name('alert-circle')->class('w-5 h-5 text-red-500 shrink-0 mt-0.5') ?>
-          <div>
-            <p class="text-sm font-semibold text-red-700"><?= $title ?> Ditolak</p>
-            <p class="text-xs text-red-600 mt-0.5">Silakan perbaiki dan upload ulang file <?= htmlspecialchars(strtolower($title)) ?> kamu.</p>
           </div>
         </div>
       <?php endif; ?>

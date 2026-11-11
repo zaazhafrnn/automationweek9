@@ -23,6 +23,8 @@ $isLkti = $divisionUpper === 'LKTI';
 $abstractApproved = ($abstract['status'] ?? '') === 'approved';
 $abstractRejected = ($abstract['status'] ?? '') === 'rejected';
 $paymentVerified = ($payment['status'] ?? '') === 'verified';
+$isFinalist = $isLkti && ($full_paper['status'] ?? '') === 'approved';
+$finalistGroup = getenv('WA_GROUP_LKTI_FINALIST') ?: 'https://chat.whatsapp.com/Di3EY5RdRUbBnvqfSLUewu?s=cl&p=a&iam=2';
 
 $steps = [
   1 => ['label' => 'Registrasi', 'title' => 'Registrasi Tim', 'done' => (bool) $team],
@@ -143,8 +145,8 @@ $QR_MAP = [
   'LF'   => '/image/qr-lf-link.png',
   'PROG' => '/image/qr-prog-link.png',
 ];
-$waLink = $team ? ($WA_GROUPS[$divisionUpper] ?? null) : null;
-$qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
+$waLink = $team ? ($isFinalist ? $finalistGroup : ($WA_GROUPS[$divisionUpper] ?? null)) : null;
+$qrSrc = $team ? ($isFinalist ? '/image/qr-lkti-finalist-link.png' : ($QR_MAP[$divisionUpper] ?? null)) : null;
 ?>
 <div class="min-h-screen bg-gray-50">
   <?php $current = 'home';
@@ -280,15 +282,15 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
       <?php if ($paymentVerified): ?>
         <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 bg-green-50 border border-green-200 rounded-2xl mt-6 lg:items-center">
           <div class="flex gap-3 flex-1 min-w-0">
-            <?= Icon::make()->name('check')->class('w-5 h-5 text-green-600 shrink-0 mt-0.5') ?>
+            <?= Icon::make()->name($isFinalist ? 'trophy' : 'check')->class('w-5 h-5 text-green-600 shrink-0 mt-0.5') ?>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-green-700">Pembayaran telah dikonfirmasi!</p>
-              <p class="text-xs text-green-600 mt-0.5">Terimakasih sudah berpartisipasi pada AutomationWeek 9. Silakan bergabung ke grup WhatsApp peserta untuk info selanjutnya.</p>
+              <p class="text-sm font-semibold text-green-700"><?= $isFinalist ? 'SELAMAT! KAMU LOLOS SEBAGAI FINALIS LKTI' : 'Pembayaran telah dikonfirmasi!' ?></p>
+              <p class="text-xs text-green-600 mt-0.5"><?= $isFinalist ? 'GABUNG GRUP WHATSAPP FINALIS UNTUK INFORMASI SELANJUTNYA.' : 'Terimakasih sudah berpartisipasi pada AutomationWeek 9. Silakan bergabung ke grup WhatsApp peserta untuk info selanjutnya.' ?></p>
               <?php if ($waLink): ?>
                 <div class="mt-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
                   <a href="<?= htmlspecialchars($waLink) ?>" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors no-underline shadow-sm">
                     <?= Icon::make()->name('whatsapp')->class('w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white') ?>
-                    Gabung Grup WhatsApp
+                    <?= $isFinalist ? 'GABUNG GRUP FINALIS' : 'Gabung Grup WhatsApp' ?>
                   </a>
                   <span class="hidden sm:inline mx-1 text-gray-500 text-sm">atau</span>
                   <button type="button" onclick="var b=this; navigator.clipboard.writeText('<?= htmlspecialchars($waLink, ENT_QUOTES) ?>'); var t=b.innerHTML; b.innerHTML='Tersalin!'; setTimeout(function(){b.innerHTML=t},1500)" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-700 bg-white border border-green-200 hover:bg-green-50 rounded-xl transition-colors"><?= Icon::make()->name('copy')->class('w-3.5 h-3.5 sm:w-4 sm:h-4') ?> Salin Link Grup</button>
@@ -300,8 +302,8 @@ $qrSrc = $team ? ($QR_MAP[$divisionUpper] ?? null) : null;
             </div>
           </div>
           <div class="shrink-0 bg-white p-2.5 rounded-xl border border-green-200 flex flex-col items-center self-center">
-            <img src="<?= htmlspecialchars($qrSrc) ?>" alt="QR Grup WhatsApp <?= htmlspecialchars($divisionUpper) ?>" class="w-36 h-36 object-contain rounded-lg" loading="lazy" onerror="this.style.display='none'">
-            <p class="text-[11px] text-center text-gray-500 mt-1.5">Scan QR untuk gabung</p>
+            <img src="<?= htmlspecialchars($qrSrc) ?>" alt="<?= $isFinalist ? 'QR GRUP FINALIS LKTI' : 'QR Grup WhatsApp ' . htmlspecialchars($divisionUpper) ?>" class="w-36 h-36 object-contain rounded-lg" loading="lazy" onerror="this.style.display='none'">
+            <p class="text-[11px] text-center text-gray-500 mt-1.5"><?php if ($isFinalist): ?><?= Icon::make()->name('trophy')->class('w-3.5 h-3.5 inline-block align-middle text-green-600') ?> SCAN QR GRUP FINALIS<?php else: ?>Scan QR untuk gabung<?php endif; ?></p>
           </div>
         </div>
       <?php endif; ?>
