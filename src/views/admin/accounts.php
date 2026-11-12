@@ -194,12 +194,14 @@ $renderProgress = function (array $m, array $p) use ($badge, $field, $sectionTit
             } else {
                 $label = $typeLabels[$type] ?? ucfirst(str_replace('_', ' ', $type));
             }
-            $link = $type === 'youtube_link'
+            $isUrl = filter_var((string) $s['value'], FILTER_VALIDATE_URL);
+            $link = $type === 'youtube_link' || $isUrl
                 ? htmlspecialchars((string) $s['value'])
                 : '/uploads/submissions/' . htmlspecialchars((string) $s['value']);
             $valueHtml = '<a href="' . $link . '" target="_blank" class="text-primary underline-offset-4 hover:underline break-all">' . htmlspecialchars((string) ($s['original_name'] ?: $s['value'])) . '</a>'
                 . '<div class="text-xs text-gray-700 font-normal mt-0.5">'
                 . (!empty($s['category']) ? 'Kategori: ' . htmlspecialchars($s['category']) . ' · ' : '')
+                . (isset($s['score']) && $s['score'] !== null ? 'Nilai: ' . (int) $s['score'] . ' · ' : '')
                 . 'Diupload: ' . date('d M Y H:i', strtotime($s['updated_at'] ?: $s['created_at']))
                 . '</div>';
             $needsConfirmation = in_array($type, ['abstract', 'full_paper'], true);

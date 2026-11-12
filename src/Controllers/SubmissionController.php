@@ -28,6 +28,129 @@ class SubmissionController extends Controller
         return self::TYPE_LABELS[$type] ?? ucfirst(str_replace('_', ' ', $type));
     }
 
+    public function plcPage()
+    {
+        $this->requireAuth();
+        if (Session::get('role') === 'admin') {
+            $this->redirect('/admin/dashboard');
+        }
+
+        $team = $this->plcTeam();
+        if (!$team) return;
+
+        $this->view('dashboard/plc-submission', $this->plcViewData($team));
+    }
+
+    public function uploadPlc()
+    {
+        $this->requireAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
+            $this->redirect('/submission/plc');
+        }
+
+        $team = $this->plcTeam();
+        if (!$team) return;
+
+        $round = (int) ($_POST['round'] ?? 0);
+        if (!isset(Submission::PLC_ROUNDS[$round])) {
+            $this->redirect('/submission/plc');
+        }
+
+        $sessions = Submission::plcSessions($round);
+        $session = $round === 1 ? max(1, min(2, (int) ($_POST['session'] ?? 1))) : 1;
+        $type = $sessions[$session - 1]['type'];
+        $roundLabel = Submission::PLC_ROUNDS[$round]['label'] . ($round === 1 ? ' ' . $sessions[$session - 1]['label'] : '');
+
+        $payment = (new Payment())->findByTeamId($team['id']);
+        if (!$payment || $payment['status'] !== 'verified') {
+            Session::flash('submission_error', 'Selesaikan pembayaran terlebih dahulu.');
+            $this->redirect('/submission/plc');
+        }
+
+        $submissionModel = new Submission();
+
+        if (empty($submissionModel->getRoundStates()[$type])) {
+            Session::flash('submission_error', 'Pengumpulan ' . $roundLabel . ' sedang ditutup.');
+            $this->redirect('/submission/plc');
+        }
+
+        if ($round === 2 && $submissionModel->plcRoundStatus((int) $team['id'], 1) !== 'approved') {
+            Session::flash('submission_error', 'Round 2 hanya untuk tim yang lolos Round 1.');
+            $this->redirect('/submission/plc');
+        }
+
+        if ($round === 3 && $submissionModel->plcRoundStatus((int) $team['id'], 2) !== 'approved') {
+            Session::flash('submission_error', 'Round 3 hanya untuk tim yang lolos Round 2.');
+            $this->redirect('/submission/plc');
+        }
+
+        $link = trim((string) ($_POST['link'] ?? ''));
+        if ($link === '' || strlen($link) > 2048 || !filter_var($link, FILTER_VALIDATE_URL) || !in_array(strtolower((string) parse_url($link, PHP_URL_SCHEME)), ['http', 'https'], true)) {
+            Session::flash('submission_error', 'Masukkan link yang valid (http/https).');
+            $this->redirect('/submission/plc');
+        }
+
+        $submissionModel->upsert($team['id'], $type, $link, 'submitted');
+        Session::flash('submission_success', 'Link ' . $roundLabel . ' berhasil disimpan!');
+        $this->redirect('/submission/plc');
+    }
+
+    private function plcTeam(): array|false
+    {
+        $team = (new Team())->findByUserId(Session::get('user_id'));
+        if (!$team || $team['division'] !== 'PLC') {
+            $this->redirect('/home');
+            return false;
+        }
+        return $team;
+    }
+
+    private function plcViewData(array $team): array
+    {
+        $submissionModel = new Submission();
+        $states = $submissionModel->getRoundStates();
+        $rounds = [];
+        foreach (Submission::PLC_ROUNDS as $number => $meta) {
+            $row = $submissionModel->findByTeamAndType($team['id'], $meta['type']);
+            $sessions = [];
+            $roundOpen = false;
+            foreach (Submission::plcSessions($number) as $sessionMeta) {
+                $sessionOpen = !empty($states[$sessionMeta['type']]);
+                $roundOpen = $roundOpen || $sessionOpen;
+                $sessions[] = [
+                    'label' => $sessionMeta['label'],
+                    'row' => $submissionModel->findByTeamAndType($team['id'], $sessionMeta['type']),
+                    'open' => $sessionOpen,
+                ];
+            }
+            $rounds[$number] = [
+                'label' => $meta['label'],
+                'row' => $row,
+                'sessions' => $sessions,
+                'open' => $roundOpen,
+            ];
+        }
+
+        $round1Status = $submissionModel->plcRoundStatus((int) $team['id'], 1);
+        $round2Status = $submissionModel->plcRoundStatus((int) $team['id'], 2);
+        $payment = (new Payment())->findByTeamId($team['id']);
+
+        return [
+            'user_name' => Session::get('user_name'),
+            'csrf_token' => Security::generateCsrfToken(),
+            'team' => $team,
+            'rounds' => $rounds,
+            'payment_verified' => ($payment['status'] ?? '') === 'verified',
+            'round1_status' => $round1Status,
+            'round2_status' => $round2Status,
+            'round2_eligible' => $round1Status === 'approved',
+            'round3_eligible' => $round2Status === 'approved',
+            'success' => Session::flash('submission_success'),
+            'error' => Session::flash('submission_error'),
+        ];
+    }
+
     public function abstractPage()
     {
         $this->requireAuth();
@@ -78,9 +201,9 @@ class SubmissionController extends Controller
         $url = '/submission/' . ($type === 'abstract' ? 'abstract' : 'full-paper');
 
         $submissionModel = new Submission();
-        $existingDoc = $submissionModel->findByTeamAndType($team['id'], $type);
-        if ($existingDoc && $existingDoc['status'] === 'rejected') {
-            Session::flash('submission_error', self::label($type) . ' tidak lolos seleksi, pengumpulan telah dikunci.');
+        $existingAbstract = $submissionModel->findByTeamAndType($team['id'], 'abstract');
+        if ($type === 'abstract' && $existingAbstract && $existingAbstract['status'] === 'rejected') {
+            Session::flash('submission_error', 'Abstrak kamu tidak lolos seleksi, pengumpulan telah dikunci.');
             $this->redirect($url);
         }
         if ($type === 'abstract' && self::abstractClosed() && !$submissionModel->findByTeamAndType($team['id'], 'abstract')) {

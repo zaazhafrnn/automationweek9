@@ -31,7 +31,9 @@ $shortcuts = [
     ['Tim', 'trophy', '/admin/teams'],
 ];
 if ($isAll || $division === 'PLC') {
-    $shortcuts[] = ['Karya', 'file-text', '/admin/submissions'];
+    $shortcuts[] = ['Round 1', 'file-text', '/admin/plc-submissions?round=1'];
+    $shortcuts[] = ['Round 2', 'file-text', '/admin/plc-submissions?round=2'];
+    $shortcuts[] = ['Round 3', 'file-text', '/admin/plc-submissions?round=3'];
 }
 if ($isAll || $division === 'LKTI') {
     $shortcuts[] = ['Full Paper', 'file-text', '/admin/submissions?div=LKTI&type=full_paper'];
