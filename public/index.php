@@ -67,7 +67,7 @@ $router->post('/admin/payments/invoice', 'AdminController@sendInvoice');
 $router->get('/admin/submissions', 'AdminController@submissions');
 $router->post('/admin/submissions/process', 'AdminController@processSubmission');
 $router->get('/admin/plc-submissions', 'AdminController@plcSubmissions');
-$router->post('/admin/plc-submissions/score', 'AdminController@processPlcScore');
+$router->get('/admin/plc-submissions/export', 'AdminController@exportPlcSubmissions');
 $router->post('/admin/plc-submissions/state', 'AdminController@processPlcRoundState');
 
 $router->post('/application/team/register', 'TeamController@register');

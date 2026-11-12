@@ -6,11 +6,37 @@ use App\Core\Model;
 
 class Submission extends Model
 {
+    public const PLC_ROUND_1_SESSION_2 = 'plc_round_1_s2';
+
+    /** Max teams approved per round before advancing. */
+    public const PLC_APPROVAL_LIMITS = [1 => 20, 2 => 10];
+
     public const PLC_ROUNDS = [
         1 => ['type' => 'plc_round_1', 'label' => 'Round 1'],
         2 => ['type' => 'plc_round_2', 'label' => 'Round 2'],
         3 => ['type' => 'plc_round_3', 'label' => 'Round 3 (Final)'],
     ];
+
+    /** @return array<int, string> */
+    public static function plcRoundOneSessionTypes(): array
+    {
+        return ['plc_round_1', self::PLC_ROUND_1_SESSION_2];
+    }
+
+    /** @return array<int, array{type: string, label: string}> */
+    public static function plcSessions(int $round): array
+    {
+        if ($round === 1) {
+            return [
+                ['type' => 'plc_round_1', 'label' => 'Sesi 1'],
+                ['type' => self::PLC_ROUND_1_SESSION_2, 'label' => 'Sesi 2'],
+            ];
+        }
+
+        $meta = self::PLC_ROUNDS[$round];
+
+        return [['type' => $meta['type'], 'label' => $meta['label']]];
+    }
 
     public function findByTeamId(int $teamId): array|false
     {
@@ -77,8 +103,26 @@ class Submission extends Model
 
     public function updateStatus(int $id, string $status): bool
     {
-        $stmt = $this->db->prepare("UPDATE submissions SET status = :status WHERE id = :id");
+        $row = $this->findRowType($id);
+        $types = self::plcRoundOneSessionTypes();
+        $isRoundOne = $row && in_array($row['type'], $types, true);
+
+        if ($isRoundOne) {
+            // A Round 1 decision applies to both sessions of the team.
+            $in = implode(',', array_fill(0, count($types), '?'));
+            $stmt = $this->db->prepare("UPDATE submissions SET status = ?, updated_at = updated_at WHERE team_id = ? AND type IN ($in)");
+            return $stmt->execute(array_merge([$status, (int) $row['team_id']], $types));
+        }
+
+        $stmt = $this->db->prepare("UPDATE submissions SET status = :status, updated_at = updated_at WHERE id = :id");
         return $stmt->execute([':status' => $status, ':id' => $id]);
+    }
+
+    private function findRowType(int $id): array|false
+    {
+        $stmt = $this->db->prepare("SELECT team_id, type FROM submissions WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
     }
 
     public function getByDivision(string $division): array
@@ -110,12 +154,6 @@ class Submission extends Model
         return $stmt->execute([':type' => $type, ':is_open' => $open ? 1 : 0]);
     }
 
-    public function updateScore(int $teamId, string $type, ?int $score): bool
-    {
-        $stmt = $this->db->prepare("UPDATE submissions SET score = :score WHERE team_id = :team_id AND type = :type");
-        return $stmt->execute([':score' => $score, ':team_id' => $teamId, ':type' => $type]);
-    }
-
     public function getPlcTeams(): array
     {
         $stmt = $this->db->prepare("
@@ -136,7 +174,7 @@ class Submission extends Model
     /** @return array<int, array<string, array>> team_id => type => row */
     public function getPlcSubmissions(): array
     {
-        $types = array_column(self::PLC_ROUNDS, 'type');
+        $types = array_merge(array_column(self::PLC_ROUNDS, 'type'), [self::PLC_ROUND_1_SESSION_2]);
         $in = implode(',', array_fill(0, count($types), '?'));
         $stmt = $this->db->prepare("SELECT * FROM submissions WHERE type IN ($in)");
         $stmt->execute($types);
@@ -148,25 +186,30 @@ class Submission extends Model
         return $out;
     }
 
-    /** Teams ranked in the top N by combined round 1 + 2 score. */
-    public function plcTopTeamIds(int $limit = 20): array
+    /** Decision status of a round for a team: approved, rejected, submitted, or null if nothing sent. */
+    public function plcRoundStatus(int $teamId, int $round): ?string
     {
-        $limit = max(1, $limit);
-        $stmt = $this->db->query("
-            SELECT s.team_id,
-                   SUM(COALESCE(s.score, 0)) AS total_score,
-                   MAX(s.updated_at) AS last_at
-            FROM submissions s
-            JOIN teams t ON t.id = s.team_id
-            WHERE t.division = 'PLC'
-              AND s.type IN ('plc_round_1', 'plc_round_2')
-              AND EXISTS (SELECT 1 FROM payments p WHERE p.teamId = t.id AND p.status = 'verified')
-            GROUP BY s.team_id
-            HAVING COUNT(DISTINCT s.type) = 2
-            ORDER BY total_score DESC, last_at ASC
-            LIMIT $limit
-        ");
+        $types = array_column(self::plcSessions($round), 'type');
+        $in = implode(',', array_fill(0, count($types), '?'));
 
-        return array_map('intval', array_column($stmt->fetchAll(), 'team_id'));
+        $stmt = $this->db->prepare("SELECT status FROM submissions WHERE team_id = ? AND type IN ($in)");
+        $stmt->execute(array_merge([$teamId], $types));
+        $statuses = array_column($stmt->fetchAll(), 'status');
+
+        if (in_array('approved', $statuses, true)) return 'approved';
+        if (in_array('rejected', $statuses, true)) return 'rejected';
+        return $statuses ? 'submitted' : null;
+    }
+
+    /** Number of distinct teams already approved in a round. */
+    public function plcApprovedTeamCount(int $round): int
+    {
+        $types = array_column(self::plcSessions($round), 'type');
+        $in = implode(',', array_fill(0, count($types), '?'));
+
+        $stmt = $this->db->prepare("SELECT COUNT(DISTINCT team_id) FROM submissions WHERE type IN ($in) AND status = 'approved'");
+        $stmt->execute($types);
+
+        return (int) $stmt->fetchColumn();
     }
 }

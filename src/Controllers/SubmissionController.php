@@ -57,6 +57,11 @@ class SubmissionController extends Controller
             $this->redirect('/submission/plc');
         }
 
+        $sessions = Submission::plcSessions($round);
+        $session = $round === 1 ? max(1, min(2, (int) ($_POST['session'] ?? 1))) : 1;
+        $type = $sessions[$session - 1]['type'];
+        $roundLabel = Submission::PLC_ROUNDS[$round]['label'] . ($round === 1 ? ' ' . $sessions[$session - 1]['label'] : '');
+
         $payment = (new Payment())->findByTeamId($team['id']);
         if (!$payment || $payment['status'] !== 'verified') {
             Session::flash('submission_error', 'Selesaikan pembayaran terlebih dahulu.');
@@ -64,15 +69,19 @@ class SubmissionController extends Controller
         }
 
         $submissionModel = new Submission();
-        $type = Submission::PLC_ROUNDS[$round]['type'];
 
         if (empty($submissionModel->getRoundStates()[$type])) {
-            Session::flash('submission_error', 'Pengumpulan ' . Submission::PLC_ROUNDS[$round]['label'] . ' sedang ditutup.');
+            Session::flash('submission_error', 'Pengumpulan ' . $roundLabel . ' sedang ditutup.');
             $this->redirect('/submission/plc');
         }
 
-        if ($round === 3 && !in_array((int) $team['id'], $submissionModel->plcTopTeamIds(20), true)) {
-            Session::flash('submission_error', 'Round 3 hanya untuk 20 tim terbaik dari Round 1 & 2.');
+        if ($round === 2 && $submissionModel->plcRoundStatus((int) $team['id'], 1) !== 'approved') {
+            Session::flash('submission_error', 'Round 2 hanya untuk tim yang lolos Round 1.');
+            $this->redirect('/submission/plc');
+        }
+
+        if ($round === 3 && $submissionModel->plcRoundStatus((int) $team['id'], 2) !== 'approved') {
+            Session::flash('submission_error', 'Round 3 hanya untuk tim yang lolos Round 2.');
             $this->redirect('/submission/plc');
         }
 
@@ -83,7 +92,7 @@ class SubmissionController extends Controller
         }
 
         $submissionModel->upsert($team['id'], $type, $link, 'submitted');
-        Session::flash('submission_success', 'Link ' . Submission::PLC_ROUNDS[$round]['label'] . ' berhasil disimpan!');
+        Session::flash('submission_success', 'Link ' . $roundLabel . ' berhasil disimpan!');
         $this->redirect('/submission/plc');
     }
 
@@ -104,14 +113,27 @@ class SubmissionController extends Controller
         $rounds = [];
         foreach (Submission::PLC_ROUNDS as $number => $meta) {
             $row = $submissionModel->findByTeamAndType($team['id'], $meta['type']);
+            $sessions = [];
+            $roundOpen = false;
+            foreach (Submission::plcSessions($number) as $sessionMeta) {
+                $sessionOpen = !empty($states[$sessionMeta['type']]);
+                $roundOpen = $roundOpen || $sessionOpen;
+                $sessions[] = [
+                    'label' => $sessionMeta['label'],
+                    'row' => $submissionModel->findByTeamAndType($team['id'], $sessionMeta['type']),
+                    'open' => $sessionOpen,
+                ];
+            }
             $rounds[$number] = [
                 'label' => $meta['label'],
                 'row' => $row,
-                'open' => !empty($states[$meta['type']]),
+                'sessions' => $sessions,
+                'open' => $roundOpen,
             ];
         }
 
-        $topIds = $submissionModel->plcTopTeamIds(20);
+        $round1Status = $submissionModel->plcRoundStatus((int) $team['id'], 1);
+        $round2Status = $submissionModel->plcRoundStatus((int) $team['id'], 2);
         $payment = (new Payment())->findByTeamId($team['id']);
 
         return [
@@ -120,7 +142,10 @@ class SubmissionController extends Controller
             'team' => $team,
             'rounds' => $rounds,
             'payment_verified' => ($payment['status'] ?? '') === 'verified',
-            'round3_eligible' => in_array((int) $team['id'], $topIds, true),
+            'round1_status' => $round1Status,
+            'round2_status' => $round2Status,
+            'round2_eligible' => $round1Status === 'approved',
+            'round3_eligible' => $round2Status === 'approved',
             'success' => Session::flash('submission_success'),
             'error' => Session::flash('submission_error'),
         ];

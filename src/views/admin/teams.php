@@ -95,7 +95,7 @@ use App\Components\Icon; ?>
         . '</div>'
         . '<div class="flex justify-end gap-2 mt-6">'
         . '<button type="button" onclick="closeDialog(\'export-csv-dialog\')" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">Batal</button>'
-        . '<a href="/admin/teams/export" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-700 hover:bg-green-800 rounded-xl transition-colors">' . Icon::make()->name('download')->class('w-4 h-4') . 'Download</a>'
+        . '<a href="/admin/teams/export" download class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-green-700 hover:bg-green-800 rounded-xl transition-colors">' . Icon::make()->name('download')->class('w-4 h-4') . 'Download</a>'
         . '</div>'
         . '</div>'
 ) ?>

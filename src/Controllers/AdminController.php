@@ -304,64 +304,77 @@ class AdminController extends Controller
         $model = new Submission();
         $teams = $model->getPlcTeams();
         $submissions = $model->getPlcSubmissions();
-        $topIds = $model->plcTopTeamIds(20);
-        $teams = array_values(array_filter(
-            $teams,
-            fn($t) => !empty($submissions[(int) $t['id']][$meta['type']]['value'])
-        ));
-        if ($round === 3) {
-            $teams = array_values(array_filter(
-                $teams,
-                fn($t) => in_array((int) $t['id'], $topIds, true)
-            ));
-        }
-
-        // First submitted team on top, latest on bottom.
-        usort($teams, function ($a, $b) use ($submissions, $meta) {
-            $left = strtotime($submissions[(int) $a['id']][$meta['type']]['updated_at'] ?? '') ?: 0;
-            $right = strtotime($submissions[(int) $b['id']][$meta['type']]['updated_at'] ?? '') ?: 0;
-            return $left <=> $right;
-        });
 
         $this->view('admin/plc-submissions', [
             'round' => $round,
             'round_meta' => $meta,
             'rounds' => Submission::PLC_ROUNDS,
+            'sessions' => Submission::plcSessions($round),
             'teams' => $teams,
             'submissions' => $submissions,
+            'states' => $model->getRoundStates(),
             'is_open' => !empty($model->getRoundStates()[$meta['type']]),
             'csrf_token' => Security::generateCsrfToken(),
             'page_title' => 'PLC ' . $meta['label'],
         ], 'admin');
     }
 
-    public function processPlcScore()
+    public function exportPlcSubmissions()
     {
         $this->requireAdmin();
         if (!$this->isPlcAdmin()) {
             $this->redirect('/admin/dashboard');
         }
 
-        $back = '/admin/plc-submissions?round=' . max(1, min(3, (int) ($_POST['round'] ?? 1)));
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Security::validateCsrfToken($_POST['csrf_token'] ?? '')) {
-            $this->redirect($back);
+        $round = (int) ($_GET['round'] ?? 1);
+        if (!isset(Submission::PLC_ROUNDS[$round])) {
+            $round = 1;
         }
 
-        $teamId = (int) ($_POST['team_id'] ?? 0);
         $model = new Submission();
-        foreach ([1, 2] as $number) {
-            if (!array_key_exists('score_' . $number, $_POST)) {
+        $teams = $model->getPlcTeams();
+        $submissions = $model->getPlcSubmissions();
+        $types = array_column(Submission::plcSessions($round), 'type');
+
+        $rows = [];
+        foreach ($teams as $team) {
+            $teamId = (int) $team['id'];
+            $times = [];
+            foreach ($types as $type) {
+                if (!empty($submissions[$teamId][$type]['value'])) {
+                    $times[] = strtotime($submissions[$teamId][$type]['updated_at'] ?? '') ?: 0;
+                }
+            }
+            if (!$times) {
                 continue;
             }
-            $raw = trim((string) $_POST['score_' . $number]);
-            $score = $raw === '' ? null : max(0, (int) $raw);
-            $model->updateScore($teamId, Submission::PLC_ROUNDS[$number]['type'], $score);
+            $rows[] = [
+                'time' => min($times),
+                'name' => $team['name'],
+                'status' => $model->plcRoundStatus($teamId, $round),
+            ];
         }
 
-        if ($this->isAjax()) {
-            $this->json(['ok' => true]);
+        usort($rows, fn($a, $b) => $a['time'] <=> $b['time']);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="hasil_plc_round_' . $round . '_' . date('Y-m-d_H-i') . '.csv"');
+        echo "\xEF\xBB\xBF";
+
+        $out = fopen('php://output', 'w');
+        fputcsv($out, ['No.', 'Nama Tim', 'Status'], ',', '"', '');
+
+        foreach ($rows as $index => $row) {
+            $status = match ($row['status']) {
+                'approved' => 'Lolos',
+                'rejected' => 'Tidak Lolos',
+                default => 'Menunggu',
+            };
+            fputcsv($out, [$index + 1, $row['name'], $status], ',', '"', '');
         }
-        $this->redirect($back);
+
+        fclose($out);
+        exit();
     }
 
     public function processPlcRoundState()
@@ -377,12 +390,25 @@ class AdminController extends Controller
             $this->redirect($back);
         }
 
-        $open = (int) ($_POST['is_open'] ?? 0) === 1;
-        (new Submission())->setRoundOpen(Submission::PLC_ROUNDS[$round]['type'], $open);
-        if ($this->isAjax()) {
-            $this->json(['ok' => true, 'is_open' => $open]);
+        $sessions = Submission::plcSessions($round);
+        $allowed = array_column($sessions, 'type');
+        $type = (string) ($_POST['type'] ?? '');
+        if (!in_array($type, $allowed, true)) {
+            $type = $allowed[0];
         }
-        Session::flash('plc_state_success', Submission::PLC_ROUNDS[$round]['label'] . ($open ? ' dibuka.' : ' ditutup.'));
+        $label = Submission::PLC_ROUNDS[$round]['label'];
+        foreach ($sessions as $session) {
+            if ($session['type'] === $type && $round === 1) {
+                $label .= ' ' . $session['label'];
+            }
+        }
+
+        $open = (int) ($_POST['is_open'] ?? 0) === 1;
+        (new Submission())->setRoundOpen($type, $open);
+        if ($this->isAjax()) {
+            $this->json(['ok' => true, 'is_open' => $open, 'type' => $type]);
+        }
+        Session::flash('plc_state_success', $label . ($open ? ' dibuka.' : ' ditutup.'));
         $this->redirect($back);
     }
 
@@ -448,6 +474,10 @@ class AdminController extends Controller
         $this->requireAdmin();
 
         $back = '/admin/submissions';
+        $postedBack = trim((string) ($_POST['back'] ?? ''));
+        if (preg_match('/^\/[A-Za-z0-9_\-\/?=]*$/', $postedBack)) {
+            $back = $postedBack;
+        }
         $query = (string) ($_POST['filter_query'] ?? '');
         if (preg_match('/^\?[A-Za-z0-9_=&-]*$/', $query)) {
             $back .= $query;
@@ -475,7 +505,22 @@ class AdminController extends Controller
         }
 
         $action = $_POST['action'] ?? '';
-        (new Submission())->updateStatus((int) $id, $map[$action]);
+        $submissionModel = new Submission();
+        $submission = $submissionModel->find((int) $id);
+
+        if ($submission && $action === 'approve') {
+            $type = $submission['type'];
+            $roundNo = in_array($type, Submission::plcRoundOneSessionTypes(), true) ? 1 : ($type === Submission::PLC_ROUNDS[2]['type'] ? 2 : null);
+
+            if ($roundNo !== null
+                && $submissionModel->plcRoundStatus((int) $submission['team_id'], $roundNo) !== 'approved'
+                && $submissionModel->plcApprovedTeamCount($roundNo) >= Submission::PLC_APPROVAL_LIMITS[$roundNo]) {
+                Session::flash('plc_state_error', 'Maksimal ' . Submission::PLC_APPROVAL_LIMITS[$roundNo] . ' tim untuk ' . Submission::PLC_ROUNDS[$roundNo]['label'] . '.');
+                $this->redirect($back);
+            }
+        }
+
+        $submissionModel->updateStatus((int) $id, $map[$action]);
 
         // auto-send disabled for manual revision resend (LKTI ABSTRACT ANNOUNCEMENT)*
         if (false && in_array($action, ['approve', 'reject'], true)) {

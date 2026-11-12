@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS submission_rounds (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO submission_rounds (type, is_open) VALUES
-('plc_round_1', 0), ('plc_round_2', 0), ('plc_round_3', 0)
+('plc_round_1', 0), ('plc_round_1_s2', 0), ('plc_round_2', 0), ('plc_round_3', 0)
 ON DUPLICATE KEY UPDATE type = type;
 
 DROP TABLE IF EXISTS submission_deadlines;
