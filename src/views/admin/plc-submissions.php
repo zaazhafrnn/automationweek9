@@ -5,6 +5,7 @@
 /** @var array $rounds */
 /** @var array $sessions */
 /** @var array $states */
+/** @var array $dummy_user_ids */
 /** @var array $teams */
 /** @var array $submissions */
 /** @var bool $is_open */
@@ -193,7 +194,12 @@ $flashError = \App\Utils\Session::flash('plc_state_error');
                                 ?>
                                     <tr class="border-b border-border hover:bg-foreground/[0.02] last:border-0">
                                         <td class="px-4 py-3 align-middle whitespace-nowrap"><?= $index + 1 ?></td>
-                                        <td class="px-4 py-3 align-middle whitespace-nowrap font-semibold"><?= htmlspecialchars($team['name']) ?></td>
+                                        <td class="px-4 py-3 align-middle whitespace-nowrap font-semibold">
+                                            <?= htmlspecialchars($team['name']) ?>
+                                            <?php if (in_array((int) ($team['user_id'] ?? 0), $dummy_user_ids, true)): ?>
+                                                <span class="ml-1 inline-block rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 align-middle">Dummy</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="px-4 py-3 align-middle whitespace-nowrap"><?= htmlspecialchars($team['teamSchool']) ?></td>
                                         <td class="px-4 py-3 align-middle whitespace-nowrap text-muted-foreground"><?= $sub ? date('d M Y H:i:s', strtotime($sub['updated_at'] ?: $sub['created_at'])) : '-' ?></td>
                                         <td class="px-4 py-3 align-middle whitespace-nowrap max-w-[260px] truncate">

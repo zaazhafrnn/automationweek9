@@ -157,7 +157,7 @@ class Submission extends Model
     public function getPlcTeams(): array
     {
         $stmt = $this->db->prepare("
-            SELECT t.id, t.name, t.teamSchool, t.leaderName,
+            SELECT t.id, t.user_id, t.name, t.teamSchool, t.leaderName,
                    (SELECT p.status FROM payments p WHERE p.teamId = t.id ORDER BY p.submittedAt DESC LIMIT 1) AS payment_status
             FROM teams t
             WHERE t.division = 'PLC'

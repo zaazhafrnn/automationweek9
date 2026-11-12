@@ -45,6 +45,22 @@ class AdminController extends Controller
         }
     }
 
+    private function isSuperAdmin(): bool
+    {
+        return stripos((string) Session::get('user_name'), 'superadmin') !== false;
+    }
+
+    /** @return array<int, string> user_id => role */
+    private function roleByUserId(): array
+    {
+        $map = [];
+        foreach ((new \App\Models\User())->getAllMembers(true) as $member) {
+            $map[(int) $member['id']] = $member['role'] ?? '';
+        }
+
+        return $map;
+    }
+
     private function filteredTeams(): array
     {
         $teamModel = new \App\Models\Team();
@@ -305,6 +321,13 @@ class AdminController extends Controller
         $teams = $model->getPlcTeams();
         $submissions = $model->getPlcSubmissions();
 
+        $roleByUserId = $this->roleByUserId();
+        $dummyUserIds = array_keys(array_filter($roleByUserId, fn($role) => $role === 'dummy'));
+        if (!$this->isSuperAdmin()) {
+            $teams = array_values(array_filter($teams, fn($t) => !in_array((int) ($t['user_id'] ?? 0), $dummyUserIds, true)));
+            $dummyUserIds = [];
+        }
+
         $this->view('admin/plc-submissions', [
             'round' => $round,
             'round_meta' => $meta,
@@ -313,6 +336,7 @@ class AdminController extends Controller
             'teams' => $teams,
             'submissions' => $submissions,
             'states' => $model->getRoundStates(),
+            'dummy_user_ids' => $dummyUserIds,
             'is_open' => !empty($model->getRoundStates()[$meta['type']]),
             'csrf_token' => Security::generateCsrfToken(),
             'page_title' => 'PLC ' . $meta['label'],
@@ -335,6 +359,14 @@ class AdminController extends Controller
         $teams = $model->getPlcTeams();
         $submissions = $model->getPlcSubmissions();
         $types = array_column(Submission::plcSessions($round), 'type');
+
+        if (!$this->isSuperAdmin()) {
+            $roleByUserId = $this->roleByUserId();
+            $teams = array_values(array_filter(
+                $teams,
+                fn($t) => ($roleByUserId[(int) ($t['user_id'] ?? 0)] ?? '') !== 'dummy'
+            ));
+        }
 
         $rows = [];
         foreach ($teams as $team) {
