@@ -383,6 +383,7 @@ class AdminController extends Controller
             $rows[] = [
                 'time' => min($times),
                 'name' => $team['name'],
+                'school' => $team['teamSchool'] ?? '-',
                 'status' => $model->plcRoundStatus($teamId, $round),
             ];
         }
@@ -394,7 +395,7 @@ class AdminController extends Controller
         echo "\xEF\xBB\xBF";
 
         $out = fopen('php://output', 'w');
-        fputcsv($out, ['No.', 'Nama Tim', 'Status'], ',', '"', '');
+        fputcsv($out, ['No.', 'Nama Tim', 'Asal Sekolah', 'Status'], ',', '"', '');
 
         foreach ($rows as $index => $row) {
             $status = match ($row['status']) {
@@ -402,7 +403,7 @@ class AdminController extends Controller
                 'rejected' => 'Tidak Lolos',
                 default => 'Menunggu',
             };
-            fputcsv($out, [$index + 1, $row['name'], $status], ',', '"', '');
+            fputcsv($out, [$index + 1, $row['name'], $row['school'], $status], ',', '"', '');
         }
 
         fclose($out);
