@@ -372,9 +372,11 @@ class AdminController extends Controller
         foreach ($teams as $team) {
             $teamId = (int) $team['id'];
             $times = [];
+            $links = [];
             foreach ($types as $type) {
                 if (!empty($submissions[$teamId][$type]['value'])) {
                     $times[] = strtotime($submissions[$teamId][$type]['updated_at'] ?? '') ?: 0;
+                    $links[] = $submissions[$teamId][$type]['value'];
                 }
             }
             if (!$times) {
@@ -384,6 +386,7 @@ class AdminController extends Controller
                 'time' => min($times),
                 'name' => $team['name'],
                 'school' => $team['teamSchool'] ?? '-',
+                'link' => implode(' | ', $links),
                 'status' => $model->plcRoundStatus($teamId, $round),
             ];
         }
@@ -395,7 +398,7 @@ class AdminController extends Controller
         echo "\xEF\xBB\xBF";
 
         $out = fopen('php://output', 'w');
-        fputcsv($out, ['No.', 'Nama Tim', 'Asal Sekolah', 'Status'], ',', '"', '');
+        fputcsv($out, ['No.', 'Nama Tim', 'Asal Sekolah', 'Link', 'Status'], ',', '"', '');
 
         foreach ($rows as $index => $row) {
             $status = match ($row['status']) {
@@ -403,7 +406,7 @@ class AdminController extends Controller
                 'rejected' => 'Tidak Lolos',
                 default => 'Menunggu',
             };
-            fputcsv($out, [$index + 1, $row['name'], $row['school'], $status], ',', '"', '');
+            fputcsv($out, [$index + 1, $row['name'], $row['school'], $row['link'], $status], ',', '"', '');
         }
 
         fclose($out);
