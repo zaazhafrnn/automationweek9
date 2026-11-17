@@ -178,6 +178,36 @@ $verified = ($status === 'verified');
         </div>
       <?php endif; ?>
     <?php endif; ?>
+
+    <?php if (!empty($payment['invoice_file'])): ?>
+      <?php
+        $invoiceUrl = '/uploads/invoices/' . rawurlencode($payment['invoice_file']);
+        $invoiceName = $payment['invoice_original_name'] ?? $payment['invoice_file'];
+      ?>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-4">
+        <div class="p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-11 h-11 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center shrink-0">
+              <?= Icon::make()->name('file-text')->class('w-5 h-5 text-gray-500') ?>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-gray-900">Invoice Pembayaran</p>
+              <p class="text-xs text-gray-500 truncate"><?= htmlspecialchars($invoiceName) ?></p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="<?= htmlspecialchars($invoiceUrl) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors no-underline">
+              <?= Icon::make()->name('eye')->class('w-4 h-4') ?>
+              Lihat
+            </a>
+            <a href="<?= htmlspecialchars($invoiceUrl) ?>" download="<?= htmlspecialchars($invoiceName) ?>" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-brand hover:bg-red-800 rounded-xl transition-colors no-underline">
+              <?= Icon::make()->name('download')->class('w-4 h-4') ?>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
   </div>
 
   <?php if ($hasProof && !$verified): ?>
